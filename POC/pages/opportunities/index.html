@@ -1,0 +1,144 @@
+<div class="opportunities-page">
+    <div class="page-header">
+        <h1>Opportunities</h1>
+        <div class="page-actions">
+            <a href="/opportunities/create" class="btn btn-primary">Create Opportunity</a>
+        </div>
+    </div>
+    
+    <div class="filters-section">
+        <div class="filters">
+            <select id="filter-model" class="form-select">
+                <option value="">All Models</option>
+                <option value="project_based">Project-Based</option>
+                <option value="strategic_partnership">Strategic Partnership</option>
+                <option value="resource_pooling">Resource Pooling</option>
+                <option value="hiring">Hiring</option>
+                <option value="competition">Competition</option>
+            </select>
+            
+            <select id="filter-status" class="form-select">
+                <option value="">All Status</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="closed">Closed</option>
+            </select>
+            
+            <input 
+                type="text" 
+                id="filter-search" 
+                class="form-input" 
+                placeholder="Search opportunities..."
+            >
+            
+            <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+            <button id="clear-filters" class="btn btn-secondary">Clear</button>
+        </div>
+    </div>
+    
+    <div id="opportunities-list" class="opportunities-grid">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<style>
+.opportunities-page {
+    width: 100%;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-header h1 {
+    font-size: var(--font-size-3xl);
+}
+
+.page-actions {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.filters-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    align-items: end;
+}
+
+.opportunities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.opportunity-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.opportunity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.opportunity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--spacing-md);
+}
+
+.opportunity-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.opportunity-meta {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.opportunity-description {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.opportunity-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-muted);
+}
+</style>

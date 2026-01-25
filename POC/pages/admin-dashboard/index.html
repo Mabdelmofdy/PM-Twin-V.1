@@ -1,0 +1,112 @@
+<div class="admin-dashboard-page">
+    <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p class="page-subtitle">Platform governance and analytics</p>
+    </div>
+    
+    <div class="admin-stats">
+        <div class="stat-card">
+            <div class="stat-value" id="stat-total-users">0</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-pending-users">0</div>
+            <div class="stat-label">Pending Approval</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-total-opportunities">0</div>
+            <div class="stat-label">Total Opportunities</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-total-applications">0</div>
+            <div class="stat-label">Total Applications</div>
+        </div>
+    </div>
+    
+    <div class="admin-actions">
+        <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+        <a href="/admin/opportunities" class="btn btn-secondary">Moderate Opportunities</a>
+        <a href="/admin/audit" class="btn btn-secondary">View Audit Trail</a>
+        <a href="/admin/settings" class="btn btn-secondary">System Settings</a>
+    </div>
+    
+    <div class="admin-content">
+        <div class="card">
+            <div class="card-header">
+                <h2>Recent Activity</h2>
+            </div>
+            <div class="card-body">
+                <div id="recent-activity">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Pending Approvals</h2>
+            </div>
+            <div class="card-body">
+                <div id="pending-approvals">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-dashboard-page {
+    width: 100%;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.admin-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.admin-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.activity-item {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xs);
+}
+
+.activity-item-title {
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+}
+
+.activity-item-time {
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+}
+
+.activity-item-details {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+</style>

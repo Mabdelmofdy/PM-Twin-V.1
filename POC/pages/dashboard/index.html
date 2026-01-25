@@ -1,0 +1,138 @@
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p class="dashboard-subtitle">Welcome back, <span id="user-name"></span></p>
+    </div>
+    
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-value" id="stat-opportunities">0</div>
+            <div class="stat-label">My Opportunities</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-applications">0</div>
+            <div class="stat-label">Applications</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-matches">0</div>
+            <div class="stat-label">Matches</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-notifications">0</div>
+            <div class="stat-label">Notifications</div>
+        </div>
+    </div>
+    
+    <div class="dashboard-actions">
+        <a href="/opportunities/create" class="btn btn-primary">Create Opportunity</a>
+        <a href="/opportunities" class="btn btn-secondary">Browse Opportunities</a>
+    </div>
+    
+    <div class="dashboard-content">
+        <div class="dashboard-section">
+            <h2>Recent Opportunities</h2>
+            <div id="recent-opportunities" class="opportunities-list">
+                <p class="text-muted">No opportunities yet. <a href="/opportunities/create">Create your first opportunity</a></p>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Recent Applications</h2>
+            <div id="recent-applications" class="applications-list">
+                <p class="text-muted">No applications yet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-page {
+    width: 100%;
+}
+
+.dashboard-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.dashboard-header h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.dashboard-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.stat-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.dashboard-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.dashboard-section h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.opportunities-list,
+.applications-list {
+    min-height: 200px;
+}
+
+.text-muted {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.text-muted a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.text-muted a:hover {
+    text-decoration: underline;
+}
+</style>

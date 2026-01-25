@@ -1,0 +1,170 @@
+<div class="pipeline-page">
+    <div class="page-header">
+        <h1>Pipeline Management</h1>
+        <p class="page-subtitle">Track your opportunities and applications</p>
+    </div>
+    
+    <div class="pipeline-tabs">
+        <button class="tab-btn active" data-tab="opportunities">My Opportunities</button>
+        <button class="tab-btn" data-tab="applications">My Applications</button>
+        <button class="tab-btn" data-tab="matches">Matches</button>
+    </div>
+    
+    <div class="pipeline-content">
+        <!-- Opportunities Pipeline -->
+        <div id="tab-opportunities" class="tab-content active">
+            <div class="kanban-board">
+                <div class="kanban-column">
+                    <h3>Draft</h3>
+                    <div id="kanban-draft" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>Published</h3>
+                    <div id="kanban-published" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>In Progress</h3>
+                    <div id="kanban-in-progress" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>Closed</h3>
+                    <div id="kanban-closed" class="kanban-items"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Applications Pipeline -->
+        <div id="tab-applications" class="tab-content" style="display: none;">
+            <div class="kanban-board">
+                <div class="kanban-column">
+                    <h3>Pending</h3>
+                    <div id="kanban-app-pending" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>Reviewing</h3>
+                    <div id="kanban-app-reviewing" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>Shortlisted</h3>
+                    <div id="kanban-app-shortlisted" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>Accepted</h3>
+                    <div id="kanban-app-accepted" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column">
+                    <h3>Rejected</h3>
+                    <div id="kanban-app-rejected" class="kanban-items"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Matches Pipeline -->
+        <div id="tab-matches" class="tab-content" style="display: none;">
+            <div id="matches-list" class="matches-container">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.pipeline-page {
+    width: 100%;
+}
+
+.pipeline-tabs {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.kanban-column {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    min-height: 400px;
+}
+
+.kanban-column h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+    text-align: center;
+}
+
+.kanban-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.kanban-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    cursor: move;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kanban-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.kanban-item-title {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+}
+
+.kanban-item-meta {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.matches-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+</style>

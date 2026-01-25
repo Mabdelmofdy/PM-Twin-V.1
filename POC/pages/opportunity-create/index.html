@@ -1,0 +1,173 @@
+<div class="opportunity-create-page">
+    <div class="page-header">
+        <h1>Create Opportunity</h1>
+        <p class="page-subtitle">Post a new collaboration opportunity</p>
+    </div>
+    
+    <form id="opportunity-form" class="opportunity-form">
+        <!-- Model Selection -->
+        <div class="form-section">
+            <h2>Select Collaboration Model</h2>
+            <div class="form-group">
+                <label for="model-type" class="form-label">Model Type <span style="color: var(--danger-color);">*</span></label>
+                <select id="model-type" name="modelType" class="form-select" required>
+                    <option value="">Select a model...</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="submodel-group" style="display: none;">
+                <label for="submodel-type" class="form-label">Sub-Model Type <span style="color: var(--danger-color);">*</span></label>
+                <select id="submodel-type" name="subModelType" class="form-select" required>
+                    <option value="">Select a sub-model...</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Basic Information -->
+        <div class="form-section">
+            <h2>Basic Information</h2>
+            <div class="form-group">
+                <label for="title" class="form-label">Title <span style="color: var(--danger-color);">*</span></label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    class="form-input" 
+                    required 
+                    maxlength="150"
+                    placeholder="Enter opportunity title"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    class="form-textarea" 
+                    maxlength="2000"
+                    placeholder="Brief description of the opportunity"
+                ></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="status" class="form-label">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Dynamic Fields -->
+        <div class="form-section" id="dynamic-fields-section">
+            <h2>Model-Specific Details</h2>
+            <div id="dynamic-fields">
+                <p class="text-muted">Please select a model and sub-model to see specific fields.</p>
+            </div>
+        </div>
+        
+        <!-- Error/Success Messages -->
+        <div id="form-error" class="alert alert-error" style="display: none;"></div>
+        <div id="form-success" class="alert alert-success" style="display: none;"></div>
+        
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Opportunity</button>
+            <button type="button" class="btn btn-secondary" onclick="router.navigate('/opportunities')">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<style>
+.opportunity-create-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-header h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+}
+
+.opportunity-form {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+}
+
+.form-section {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.currency-range,
+.date-range {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.currency-range input,
+.date-range input {
+    flex: 1;
+}
+
+.array-objects-container {
+    margin-bottom: var(--spacing-md);
+}
+
+.array-object-item {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    align-items: center;
+}
+
+.array-object-item input {
+    flex: 1;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: auto;
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+</style>

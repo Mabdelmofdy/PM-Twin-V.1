@@ -1,0 +1,163 @@
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>Join PMTwin</h1>
+            <p class="auth-subtitle">Create your account to start collaborating</p>
+            
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="user-type" class="form-label">I am a:</label>
+                    <select id="user-type" name="userType" class="form-select" required>
+                        <option value="">Select account type</option>
+                        <option value="company">Company / Business</option>
+                        <option value="professional">Professional / Individual</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-email" class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        id="reg-email" 
+                        name="email" 
+                        class="form-input" 
+                        required 
+                        placeholder="your@email.com"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-password" class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        id="reg-password" 
+                        name="password" 
+                        class="form-input" 
+                        required 
+                        placeholder="Minimum 6 characters"
+                        minlength="6"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password" class="form-label">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirm-password" 
+                        name="confirmPassword" 
+                        class="form-input" 
+                        required 
+                        placeholder="Re-enter your password"
+                    >
+                </div>
+                
+                <!-- Company-specific fields -->
+                <div id="company-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="company-name" class="form-label">Company Name</label>
+                        <input 
+                            type="text" 
+                            id="company-name" 
+                            name="companyName" 
+                            class="form-input" 
+                            placeholder="Your company name"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="cr-number" class="form-label">CR Number (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="cr-number" 
+                            name="crNumber" 
+                            class="form-input" 
+                            placeholder="Commercial Registration Number"
+                        >
+                    </div>
+                </div>
+                
+                <!-- Professional-specific fields -->
+                <div id="professional-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="full-name" class="form-label">Full Name</label>
+                        <input 
+                            type="text" 
+                            id="full-name" 
+                            name="fullName" 
+                            class="form-input" 
+                            placeholder="Your full name"
+                        >
+                    </div>
+                </div>
+                
+                <div id="register-error" class="alert alert-error" style="display: none;"></div>
+                <div id="register-success" class="alert alert-success" style="display: none;"></div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                
+                <p class="auth-footer">
+                    Already have an account? <a href="/login">Login here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-page {
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+.auth-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card h1 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.auth-form {
+    margin-top: var(--spacing-lg);
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: var(--spacing-md);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    color: var(--text-secondary);
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+</style>

@@ -1,0 +1,159 @@
+<div class="profile-page">
+    <div class="page-header">
+        <h1>My Profile</h1>
+    </div>
+    
+    <div class="profile-content">
+        <div class="profile-main">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Account Information</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="profile-email" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" id="profile-role" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <input type="text" id="profile-status" class="form-input" readonly>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" id="company-profile-card" style="display: none;">
+                <div class="card-header">
+                    <h2>Company Profile</h2>
+                </div>
+                <div class="card-body">
+                    <form id="company-profile-form">
+                        <div class="form-group">
+                            <label for="company-name" class="form-label">Company Name</label>
+                            <input type="text" id="company-name" name="name" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="cr-number" class="form-label">CR Number</label>
+                            <input type="text" id="cr-number" name="crNumber" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="company-classifications" class="form-label">Classifications</label>
+                            <input type="text" id="company-classifications" name="classifications" class="form-input" placeholder="Comma-separated">
+                        </div>
+                        <div class="form-group">
+                            <label for="financial-capacity" class="form-label">Financial Capacity (SAR)</label>
+                            <input type="number" id="financial-capacity" name="financialCapacity" class="form-input">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card" id="professional-profile-card" style="display: none;">
+                <div class="card-header">
+                    <h2>Professional Profile</h2>
+                </div>
+                <div class="card-body">
+                    <form id="professional-profile-form">
+                        <div class="form-group">
+                            <label for="full-name" class="form-label">Full Name</label>
+                            <input type="text" id="full-name" name="name" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="specializations" class="form-label">Specializations</label>
+                            <input type="text" id="specializations" name="specializations" class="form-input" placeholder="Comma-separated">
+                        </div>
+                        <div class="form-group">
+                            <label for="certifications" class="form-label">Certifications</label>
+                            <input type="text" id="certifications" name="certifications" class="form-input" placeholder="Comma-separated">
+                        </div>
+                        <div class="form-group">
+                            <label for="years-experience" class="form-label">Years of Experience</label>
+                            <input type="number" id="years-experience" name="yearsExperience" class="form-input">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-sidebar">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Quick Stats</h3>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item">
+                        <strong>Opportunities Created</strong>
+                        <span id="stat-opps-created">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong>Applications Submitted</strong>
+                        <span id="stat-apps-submitted">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong>Matches Received</strong>
+                        <span id="stat-matches-received">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-page {
+    width: 100%;
+}
+
+.profile-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-xl);
+}
+
+.profile-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.stat-item {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.stat-item strong {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.stat-item span {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+@media (max-width: 968px) {
+    .profile-content {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

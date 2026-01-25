@@ -1,0 +1,88 @@
+<div class="admin-audit-page">
+    <div class="page-header">
+        <h1>Audit Trail</h1>
+        <p class="page-subtitle">System activity and audit logs</p>
+    </div>
+    
+    <div class="filters-section">
+        <div class="filters">
+            <select id="filter-user" class="form-select">
+                <option value="">All Users</option>
+            </select>
+            
+            <select id="filter-action" class="form-select">
+                <option value="">All Actions</option>
+                <option value="user_registered">User Registered</option>
+                <option value="user_logged_in">User Logged In</option>
+                <option value="opportunity_created">Opportunity Created</option>
+                <option value="application_submitted">Application Submitted</option>
+                <option value="user_approved">User Approved</option>
+                <option value="user_rejected">User Rejected</option>
+            </select>
+            
+            <input type="date" id="filter-start-date" class="form-input" placeholder="Start Date">
+            <input type="date" id="filter-end-date" class="form-input" placeholder="End Date">
+            
+            <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+        </div>
+    </div>
+    
+    <div id="audit-logs" class="audit-logs">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<style>
+.admin-audit-page {
+    width: 100%;
+}
+
+.filters-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    align-items: end;
+}
+
+.audit-logs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.audit-log-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.audit-log-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.audit-log-action {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.audit-log-time {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.audit-log-details {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+</style>

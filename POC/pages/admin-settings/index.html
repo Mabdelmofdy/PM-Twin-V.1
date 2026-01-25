@@ -1,0 +1,121 @@
+<div class="admin-settings-page">
+    <div class="page-header">
+        <h1>System Settings</h1>
+        <p class="page-subtitle">Configure platform settings</p>
+    </div>
+    
+    <div class="settings-content">
+        <div class="card">
+            <div class="card-header">
+                <h2>Platform Settings</h2>
+            </div>
+            <div class="card-body">
+                <form id="settings-form">
+                    <div class="form-group">
+                        <label for="matching-threshold" class="form-label">Matching Threshold (%)</label>
+                        <input 
+                            type="number" 
+                            id="matching-threshold" 
+                            name="matchingThreshold" 
+                            class="form-input" 
+                            min="0" 
+                            max="100" 
+                            value="70"
+                        >
+                        <small class="form-help">Minimum match score percentage for recommendations</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auto-notify-threshold" class="form-label">Auto-Notify Threshold (%)</label>
+                        <input 
+                            type="number" 
+                            id="auto-notify-threshold" 
+                            name="autoNotifyThreshold" 
+                            class="form-input" 
+                            min="0" 
+                            max="100" 
+                            value="80"
+                        >
+                        <small class="form-help">Match score percentage to automatically notify users</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="session-duration" class="form-label">Session Duration (hours)</label>
+                        <input 
+                            type="number" 
+                            id="session-duration" 
+                            name="sessionDuration" 
+                            class="form-input" 
+                            min="1" 
+                            max="168" 
+                            value="24"
+                        >
+                        <small class="form-help">How long user sessions remain active</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>System Information</h2>
+            </div>
+            <div class="card-body">
+                <div class="info-item">
+                    <strong>Platform Version:</strong>
+                    <span>1.0.0 (POC)</span>
+                </div>
+                <div class="info-item">
+                    <strong>Storage Type:</strong>
+                    <span>localStorage (POC)</span>
+                </div>
+                <div class="info-item">
+                    <strong>Total Users:</strong>
+                    <span id="total-users-count">-</span>
+                </div>
+                <div class="info-item">
+                    <strong>Total Opportunities:</strong>
+                    <span id="total-opportunities-count">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-settings-page {
+    width: 100%;
+    max-width: 800px;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.info-item {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-item strong {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.info-item span {
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+}
+</style>

@@ -1,0 +1,104 @@
+<div class="admin-users-page">
+    <div class="page-header">
+        <h1>User Management</h1>
+        <p class="page-subtitle">Manage platform users and approvals</p>
+    </div>
+    
+    <div class="filters-section">
+        <div class="filters">
+            <select id="filter-status" class="form-select">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            
+            <select id="filter-role" class="form-select">
+                <option value="">All Roles</option>
+                <option value="company_owner">Company Owner</option>
+                <option value="company_admin">Company Admin</option>
+                <option value="company_member">Company Member</option>
+                <option value="professional">Professional</option>
+                <option value="consultant">Consultant</option>
+            </select>
+            
+            <input 
+                type="text" 
+                id="filter-search" 
+                class="form-input" 
+                placeholder="Search by email..."
+            >
+            
+            <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+        </div>
+    </div>
+    
+    <div id="users-list" class="users-list">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<style>
+.admin-users-page {
+    width: 100%;
+}
+
+.filters-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    align-items: end;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.user-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.user-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--spacing-md);
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-email {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.user-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.user-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+</style>

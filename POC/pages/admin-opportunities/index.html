@@ -1,0 +1,66 @@
+<div class="admin-opportunities-page">
+    <div class="page-header">
+        <h1>Opportunity Moderation</h1>
+        <p class="page-subtitle">Review and moderate platform opportunities</p>
+    </div>
+    
+    <div class="filters-section">
+        <div class="filters">
+            <select id="filter-status" class="form-select">
+                <option value="">All Status</option>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+                <option value="closed">Closed</option>
+            </select>
+            
+            <select id="filter-model" class="form-select">
+                <option value="">All Models</option>
+                <option value="project_based">Project-Based</option>
+                <option value="strategic_partnership">Strategic Partnership</option>
+                <option value="resource_pooling">Resource Pooling</option>
+                <option value="hiring">Hiring</option>
+                <option value="competition">Competition</option>
+            </select>
+            
+            <input 
+                type="text" 
+                id="filter-search" 
+                class="form-input" 
+                placeholder="Search opportunities..."
+            >
+            
+            <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+        </div>
+    </div>
+    
+    <div id="opportunities-list" class="opportunities-list">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<style>
+.admin-opportunities-page {
+    width: 100%;
+}
+
+.filters-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    align-items: end;
+}
+
+.opportunities-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+</style>
