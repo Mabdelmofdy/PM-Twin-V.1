@@ -1,0 +1,28 @@
+<div class="opportunity-card" data-id="{{id}}">
+    <div class="opportunity-header">
+        <div>
+            <h3 class="opportunity-title">{{title}}</h3>
+            <div class="opportunity-meta">
+                <span class="badge badge-primary">{{modelType}}</span>
+                <span class="badge badge-{{statusBadgeClass}}">{{status}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="opportunity-description">
+        {{{description}}}
+    </div>
+    <div class="opportunity-footer">
+        <span class="text-muted" style="font-size: var(--font-size-xs);">
+            {{createdDate}}
+        </span>
+        {{#if isOwner}}
+            <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-secondary">Manage</a>
+        {{else}}
+            {{#if canApply}}
+                <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-primary">View & Apply</a>
+            {{else}}
+                <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-secondary">View</a>
+            {{/if}}
+        {{/if}}
+    </div>
+</div>

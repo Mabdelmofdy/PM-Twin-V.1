@@ -3,20 +3,35 @@
 ## Quick Start
 
 1. **Open the Application**
-   - Navigate to `POC/index.html` in your web browser
-   - No build process or server required - it's a pure HTML/CSS/JS application
+   - Open `POC/index.html` in your browser (via Live Server or directly)
+   - The app uses hash-based routing for compatibility with static servers
+   - Base URL: `http://127.0.0.1:5500/PM-Twin-MVP/POC/` (your path may vary)
+   - Routes are appended as hash: `#/login`, `#/register`, `#/dashboard`
+   - Full example: `http://127.0.0.1:5500/PM-Twin-MVP/POC/index.html#/login`
+   - The app auto-detects its base path, so it works from any directory
 
-2. **Default Admin Account**
-   - Email: `admin@pmtwin.com`
-   - Password: `admin123`
-   - This account is automatically created on first load
+2. **Preloaded Demo Accounts**
+   
+   The app comes with preloaded sample data. Use any of these accounts:
+   
+   | Account Type | Email | Password |
+   |--------------|-------|----------|
+   | **Admin** | admin@pmtwin.com | admin123 |
+   | **Company** | info@alkhorayef.com | password123 |
+   | **Company** | contact@saudibinladin.com | password123 |
+   | **Company** | info@almabani.com | password123 |
+   | **Company** | projects@nesma.com | password123 |
+   | **Professional** | ahmed.hassan@email.com | password123 |
+   | **Professional** | fatima.almutairi@email.com | password123 |
+   | **Professional** | mohammed.alqahtani@email.com | password123 |
+   | **Consultant** | sara.alzahrani@email.com | password123 |
+   | **Professional** | khalid.alharbi@email.com | password123 |
 
-3. **Test the Application**
-   - Register a new user (Company or Professional)
-   - Login with the admin account to approve the new user
-   - Create opportunities
-   - Submit applications
-   - View matches and recommendations
+3. **Explore the Demo Data**
+   - 10 sample opportunities across all business models
+   - Pre-existing applications and matches
+   - Notifications and audit logs
+   - Ready-to-use profiles for testing
 
 ## File Structure
 
@@ -69,7 +84,27 @@ POC/
 All data is stored in browser localStorage:
 - Data persists between sessions
 - Data is browser-specific
-- Clear browser data to reset
+- Preloaded seed data is loaded on first launch from `data/*.json` files
+
+### Seed Data Files
+Located in `POC/data/`:
+- `users.json` - User accounts (companies, professionals, admin)
+- `opportunities.json` - Sample opportunities across all business models
+- `applications.json` - Applications to opportunities
+- `matches.json` - AI-generated matches between users and opportunities
+- `notifications.json` - User notifications
+- `audit.json` - System audit logs
+- `sessions.json` - Active sessions (starts empty)
+
+### Reset Data
+To reset all data to the original seed data:
+1. Open browser console (F12)
+2. Run: `window.resetAppData()`
+3. Confirm the reset when prompted
+
+Or manually clear localStorage:
+1. Open DevTools → Application → Local Storage
+2. Delete all `pmtwin_*` entries
 
 ## Known Limitations (POC)
 
@@ -107,6 +142,12 @@ All data is stored in browser localStorage:
 
 ## Troubleshooting
 
+### 404 Error on Routes (e.g., /login)
+- The app uses hash-based routing: URLs must include `#` before the route
+- Correct: `http://localhost:5500/path/to/index.html#/login`
+- Wrong: `http://localhost:5500/path/to/login`
+- Navigate using the app's links or manually add `#/login` to the URL
+
 ### Page Not Loading
 - Check browser console for errors
 - Ensure all files are in correct locations
@@ -116,6 +157,17 @@ All data is stored in browser localStorage:
 - Check browser localStorage support
 - Clear browser cache and reload
 - Check browser console for storage errors
+
+### Data Seems Corrupted or Missing
+- Run `window.resetAppData()` in browser console to re-seed from JSON files
+- This will restore all demo data to original state
+
+### Debug Information
+- Run `window.appDebug()` in browser console to see:
+  - Current base path
+  - Current route
+  - Authentication status
+  - App configuration
 
 ### Scripts Not Loading
 - Check browser console for 404 errors

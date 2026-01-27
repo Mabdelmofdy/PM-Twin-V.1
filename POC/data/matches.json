@@ -1,0 +1,104 @@
+{
+  "domain": "matches",
+  "version": "1.0",
+  "data": [
+    {
+      "id": "match-001",
+      "opportunityId": "opp-002",
+      "userId": "user-pro-001",
+      "matchScore": 0.92,
+      "matchReasons": [
+        {"factor": "Skills Match", "score": 0.95, "details": "Strong match on Structural Design, SAP2000, ETABS"},
+        {"factor": "Experience Level", "score": 0.90, "details": "15 years experience exceeds 10 year requirement"},
+        {"factor": "Location", "score": 0.90, "details": "Based in Riyadh, on-site available"},
+        {"factor": "Certifications", "score": 0.95, "details": "PMP and PE certifications match requirements"}
+      ],
+      "notified": true,
+      "createdAt": "2026-01-12T10:00:00.000Z"
+    },
+    {
+      "id": "match-002",
+      "opportunityId": "opp-007",
+      "userId": "user-pro-004",
+      "matchScore": 0.95,
+      "matchReasons": [
+        {"factor": "Skills Match", "score": 0.98, "details": "Expert in LEED Certification and Energy Modeling"},
+        {"factor": "Certifications", "score": 1.0, "details": "LEED AP BD+C certification matches requirement"},
+        {"factor": "Experience Level", "score": 0.90, "details": "8 years experience, Expert level"},
+        {"factor": "Availability", "score": 0.85, "details": "Limited availability but can accommodate"}
+      ],
+      "notified": true,
+      "createdAt": "2026-01-18T11:00:00.000Z"
+    },
+    {
+      "id": "match-003",
+      "opportunityId": "opp-004",
+      "userId": "user-pro-002",
+      "matchScore": 0.88,
+      "matchReasons": [
+        {"factor": "Skills Match", "score": 0.92, "details": "Strong architectural and sustainable design skills"},
+        {"factor": "Certifications", "score": 0.85, "details": "LEED AP certification aligns with competition focus"},
+        {"factor": "Portfolio", "score": 0.90, "details": "High-rise and sustainable design experience"},
+        {"factor": "Work Mode", "score": 0.80, "details": "Remote work preference compatible"}
+      ],
+      "notified": true,
+      "createdAt": "2026-01-15T12:00:00.000Z"
+    },
+    {
+      "id": "match-004",
+      "opportunityId": "opp-008",
+      "userId": "user-pro-001",
+      "matchScore": 0.85,
+      "matchReasons": [
+        {"factor": "Skills Match", "score": 0.88, "details": "Strong structural analysis background"},
+        {"factor": "Experience Level", "score": 0.95, "details": "Expert level, 15 years experience"},
+        {"factor": "Remote Compatibility", "score": 0.80, "details": "Hybrid preferred but can work remote"},
+        {"factor": "Specialization", "score": 0.75, "details": "General structural, some bridge experience"}
+      ],
+      "notified": true,
+      "createdAt": "2026-01-19T12:00:00.000Z"
+    },
+    {
+      "id": "match-005",
+      "opportunityId": "opp-009",
+      "userId": "user-pro-001",
+      "matchScore": 0.90,
+      "matchReasons": [
+        {"factor": "Experience", "score": 0.95, "details": "15 years exceeds 10 year requirement"},
+        {"factor": "Certifications", "score": 1.0, "details": "PE certification matches requirement"},
+        {"factor": "Location", "score": 0.85, "details": "Riyadh-based, hybrid compatible"},
+        {"factor": "Industry Knowledge", "score": 0.90, "details": "Broad construction industry experience"}
+      ],
+      "notified": true,
+      "createdAt": "2026-01-20T09:00:00.000Z"
+    },
+    {
+      "id": "match-006",
+      "opportunityId": "opp-002",
+      "userId": "user-pro-003",
+      "matchScore": 0.72,
+      "matchReasons": [
+        {"factor": "Skills Match", "score": 0.65, "details": "Project management focus, limited structural design"},
+        {"factor": "Experience Level", "score": 0.80, "details": "12 years experience"},
+        {"factor": "Location", "score": 0.70, "details": "Based in Dammam, relocation needed"},
+        {"factor": "Certifications", "score": 0.75, "details": "PMP, PRINCE2 but no PE"}
+      ],
+      "notified": false,
+      "createdAt": "2026-01-12T10:30:00.000Z"
+    },
+    {
+      "id": "match-007",
+      "opportunityId": "opp-001",
+      "userId": "user-company-004",
+      "matchScore": 0.88,
+      "matchReasons": [
+        {"factor": "Company Size", "score": 0.90, "details": "Large enterprise with 2000+ employees"},
+        {"factor": "Sector Experience", "score": 0.85, "details": "Infrastructure and engineering experience"},
+        {"factor": "Certifications", "score": 0.90, "details": "ISO certified, LEED experience"},
+        {"factor": "Financial Capability", "score": 0.88, "details": "Strong financial position"}
+      ],
+      "notified": true,
+      "createdAt": "2026-01-10T12:00:00.000Z"
+    }
+  ]
+}

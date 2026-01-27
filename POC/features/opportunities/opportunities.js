@@ -69,11 +69,33 @@ async function loadOpportunities() {
         opportunities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         
         if (opportunities.length === 0) {
-            container.innerHTML = '<div class="empty-state">No opportunities found. <a href="/opportunities/create">Create the first one!</a></div>';
+            container.innerHTML = '<div class="empty-state">No opportunities found. <a href="#" data-route="/opportunities/create">Create the first one!</a></div>';
             return;
         }
         
-        container.innerHTML = opportunities.map(opp => createOpportunityCard(opp, user)).join('');
+        // Load template
+        const template = await templateLoader.load('opportunity-card');
+        
+        // Render opportunities
+        const html = opportunities.map(opp => {
+            const isOwner = user && opp.creatorId === user.id;
+            const canApply = user && !isOwner && opp.status === 'published';
+            
+            const data = {
+                ...opp,
+                title: opp.title || 'Untitled Opportunity',
+                modelType: opp.modelType || 'N/A',
+                status: opp.status || 'draft',
+                statusBadgeClass: getStatusBadgeClass(opp.status),
+                description: opp.description || 'No description available',
+                createdDate: new Date(opp.createdAt).toLocaleDateString(),
+                isOwner,
+                canApply
+            };
+            return templateRenderer.render(template, data);
+        }).join('');
+        
+        container.innerHTML = html;
         
         // Attach click handlers
         container.querySelectorAll('.opportunity-card').forEach(card => {
@@ -89,40 +111,6 @@ async function loadOpportunities() {
         console.error('Error loading opportunities:', error);
         container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again.</div>';
     }
-}
-
-function createOpportunityCard(opportunity, user) {
-    const isOwner = user && opportunity.creatorId === user.id;
-    const canApply = user && !isOwner && opportunity.status === 'published';
-    
-    return `
-        <div class="opportunity-card" data-id="${opportunity.id}">
-            <div class="opportunity-header">
-                <div>
-                    <h3 class="opportunity-title">${opportunity.title || 'Untitled Opportunity'}</h3>
-                    <div class="opportunity-meta">
-                        <span class="badge badge-primary">${opportunity.modelType || 'N/A'}</span>
-                        <span class="badge badge-${getStatusBadgeClass(opportunity.status)}">${opportunity.status || 'draft'}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="opportunity-description">
-                ${opportunity.description || 'No description available'}
-            </div>
-            <div class="opportunity-footer">
-                <span class="text-muted" style="font-size: var(--font-size-xs);">
-                    ${new Date(opportunity.createdAt).toLocaleDateString()}
-                </span>
-                ${isOwner ? `
-                    <a href="/opportunities/${opportunity.id}" class="btn btn-sm btn-secondary">Manage</a>
-                ` : canApply ? `
-                    <a href="/opportunities/${opportunity.id}" class="btn btn-sm btn-primary">View & Apply</a>
-                ` : `
-                    <a href="/opportunities/${opportunity.id}" class="btn btn-sm btn-secondary">View</a>
-                `}
-            </div>
-        </div>
-    `;
 }
 
 function getStatusBadgeClass(status) {

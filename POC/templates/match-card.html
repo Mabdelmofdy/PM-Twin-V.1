@@ -1,0 +1,16 @@
+<div class="card">
+    <div class="card-header">
+        <h3>{{opportunity.title}}</h3>
+        <span class="badge badge-success">{{matchScorePercent}}% Match</span>
+    </div>
+    <div class="card-body">
+        <p>{{opportunity.description}}</p>
+        <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
+            Model: {{opportunity.modelType}} | 
+            Status: {{opportunity.status}}
+        </p>
+    </div>
+    <div class="card-footer">
+        <a href="#" data-route="/opportunities/{{opportunity.id}}" class="btn btn-primary btn-sm">View & Apply</a>
+    </div>
+</div>

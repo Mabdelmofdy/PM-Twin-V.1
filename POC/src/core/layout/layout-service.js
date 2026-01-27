@@ -28,16 +28,16 @@ class LayoutService {
         const user = this.authService.getCurrentUser();
         
         let navHTML = '<nav class="main-nav"><div class="nav-container">';
-        navHTML += `<div class="nav-brand"><a href="${CONFIG.ROUTES.HOME}">${CONFIG.APP_NAME}</a></div>`;
+        navHTML += `<div class="nav-brand"><a href="#" data-route="${CONFIG.ROUTES.HOME}">${CONFIG.APP_NAME}</a></div>`;
         navHTML += '<ul class="nav-menu">';
         
         if (isAuthenticated) {
-            navHTML += `<li><a href="${CONFIG.ROUTES.DASHBOARD}">Dashboard</a></li>`;
-            navHTML += `<li><a href="${CONFIG.ROUTES.OPPORTUNITIES}">Opportunities</a></li>`;
-            navHTML += `<li><a href="${CONFIG.ROUTES.PROFILE}">Profile</a></li>`;
+            navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.DASHBOARD}">Dashboard</a></li>`;
+            navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.OPPORTUNITIES}">Opportunities</a></li>`;
+            navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.PROFILE}">Profile</a></li>`;
             
             if (this.authService.isAdmin()) {
-                navHTML += `<li><a href="${CONFIG.ROUTES.ADMIN}">Admin</a></li>`;
+                navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.ADMIN}">Admin</a></li>`;
             }
             
             navHTML += `<li class="nav-user">
@@ -45,12 +45,35 @@ class LayoutService {
                 <button onclick="layoutService.handleLogout()">Logout</button>
             </li>`;
         } else {
-            navHTML += `<li><a href="${CONFIG.ROUTES.LOGIN}">Login</a></li>`;
-            navHTML += `<li><a href="${CONFIG.ROUTES.REGISTER}">Register</a></li>`;
+            navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.LOGIN}">Login</a></li>`;
+            navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.REGISTER}">Register</a></li>`;
         }
         
         navHTML += '</ul></div></nav>';
         navElement.innerHTML = navHTML;
+        
+        // Attach click handlers to navigation links
+        this.attachNavigationHandlers();
+    }
+    
+    /**
+     * Attach click handlers to navigation links
+     */
+    attachNavigationHandlers() {
+        const navElement = document.getElementById('main-nav');
+        if (!navElement) return;
+        
+        // Use event delegation to handle clicks on navigation links
+        navElement.addEventListener('click', (e) => {
+            const link = e.target.closest('a[data-route]');
+            if (link) {
+                e.preventDefault();
+                const route = link.getAttribute('data-route');
+                if (route) {
+                    this.router.navigate(route);
+                }
+            }
+        });
     }
     
     /**

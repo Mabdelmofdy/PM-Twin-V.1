@@ -3,13 +3,85 @@
  * Bootstraps the application
  */
 
-// Load configuration first
-const configScript = document.createElement('script');
-configScript.src = 'src/core/config/config.js';
-document.head.appendChild(configScript);
+/**
+ * Detect base path from document location
+ * This is the single source of truth for base path
+ * Works whether app is served from root or subdirectory
+ */
+function detectBasePath() {
+    // Method 1: Use document.baseURI (most reliable)
+    try {
+        const baseURI = new URL(document.baseURI);
+        let basePath = baseURI.pathname;
+        
+        // Remove index.html if present
+        if (basePath.endsWith('index.html')) {
+            basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+        }
+        // Ensure ends with /
+        if (!basePath.endsWith('/')) {
+            basePath += '/';
+        }
+        return basePath;
+    } catch (e) {
+        console.warn('Could not parse document.baseURI', e);
+    }
+    
+    // Method 2: Fallback to window.location.pathname
+    let pathname = window.location.pathname;
+    
+    // Remove hash and query
+    pathname = pathname.split('?')[0].split('#')[0];
+    
+    // Remove index.html if present
+    if (pathname.endsWith('index.html')) {
+        pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    }
+    
+    // Ensure ends with /
+    if (!pathname.endsWith('/')) {
+        pathname += '/';
+    }
+    
+    return pathname;
+}
 
-// Wait for config to load, then initialize
-configScript.onload = async () => {
+// Detect base path immediately
+const APP_BASE_PATH = detectBasePath();
+console.log('PMTwin App base path:', APP_BASE_PATH);
+
+/**
+ * Load script dynamically with base path
+ */
+function loadScript(relativeSrc) {
+    const fullSrc = APP_BASE_PATH + relativeSrc;
+    
+    return new Promise((resolve, reject) => {
+        // Check if script already loaded (check both relative and full paths)
+        const existingScript = document.querySelector(`script[src="${fullSrc}"], script[src="${relativeSrc}"]`);
+        if (existingScript) {
+            resolve();
+            return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = fullSrc;
+        script.onload = resolve;
+        script.onerror = () => {
+            document.head.removeChild(script);
+            reject(new Error(`Failed to load script: ${fullSrc}`));
+        };
+        document.head.appendChild(script);
+    });
+}
+
+// Load configuration first
+loadScript('src/core/config/config.js').then(async () => {
+    // Ensure CONFIG has the correct BASE_PATH
+    if (window.CONFIG) {
+        window.CONFIG.BASE_PATH = APP_BASE_PATH;
+    }
+    
     // Load core services
     await loadScript('src/core/storage/storage-service.js');
     await loadScript('src/core/data/data-service.js');
@@ -18,6 +90,10 @@ configScript.onload = async () => {
     await loadScript('src/core/router/auth-guard.js');
     await loadScript('src/core/layout/layout-service.js');
     await loadScript('src/core/api/api-service.js');
+    
+    // Load utilities
+    await loadScript('src/utils/template-loader.js');
+    await loadScript('src/utils/template-renderer.js');
     
     // Load business logic
     await loadScript('src/business-logic/models/opportunity-models.js');
@@ -28,20 +104,9 @@ configScript.onload = async () => {
     
     // Initialize application
     await initializeApp();
-};
-
-/**
- * Load script dynamically
- */
-function loadScript(src) {
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-    });
-}
+}).catch(error => {
+    console.error('Failed to load configuration:', error);
+});
 
 /**
  * Initialize application
@@ -60,6 +125,9 @@ async function initializeApp() {
         // Initialize router
         initializeRoutes();
         router.init();
+        
+        // Add global click handler for navigation links
+        setupGlobalNavigation();
         
         console.log('PMTwin application initialized');
     } catch (error) {
@@ -84,12 +152,54 @@ async function initializeStorage() {
     
     storageService.initialize(defaultData);
     
-    // Create default admin user if no users exist
+    // Initialize data from JSON seed files
+    await dataService.initializeFromJSON();
+    
+    // Create default admin user if no admin exists
     const users = await dataService.getUsers();
-    if (users.length === 0) {
+    const hasAdmin = users.some(u => u.role === CONFIG.ROLES.ADMIN && u.status === 'active');
+    if (!hasAdmin) {
         await createDefaultAdmin();
     }
 }
+
+/**
+ * Reset all data and re-seed from JSON files
+ * Can be called from browser console: window.resetAppData()
+ */
+async function resetAppData() {
+    if (confirm('This will reset all data to default. Continue?')) {
+        await dataService.reseedFromJSON();
+        // Clear session
+        sessionStorage.clear();
+        // Reload page
+        window.location.reload();
+    }
+}
+
+// Expose reset function globally for debugging
+window.resetAppData = resetAppData;
+
+/**
+ * Debug utility - shows app configuration
+ * Can be called from browser console: window.appDebug()
+ */
+function appDebug() {
+    console.log('=== PMTwin Debug Info ===');
+    console.log('Base Path:', CONFIG.BASE_PATH);
+    console.log('App Version:', CONFIG.APP_VERSION);
+    console.log('Current Route:', router.getCurrentPath());
+    console.log('Authenticated:', !!authService.currentUser);
+    console.log('User:', authService.currentUser?.email || 'Not logged in');
+    console.log('Storage Keys:', Object.keys(CONFIG.STORAGE_KEYS));
+    console.log('========================');
+    return {
+        basePath: CONFIG.BASE_PATH,
+        route: router.getCurrentPath(),
+        user: authService.currentUser?.email
+    };
+}
+window.appDebug = appDebug;
 
 /**
  * Create default admin user
@@ -147,6 +257,7 @@ function initializeRoutes() {
         await loadPage('opportunity-detail', params);
     }));
     
+    // Edit route
     router.register('/opportunities/:id/edit', authGuard.protect(async (params) => {
         await loadPage('opportunity-edit', params);
     }));
@@ -204,15 +315,37 @@ function initializeRoutes() {
 }
 
 /**
+ * Setup global navigation handler
+ */
+function setupGlobalNavigation() {
+    // Use event delegation on document body to catch all links
+    document.body.addEventListener('click', (e) => {
+        const link = e.target.closest('a[data-route]');
+        if (link) {
+            e.preventDefault();
+            const route = link.getAttribute('data-route');
+            if (route) {
+                router.navigate(route);
+            }
+        }
+    });
+}
+
+/**
  * Load page content
+ * Uses CONFIG.BASE_PATH for correct path resolution
  */
 async function loadPage(pageName, params = {}) {
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
     
+    // Get base path from CONFIG (set during initialization)
+    const basePath = window.CONFIG?.BASE_PATH || APP_BASE_PATH || '';
+    
     try {
-        // Load page HTML
-        const response = await fetch(`pages/${pageName}/index.html`);
+        // Load page HTML using base path
+        const pagePath = `${basePath}pages/${pageName}/index.html`;
+        const response = await fetch(pagePath);
         if (!response.ok) {
             throw new Error(`Page not found: ${pageName}`);
         }
@@ -221,7 +354,7 @@ async function loadPage(pageName, params = {}) {
         // Set content
         mainContent.innerHTML = html;
         
-        // Load page script if exists
+        // Load page script if exists (loadScript already uses base path)
         const scriptPath = `features/${pageName}/${pageName}.js`;
         try {
             await loadScript(scriptPath);

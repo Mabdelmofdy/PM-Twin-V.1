@@ -66,21 +66,26 @@ async function loadAuditLogs() {
             return;
         }
         
-        container.innerHTML = logsWithUsers.map(log => `
-            <div class="audit-log-item">
-                <div class="audit-log-header">
-                    <span class="audit-log-action">${log.action.replace(/_/g, ' ').toUpperCase()}</span>
-                    <span class="audit-log-time">${new Date(log.timestamp).toLocaleString()}</span>
-                </div>
-                <div class="audit-log-details">
-                    <p><strong>User:</strong> ${log.user?.email || 'Unknown'} (${log.user?.role || 'N/A'})</p>
-                    <p><strong>Entity:</strong> ${log.entityType} ${log.entityId ? `(${log.entityId})` : ''}</p>
-                    ${log.details && Object.keys(log.details).length > 0 ? `
-                        <p><strong>Details:</strong> ${JSON.stringify(log.details)}</p>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
+        // Load template
+        const template = await templateLoader.load('audit-log-item');
+        
+        // Render audit logs
+        const html = logsWithUsers.map(log => {
+            const data = {
+                ...log,
+                actionFormatted: log.action.replace(/_/g, ' ').toUpperCase(),
+                timestampFormatted: new Date(log.timestamp).toLocaleString(),
+                user: {
+                    email: log.user?.email || 'Unknown',
+                    role: log.user?.role || 'N/A'
+                },
+                hasDetails: log.details && Object.keys(log.details).length > 0,
+                detailsJson: log.details && Object.keys(log.details).length > 0 ? JSON.stringify(log.details) : ''
+            };
+            return templateRenderer.render(template, data);
+        }).join('');
+        
+        container.innerHTML = html;
         
     } catch (error) {
         console.error('Error loading audit logs:', error);

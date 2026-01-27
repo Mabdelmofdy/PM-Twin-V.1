@@ -9,6 +9,10 @@ const CONFIG = {
     APP_VERSION: '1.0.0',
     APP_DESCRIPTION: 'Construction Collaboration Platform',
     
+    // Base path for loading resources
+    // This is set by app-init.js during initialization
+    BASE_PATH: '',
+    
     // Storage Keys
     STORAGE_KEYS: {
         USERS: 'pmtwin_users',

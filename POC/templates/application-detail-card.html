@@ -1,0 +1,16 @@
+<div class="card" style="margin-bottom: var(--spacing-md);">
+    <div class="card-header">
+        <h3>{{applicant.email}}</h3>
+        <span class="badge badge-{{statusBadgeClass}}">{{status}}</span>
+    </div>
+    <div class="card-body">
+        <p>{{proposal}}</p>
+        <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
+            Applied: {{createdDate}}
+        </p>
+    </div>
+    <div class="card-footer">
+        <button onclick="updateApplicationStatus('{{id}}', 'accepted')" class="btn btn-success btn-sm">Accept</button>
+        <button onclick="updateApplicationStatus('{{id}}', 'rejected')" class="btn btn-danger btn-sm">Reject</button>
+    </div>
+</div>

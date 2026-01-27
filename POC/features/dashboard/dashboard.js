@@ -42,46 +42,45 @@ async function loadDashboardData(userId) {
         document.getElementById('stat-notifications').textContent = unreadCount;
         
         // Display recent opportunities
-        displayRecentOpportunities(userOpportunities.slice(0, 5));
+        await displayRecentOpportunities(userOpportunities.slice(0, 5));
         
         // Display recent applications
-        displayRecentApplications(userApplications.slice(0, 5));
+        await displayRecentApplications(userApplications.slice(0, 5));
         
     } catch (error) {
         console.error('Error loading dashboard data:', error);
     }
 }
 
-function displayRecentOpportunities(opportunities) {
+async function displayRecentOpportunities(opportunities) {
     const container = document.getElementById('recent-opportunities');
     if (!container) return;
     
     if (opportunities.length === 0) {
-        container.innerHTML = '<p class="text-muted">No opportunities yet. <a href="/opportunities/create">Create your first opportunity</a></p>';
+        container.innerHTML = '<p class="text-muted">No opportunities yet. <a href="#" data-route="/opportunities/create">Create your first opportunity</a></p>';
         return;
     }
     
-    container.innerHTML = opportunities.map(opp => `
-        <div class="card" style="margin-bottom: var(--spacing-md);">
-            <div class="card-header">
-                <h3 class="card-title">${opp.title}</h3>
-                <span class="badge badge-primary">${opp.modelType}</span>
-            </div>
-            <div class="card-body">
-                <p>${opp.description || 'No description'}</p>
-                <p class="text-muted" style="font-size: var(--font-size-sm);">
-                    Status: <strong>${opp.status}</strong> | 
-                    Created: ${new Date(opp.createdAt).toLocaleDateString()}
-                </p>
-            </div>
-            <div class="card-footer">
-                <a href="/opportunities/${opp.id}" class="btn btn-sm btn-secondary">View Details</a>
-            </div>
-        </div>
-    `).join('');
+    // Load template
+    const template = await templateLoader.load('opportunity-card');
+    
+    // Render each opportunity
+    const html = opportunities.map(opp => {
+        const data = {
+            ...opp,
+            statusBadgeClass: getStatusBadgeClass(opp.status),
+            createdDate: new Date(opp.createdAt).toLocaleDateString(),
+            description: opp.description || 'No description',
+            isOwner: true,
+            canApply: false
+        };
+        return templateRenderer.render(template, data);
+    }).join('');
+    
+    container.innerHTML = html;
 }
 
-function displayRecentApplications(applications) {
+async function displayRecentApplications(applications) {
     const container = document.getElementById('recent-applications');
     if (!container) return;
     
@@ -91,24 +90,27 @@ function displayRecentApplications(applications) {
     }
     
     // Load opportunity details for each application
-    Promise.all(applications.map(async (app) => {
-        const opportunity = await dataService.getOpportunityById(app.opportunityId);
-        return { ...app, opportunity };
-    })).then(appsWithOpps => {
-        container.innerHTML = appsWithOpps.map(app => `
-            <div class="card" style="margin-bottom: var(--spacing-md);">
-                <div class="card-header">
-                    <h3 class="card-title">${app.opportunity?.title || 'Unknown Opportunity'}</h3>
-                    <span class="badge badge-${getStatusBadgeClass(app.status)}">${app.status}</span>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted" style="font-size: var(--font-size-sm);">
-                        Applied: ${new Date(app.createdAt).toLocaleDateString()}
-                    </p>
-                </div>
-            </div>
-        `).join('');
-    });
+    const appsWithOpps = await Promise.all(
+        applications.map(async (app) => {
+            const opportunity = await dataService.getOpportunityById(app.opportunityId);
+            return { ...app, opportunity };
+        })
+    );
+    
+    // Load template
+    const template = await templateLoader.load('application-card');
+    
+    // Render each application
+    const html = appsWithOpps.map(app => {
+        const data = {
+            ...app,
+            statusBadgeClass: getStatusBadgeClass(app.status),
+            createdDate: new Date(app.createdAt).toLocaleDateString()
+        };
+        return templateRenderer.render(template, data);
+    }).join('');
+    
+    container.innerHTML = html;
 }
 
 function getStatusBadgeClass(status) {

@@ -57,7 +57,28 @@ async function loadOpportunities() {
             })
         );
         
-        container.innerHTML = oppsWithCreators.map(opp => createOpportunityCard(opp)).join('');
+        // Load template
+        const template = await templateLoader.load('admin-opportunity-card');
+        
+        // Render opportunities
+        const html = oppsWithCreators.map(opp => {
+            const data = {
+                ...opp,
+                title: opp.title || 'Untitled',
+                modelType: opp.modelType || 'N/A',
+                status: opp.status || 'draft',
+                statusBadgeClass: getStatusBadgeClass(opp.status),
+                description: opp.description || 'No description',
+                createdDate: new Date(opp.createdAt).toLocaleDateString(),
+                creator: {
+                    email: opp.creator?.email || 'Unknown'
+                },
+                showClose: opp.status === 'published'
+            };
+            return templateRenderer.render(template, data);
+        }).join('');
+        
+        container.innerHTML = html;
         
         // Attach event handlers
         container.querySelectorAll('[data-action]').forEach(btn => {
@@ -74,33 +95,6 @@ async function loadOpportunities() {
     }
 }
 
-function createOpportunityCard(opportunity) {
-    return `
-        <div class="card">
-            <div class="card-header">
-                <h3>${opportunity.title || 'Untitled'}</h3>
-                <div>
-                    <span class="badge badge-primary">${opportunity.modelType || 'N/A'}</span>
-                    <span class="badge badge-${getStatusBadgeClass(opportunity.status)}">${opportunity.status || 'draft'}</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <p>${opportunity.description || 'No description'}</p>
-                <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
-                    Created by: ${opportunity.creator?.email || 'Unknown'} | 
-                    ${new Date(opportunity.createdAt).toLocaleDateString()}
-                </p>
-            </div>
-            <div class="card-footer">
-                <a href="/opportunities/${opportunity.id}" class="btn btn-secondary btn-sm">View</a>
-                ${opportunity.status === 'published' ? `
-                    <button data-action="close" data-opportunity-id="${opportunity.id}" class="btn btn-warning btn-sm">Close</button>
-                ` : ''}
-                <button data-action="delete" data-opportunity-id="${opportunity.id}" class="btn btn-danger btn-sm">Delete</button>
-            </div>
-        </div>
-    `;
-}
 
 function getStatusBadgeClass(status) {
     const statusMap = {

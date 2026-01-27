@@ -73,7 +73,8 @@ class AuthGuard {
      */
     protect(handler, requiredRoles = null) {
         return async (params) => {
-            const route = window.location.pathname;
+            // Get current route from router (handles both hash and path-based routing)
+            const route = this.router.getCurrentPath();
             const guardResult = await this.canActivate(route);
             
             if (!guardResult.allowed) {

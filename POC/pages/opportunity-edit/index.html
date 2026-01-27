@@ -1,0 +1,206 @@
+<div class="opportunity-edit-page">
+    <div class="page-header">
+        <h1>Edit Opportunity</h1>
+        <p class="page-subtitle">Update your collaboration opportunity</p>
+    </div>
+    
+    <div id="edit-loading" class="loading-state">
+        <p>Loading opportunity...</p>
+    </div>
+    
+    <form id="opportunity-edit-form" class="opportunity-form" style="display: none;">
+        <!-- Hidden ID field -->
+        <input type="hidden" id="opportunity-id" name="id">
+        
+        <!-- Model Info (Read-only) -->
+        <div class="form-section">
+            <h2>Collaboration Model</h2>
+            <div class="form-group">
+                <label class="form-label">Model Type</label>
+                <input type="text" id="model-type-display" class="form-input" readonly>
+                <input type="hidden" id="model-type" name="modelType">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Sub-Model Type</label>
+                <input type="text" id="submodel-type-display" class="form-input" readonly>
+                <input type="hidden" id="submodel-type" name="subModelType">
+            </div>
+            <p class="text-muted" style="font-size: var(--font-size-sm);">
+                Model type cannot be changed after creation.
+            </p>
+        </div>
+        
+        <!-- Basic Information -->
+        <div class="form-section">
+            <h2>Basic Information</h2>
+            <div class="form-group">
+                <label for="title" class="form-label">Title <span style="color: var(--danger-color);">*</span></label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    class="form-input" 
+                    required 
+                    maxlength="150"
+                    placeholder="Enter opportunity title"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    class="form-textarea" 
+                    maxlength="2000"
+                    placeholder="Brief description of the opportunity"
+                ></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="status" class="form-label">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                    <option value="closed">Closed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Dynamic Fields -->
+        <div class="form-section" id="dynamic-fields-section">
+            <h2>Model-Specific Details</h2>
+            <div id="dynamic-fields">
+                <p class="text-muted">Loading model fields...</p>
+            </div>
+        </div>
+        
+        <!-- Error/Success Messages -->
+        <div id="form-error" class="alert alert-error" style="display: none;"></div>
+        <div id="form-success" class="alert alert-success" style="display: none;"></div>
+        
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+        </div>
+    </form>
+    
+    <div id="edit-error" class="error-state" style="display: none;">
+        <p>Failed to load opportunity. It may have been deleted or you don't have permission to edit it.</p>
+        <a href="#" data-route="/opportunities" class="btn btn-primary">Back to Opportunities</a>
+    </div>
+</div>
+
+<style>
+.opportunity-edit-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-header h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+}
+
+.opportunity-form {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+}
+
+.form-section {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.error-state {
+    background: var(--danger-bg);
+    color: var(--danger-color);
+}
+
+input[readonly] {
+    background: var(--bg-secondary);
+    cursor: not-allowed;
+}
+
+.currency-range,
+.date-range {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.currency-range input,
+.date-range input {
+    flex: 1;
+}
+
+.array-objects-container {
+    margin-bottom: var(--spacing-md);
+}
+
+.array-object-item {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    align-items: center;
+}
+
+.array-object-item input {
+    flex: 1;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: auto;
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+</style>

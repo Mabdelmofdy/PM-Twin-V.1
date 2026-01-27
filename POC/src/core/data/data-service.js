@@ -1,11 +1,134 @@
 /**
  * Data Service
  * High-level data access layer for all entities
+ * Uses browser localStorage for all CRUD operations
  */
 
 class DataService {
     constructor() {
         this.storage = window.storageService || storageService;
+        this.initialized = false;
+        this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
+        this.CURRENT_SEED_VERSION = '1.0.1'; // Increment this to force re-seed
+    }
+    
+    /**
+     * Get the data path using centralized BASE_PATH
+     */
+    get jsonDataPath() {
+        return (window.CONFIG?.BASE_PATH || '') + 'data/';
+    }
+    
+    /**
+     * Initialize data from JSON files on first launch or when seed version changes
+     */
+    async initializeFromJSON() {
+        if (this.initialized) return;
+        
+        try {
+            // Check if we need to seed data
+            const storedVersion = this.storage.get(this.SEED_DATA_VERSION_KEY);
+            const needsSeed = !storedVersion || storedVersion !== this.CURRENT_SEED_VERSION;
+            
+            if (!needsSeed) {
+                console.log('Data already initialized, skipping seed');
+                this.initialized = true;
+                return;
+            }
+            
+            console.log('Initializing data from JSON seed files...');
+            
+            // Clear existing data if re-seeding
+            if (storedVersion && storedVersion !== this.CURRENT_SEED_VERSION) {
+                console.log('Seed version changed, clearing old data...');
+                this.clearAllData();
+            }
+            
+            // Load from JSON files
+            const domains = ['users', 'opportunities', 'applications', 'matches', 'notifications', 'audit', 'sessions'];
+            
+            for (const domain of domains) {
+                try {
+                    const response = await fetch(`${this.jsonDataPath}${domain}.json`);
+                    if (response.ok) {
+                        const jsonData = await response.json();
+                        if (jsonData.data && Array.isArray(jsonData.data)) {
+                            const storageKey = this.getStorageKeyForDomain(domain);
+                            if (storageKey) {
+                                this.storage.set(storageKey, jsonData.data);
+                                console.log(`Loaded ${jsonData.data.length} ${domain} records`);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.warn(`Failed to load ${domain}.json:`, error);
+                    // Initialize with empty array if JSON fails
+                    const storageKey = this.getStorageKeyForDomain(domain);
+                    if (storageKey && !this.storage.get(storageKey)) {
+                        this.storage.set(storageKey, []);
+                    }
+                }
+            }
+            
+            // Store seed version
+            this.storage.set(this.SEED_DATA_VERSION_KEY, this.CURRENT_SEED_VERSION);
+            
+            this.initialized = true;
+            console.log('Data initialization complete');
+        } catch (error) {
+            console.error('Error initializing from JSON:', error);
+        }
+    }
+    
+    /**
+     * Clear all stored data (useful for reset)
+     */
+    clearAllData() {
+        Object.values(CONFIG.STORAGE_KEYS).forEach(key => {
+            this.storage.remove(key);
+        });
+    }
+    
+    /**
+     * Force re-seed from JSON files
+     */
+    async reseedFromJSON() {
+        this.storage.remove(this.SEED_DATA_VERSION_KEY);
+        this.initialized = false;
+        await this.initializeFromJSON();
+    }
+    
+    /**
+     * Get storage key for a domain
+     */
+    getStorageKeyForDomain(domain) {
+        const keyMap = {
+            'users': CONFIG.STORAGE_KEYS.USERS,
+            'opportunities': CONFIG.STORAGE_KEYS.OPPORTUNITIES,
+            'applications': CONFIG.STORAGE_KEYS.APPLICATIONS,
+            'matches': CONFIG.STORAGE_KEYS.MATCHES,
+            'notifications': CONFIG.STORAGE_KEYS.NOTIFICATIONS,
+            'audit': CONFIG.STORAGE_KEYS.AUDIT,
+            'sessions': CONFIG.STORAGE_KEYS.SESSIONS
+        };
+        return keyMap[domain];
+    }
+    
+    /**
+     * Load domain data from JSON file (for seeding/backup)
+     */
+    async loadDomainDataFromJSON(domain) {
+        try {
+            const response = await fetch(`${this.jsonDataPath}${domain}.json`);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${domain}.json`);
+            }
+            const jsonData = await response.json();
+            return jsonData.data || [];
+        } catch (error) {
+            console.error(`Error loading ${domain} from JSON:`, error);
+            return [];
+        }
     }
     
     // User Operations

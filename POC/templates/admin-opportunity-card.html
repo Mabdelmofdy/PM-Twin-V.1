@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-header">
+        <h3>{{title}}</h3>
+        <div>
+            <span class="badge badge-primary">{{modelType}}</span>
+            <span class="badge badge-{{statusBadgeClass}}">{{status}}</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <p>{{description}}</p>
+        <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
+            Created by: {{creator.email}} | 
+            {{createdDate}}
+        </p>
+    </div>
+    <div class="card-footer">
+        <a href="#" data-route="/opportunities/{{id}}" class="btn btn-secondary btn-sm">View</a>
+        {{#if showClose}}
+            <button data-action="close" data-opportunity-id="{{id}}" class="btn btn-warning btn-sm">Close</button>
+        {{/if}}
+        <button data-action="delete" data-opportunity-id="{{id}}" class="btn btn-danger btn-sm">Delete</button>
+    </div>
+</div>

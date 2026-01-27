@@ -1,0 +1,227 @@
+{
+  "domain": "users",
+  "version": "1.0",
+  "data": [
+    {
+      "id": "user-admin-001",
+      "email": "admin@pmtwin.com",
+      "passwordHash": "YWRtaW4xMjM=",
+      "role": "admin",
+      "status": "active",
+      "profile": {
+        "name": "Platform Administrator",
+        "type": "admin",
+        "phone": "+966 50 000 0001"
+      },
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "user-company-001",
+      "email": "info@alkhorayef.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "company_owner",
+      "status": "active",
+      "profile": {
+        "name": "Al Khorayef Industries",
+        "type": "company",
+        "companyType": "Large Enterprise",
+        "registrationNumber": "1010123456",
+        "phone": "+966 11 456 7890",
+        "website": "https://alkhorayef.com",
+        "address": "Riyadh, Saudi Arabia",
+        "description": "Leading industrial company specializing in construction equipment and agricultural machinery",
+        "sectors": ["Construction", "Industrial", "Agriculture"],
+        "employeeCount": "1000+",
+        "yearEstablished": 1957,
+        "certifications": ["ISO 9001", "ISO 14001", "OHSAS 18001"]
+      },
+      "createdAt": "2025-01-15T08:00:00.000Z",
+      "updatedAt": "2025-01-15T08:00:00.000Z"
+    },
+    {
+      "id": "user-company-002",
+      "email": "contact@saudibinladin.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "company_owner",
+      "status": "active",
+      "profile": {
+        "name": "Saudi Binladin Group",
+        "type": "company",
+        "companyType": "Large Enterprise",
+        "registrationNumber": "1010234567",
+        "phone": "+966 12 678 9012",
+        "website": "https://sbg.com.sa",
+        "address": "Jeddah, Saudi Arabia",
+        "description": "One of the largest construction and civil engineering companies in the Middle East",
+        "sectors": ["Construction", "Infrastructure", "Real Estate"],
+        "employeeCount": "5000+",
+        "yearEstablished": 1931,
+        "certifications": ["ISO 9001", "ISO 14001", "ISO 45001"]
+      },
+      "createdAt": "2025-01-16T09:00:00.000Z",
+      "updatedAt": "2025-01-16T09:00:00.000Z"
+    },
+    {
+      "id": "user-company-003",
+      "email": "info@almabani.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "company_owner",
+      "status": "active",
+      "profile": {
+        "name": "Al Mabani General Contractors",
+        "type": "company",
+        "companyType": "Medium Enterprise",
+        "registrationNumber": "1010345678",
+        "phone": "+966 11 234 5678",
+        "website": "https://almabani.com",
+        "address": "Riyadh, Saudi Arabia",
+        "description": "General contracting company specializing in commercial and residential buildings",
+        "sectors": ["Construction", "Building", "Commercial"],
+        "employeeCount": "500-1000",
+        "yearEstablished": 1985,
+        "certifications": ["ISO 9001", "SASO"]
+      },
+      "createdAt": "2025-01-17T10:00:00.000Z",
+      "updatedAt": "2025-01-17T10:00:00.000Z"
+    },
+    {
+      "id": "user-company-004",
+      "email": "projects@nesma.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "company_owner",
+      "status": "active",
+      "profile": {
+        "name": "Nesma & Partners",
+        "type": "company",
+        "companyType": "Large Enterprise",
+        "registrationNumber": "1010456789",
+        "phone": "+966 12 345 6789",
+        "website": "https://nesma.com",
+        "address": "Jeddah, Saudi Arabia",
+        "description": "Diversified construction and engineering company with operations across GCC",
+        "sectors": ["Construction", "Engineering", "Infrastructure"],
+        "employeeCount": "2000+",
+        "yearEstablished": 1979,
+        "certifications": ["ISO 9001", "ISO 14001", "LEED Certified"]
+      },
+      "createdAt": "2025-01-18T11:00:00.000Z",
+      "updatedAt": "2025-01-18T11:00:00.000Z"
+    },
+    {
+      "id": "user-pro-001",
+      "email": "ahmed.hassan@email.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "profile": {
+        "name": "Ahmed Hassan",
+        "type": "professional",
+        "title": "Senior Civil Engineer",
+        "phone": "+966 55 123 4567",
+        "location": "Riyadh, Saudi Arabia",
+        "bio": "15+ years experience in civil engineering with expertise in infrastructure projects",
+        "skills": ["Project Management", "Structural Design", "AutoCAD", "BIM", "Cost Estimation"],
+        "experience": 15,
+        "education": "MSc Civil Engineering - KFUPM",
+        "certifications": ["PMP", "PE"],
+        "availability": "Available",
+        "preferredWorkMode": "Hybrid"
+      },
+      "createdAt": "2025-01-20T08:00:00.000Z",
+      "updatedAt": "2025-01-20T08:00:00.000Z"
+    },
+    {
+      "id": "user-pro-002",
+      "email": "fatima.almutairi@email.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "profile": {
+        "name": "Fatima Al-Mutairi",
+        "type": "professional",
+        "title": "Architect",
+        "phone": "+966 55 234 5678",
+        "location": "Jeddah, Saudi Arabia",
+        "bio": "Award-winning architect specializing in sustainable design and smart buildings",
+        "skills": ["Architectural Design", "Revit", "SketchUp", "Sustainable Design", "Interior Design"],
+        "experience": 10,
+        "education": "MArch - King Saud University",
+        "certifications": ["LEED AP", "Saudi Council of Engineers"],
+        "availability": "Available",
+        "preferredWorkMode": "Remote"
+      },
+      "createdAt": "2025-01-21T09:00:00.000Z",
+      "updatedAt": "2025-01-21T09:00:00.000Z"
+    },
+    {
+      "id": "user-pro-003",
+      "email": "mohammed.alqahtani@email.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "profile": {
+        "name": "Mohammed Al-Qahtani",
+        "type": "professional",
+        "title": "Project Manager",
+        "phone": "+966 55 345 6789",
+        "location": "Dammam, Saudi Arabia",
+        "bio": "Experienced project manager with track record of delivering mega projects on time and budget",
+        "skills": ["Project Planning", "Risk Management", "Stakeholder Management", "Primavera P6", "MS Project"],
+        "experience": 12,
+        "education": "MBA - Effat University",
+        "certifications": ["PMP", "PMI-RMP", "PRINCE2"],
+        "availability": "Available",
+        "preferredWorkMode": "On-Site"
+      },
+      "createdAt": "2025-01-22T10:00:00.000Z",
+      "updatedAt": "2025-01-22T10:00:00.000Z"
+    },
+    {
+      "id": "user-pro-004",
+      "email": "sara.alzahrani@email.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "consultant",
+      "status": "active",
+      "profile": {
+        "name": "Sara Al-Zahrani",
+        "type": "professional",
+        "title": "Sustainability Consultant",
+        "phone": "+966 55 456 7890",
+        "location": "Riyadh, Saudi Arabia",
+        "bio": "Expert in green building certification and environmental impact assessment",
+        "skills": ["LEED Certification", "Environmental Assessment", "Energy Modeling", "Carbon Footprint Analysis"],
+        "experience": 8,
+        "education": "MSc Environmental Engineering - KAU",
+        "certifications": ["LEED AP BD+C", "WELL AP", "Envision SP"],
+        "availability": "Limited",
+        "preferredWorkMode": "Hybrid"
+      },
+      "createdAt": "2025-01-23T11:00:00.000Z",
+      "updatedAt": "2025-01-23T11:00:00.000Z"
+    },
+    {
+      "id": "user-pro-005",
+      "email": "khalid.alharbi@email.com",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "profile": {
+        "name": "Khalid Al-Harbi",
+        "type": "professional",
+        "title": "Quantity Surveyor",
+        "phone": "+966 55 567 8901",
+        "location": "Riyadh, Saudi Arabia",
+        "bio": "Chartered quantity surveyor with expertise in cost management and contract administration",
+        "skills": ["Cost Estimation", "Bill of Quantities", "Contract Administration", "Value Engineering", "CostX"],
+        "experience": 11,
+        "education": "BSc Quantity Surveying - Heriot-Watt University",
+        "certifications": ["RICS", "MCIOB"],
+        "availability": "Available",
+        "preferredWorkMode": "Hybrid"
+      },
+      "createdAt": "2025-01-24T08:00:00.000Z",
+      "updatedAt": "2025-01-24T08:00:00.000Z"
+    }
+  ]
+}

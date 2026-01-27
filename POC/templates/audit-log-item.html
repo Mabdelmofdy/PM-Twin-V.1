@@ -1,0 +1,13 @@
+<div class="audit-log-item">
+    <div class="audit-log-header">
+        <span class="audit-log-action">{{actionFormatted}}</span>
+        <span class="audit-log-time">{{timestampFormatted}}</span>
+    </div>
+    <div class="audit-log-details">
+        <p><strong>User:</strong> {{user.email}} ({{user.role}})</p>
+        <p><strong>Entity:</strong> {{entityType}} {{#if entityId}}({{entityId}}){{/if}}</p>
+        {{#if hasDetails}}
+            <p><strong>Details:</strong> {{detailsJson}}</p>
+        {{/if}}
+    </div>
+</div>

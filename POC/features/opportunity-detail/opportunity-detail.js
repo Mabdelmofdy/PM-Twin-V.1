@@ -34,7 +34,7 @@ async function loadOpportunity(id) {
         const canApply = user && !isOwner && opportunity.status === 'published';
         
         // Render opportunity
-        renderOpportunity(opportunity, creator, isOwner, canApply);
+        await renderOpportunity(opportunity, creator, isOwner, canApply);
         
         // Load applications if owner
         if (isOwner) {
@@ -56,7 +56,7 @@ async function loadOpportunity(id) {
     }
 }
 
-function renderOpportunity(opportunity, creator, isOwner, canApply) {
+async function renderOpportunity(opportunity, creator, isOwner, canApply) {
     // Title and meta
     document.getElementById('opportunity-title').textContent = opportunity.title || 'Untitled Opportunity';
     document.getElementById('opportunity-model').textContent = opportunity.modelType || 'N/A';
@@ -79,7 +79,7 @@ function renderOpportunity(opportunity, creator, isOwner, canApply) {
     const actionsDiv = document.getElementById('opportunity-actions');
     if (isOwner) {
         actionsDiv.innerHTML = `
-            <a href="/opportunities/${opportunity.id}/edit" class="btn btn-secondary">Edit</a>
+            <a href="#" data-route="/opportunities/${opportunity.id}/edit" class="btn btn-secondary">Edit</a>
             <button onclick="deleteOpportunity('${opportunity.id}')" class="btn btn-danger">Delete</button>
         `;
     } else {
@@ -98,7 +98,7 @@ function renderOpportunity(opportunity, creator, isOwner, canApply) {
     }
 }
 
-function renderModelDetails(opportunity) {
+async function renderModelDetails(opportunity) {
     const container = document.getElementById('model-details');
     if (!opportunity.attributes) {
         container.innerHTML = '<p class="text-muted">No additional details available.</p>';
@@ -106,35 +106,44 @@ function renderModelDetails(opportunity) {
     }
     
     const attributes = opportunity.attributes;
-    const detailsHTML = Object.keys(attributes)
-        .filter(key => !['title', 'description', 'status', 'modelType', 'subModelType'].includes(key))
-        .map(key => {
-            const value = attributes[key];
-            let displayValue = value;
-            
-            if (Array.isArray(value)) {
-                displayValue = value.join(', ');
-            } else if (typeof value === 'object' && value !== null) {
-                if (value.min !== undefined && value.max !== undefined) {
-                    displayValue = `${value.min} - ${value.max}`;
-                } else if (value.start && value.end) {
-                    displayValue = `${value.start} to ${value.end}`;
-                } else {
-                    displayValue = JSON.stringify(value);
-                }
-            } else if (typeof value === 'boolean') {
-                displayValue = value ? 'Yes' : 'No';
-            }
-            
-            return `
-                <div class="detail-item">
-                    <div class="detail-label">${formatLabel(key)}</div>
-                    <div class="detail-value">${displayValue || 'N/A'}</div>
-                </div>
-            `;
-        }).join('');
+    const detailKeys = Object.keys(attributes)
+        .filter(key => !['title', 'description', 'status', 'modelType', 'subModelType'].includes(key));
     
-    container.innerHTML = detailsHTML || '<p class="text-muted">No additional details available.</p>';
+    if (detailKeys.length === 0) {
+        container.innerHTML = '<p class="text-muted">No additional details available.</p>';
+        return;
+    }
+    
+    // Load template
+    const template = await templateLoader.load('model-detail-item');
+    
+    // Render each detail item
+    const detailsHTML = detailKeys.map(key => {
+        const value = attributes[key];
+        let displayValue = value;
+        
+        if (Array.isArray(value)) {
+            displayValue = value.join(', ');
+        } else if (typeof value === 'object' && value !== null) {
+            if (value.min !== undefined && value.max !== undefined) {
+                displayValue = `${value.min} - ${value.max}`;
+            } else if (value.start && value.end) {
+                displayValue = `${value.start} to ${value.end}`;
+            } else {
+                displayValue = JSON.stringify(value);
+            }
+        } else if (typeof value === 'boolean') {
+            displayValue = value ? 'Yes' : 'No';
+        }
+        
+        const data = {
+            label: formatLabel(key),
+            value: displayValue || 'N/A'
+        };
+        return templateRenderer.render(template, data);
+    }).join('');
+    
+    container.innerHTML = detailsHTML;
 }
 
 function formatLabel(key) {
@@ -181,24 +190,24 @@ async function loadApplications(opportunityId) {
             })
         );
         
-        applicationsList.innerHTML = applicationsWithUsers.map(app => `
-            <div class="card" style="margin-bottom: var(--spacing-md);">
-                <div class="card-header">
-                    <h3>${app.applicant?.email || 'Unknown Applicant'}</h3>
-                    <span class="badge badge-${getApplicationStatusBadgeClass(app.status)}">${app.status}</span>
-                </div>
-                <div class="card-body">
-                    <p>${app.proposal || 'No proposal provided'}</p>
-                    <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
-                        Applied: ${new Date(app.createdAt).toLocaleDateString()}
-                    </p>
-                </div>
-                <div class="card-footer">
-                    <button onclick="updateApplicationStatus('${app.id}', 'accepted')" class="btn btn-success btn-sm">Accept</button>
-                    <button onclick="updateApplicationStatus('${app.id}', 'rejected')" class="btn btn-danger btn-sm">Reject</button>
-                </div>
-            </div>
-        `).join('');
+        // Load template
+        const template = await templateLoader.load('application-detail-card');
+        
+        // Render applications
+        const html = applicationsWithUsers.map(app => {
+            const data = {
+                ...app,
+                applicant: {
+                    email: app.applicant?.email || 'Unknown Applicant'
+                },
+                statusBadgeClass: getApplicationStatusBadgeClass(app.status),
+                proposal: app.proposal || 'No proposal provided',
+                createdDate: new Date(app.createdAt).toLocaleDateString()
+            };
+            return templateRenderer.render(template, data);
+        }).join('');
+        
+        applicationsList.innerHTML = html;
         
     } catch (error) {
         console.error('Error loading applications:', error);

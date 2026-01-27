@@ -46,7 +46,30 @@ async function loadUsers() {
             return;
         }
         
-        container.innerHTML = users.map(user => createUserCard(user)).join('');
+        // Load template
+        const template = await templateLoader.load('user-card');
+        
+        // Render users
+        const html = users.map(user => {
+            const statusBadgeClass = {
+                'pending': 'warning',
+                'active': 'success',
+                'suspended': 'danger',
+                'rejected': 'danger'
+            }[user.status] || 'secondary';
+            
+            const data = {
+                ...user,
+                statusBadgeClass,
+                createdDate: new Date(user.createdAt).toLocaleDateString(),
+                showApproveReject: user.status === 'pending',
+                showSuspend: user.status === 'active',
+                showActivate: user.status === 'suspended'
+            };
+            return templateRenderer.render(template, data);
+        }).join('');
+        
+        container.innerHTML = html;
         
         // Attach event handlers
         container.querySelectorAll('[data-action]').forEach(btn => {
@@ -63,43 +86,6 @@ async function loadUsers() {
     }
 }
 
-function createUserCard(user) {
-    const statusBadgeClass = {
-        'pending': 'warning',
-        'active': 'success',
-        'suspended': 'danger',
-        'rejected': 'danger'
-    }[user.status] || 'secondary';
-    
-    return `
-        <div class="user-card">
-            <div class="user-card-header">
-                <div class="user-info">
-                    <div class="user-email">${user.email}</div>
-                    <div class="user-meta">
-                        <span><strong>Role:</strong> ${user.role}</span>
-                        <span><strong>Status:</strong> <span class="badge badge-${statusBadgeClass}">${user.status}</span></span>
-                        <span><strong>Joined:</strong> ${new Date(user.createdAt).toLocaleDateString()}</span>
-                    </div>
-                    ${user.profile?.name ? `<div style="margin-top: var(--spacing-xs); color: var(--text-secondary);">${user.profile.name}</div>` : ''}
-                </div>
-                <div class="user-actions">
-                    ${user.status === 'pending' ? `
-                        <button data-action="approve" data-user-id="${user.id}" class="btn btn-success btn-sm">Approve</button>
-                        <button data-action="reject" data-user-id="${user.id}" class="btn btn-danger btn-sm">Reject</button>
-                    ` : ''}
-                    ${user.status === 'active' ? `
-                        <button data-action="suspend" data-user-id="${user.id}" class="btn btn-warning btn-sm">Suspend</button>
-                    ` : ''}
-                    ${user.status === 'suspended' ? `
-                        <button data-action="activate" data-user-id="${user.id}" class="btn btn-success btn-sm">Activate</button>
-                    ` : ''}
-                    <button data-action="view" data-user-id="${user.id}" class="btn btn-secondary btn-sm">View Details</button>
-                </div>
-            </div>
-        </div>
-    `;
-}
 
 function setupFilters() {
     const applyBtn = document.getElementById('apply-filters');

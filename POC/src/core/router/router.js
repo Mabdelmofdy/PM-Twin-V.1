@@ -8,6 +8,30 @@ class Router {
         this.routes = [];
         this.currentRoute = null;
         this.params = {};
+        this.useHash = true; // Use hash-based routing for compatibility with static servers
+    }
+    
+    /**
+     * Normalize path - extract from hash or pathname
+     */
+    normalizePath(path) {
+        // If path contains a hash, extract it
+        if (path.includes('#')) {
+            path = path.split('#')[1] || '';
+        }
+        // Remove leading hash if present
+        if (path.startsWith('#')) {
+            path = path.substring(1);
+        }
+        // Ensure path starts with /
+        if (!path.startsWith('/')) {
+            path = '/' + path;
+        }
+        // Remove trailing slash except for root
+        if (path.length > 1 && path.endsWith('/')) {
+            path = path.substring(0, path.length - 1);
+        }
+        return path || '/';
     }
     
     /**
@@ -21,24 +45,29 @@ class Router {
      * Navigate to a route
      */
     async navigate(path) {
-        // Update URL
-        window.history.pushState({ path }, '', path);
+        // Normalize the path
+        const normalizedPath = this.normalizePath(path);
         
-        // Find matching route
-        const route = this.findRoute(path);
-        if (!route) {
-            console.error(`Route not found: ${path}`);
-            return false;
+        // Update URL using hash
+        if (this.useHash) {
+            const newHash = normalizedPath === '/' ? '' : normalizedPath;
+            const currentHash = window.location.hash.substring(1); // Remove leading #
+            
+            // Only update hash if it's different
+            if (currentHash !== newHash) {
+                // Setting hash will trigger hashchange event, which will call handleRoute
+                window.location.hash = newHash;
+                // handleRoute will be called by hashchange event
+                return true;
+            } else {
+                // Hash is already set to this path, just handle the route
+                return this.handleRoute(normalizedPath);
+            }
+        } else {
+            window.history.pushState({ path: normalizedPath }, '', normalizedPath);
+            // For non-hash routing, handle route directly
+            return this.handleRoute(normalizedPath);
         }
-        
-        this.currentRoute = route;
-        
-        // Execute route handler
-        if (route.handler) {
-            await route.handler(route.params);
-        }
-        
-        return true;
     }
     
     /**
@@ -89,22 +118,71 @@ class Router {
      * Get current path
      */
     getCurrentPath() {
-        return window.location.pathname;
+        if (this.useHash) {
+            // For hash-based routing, only use the hash (empty hash = root)
+            const hash = window.location.hash;
+            return this.normalizePath(hash || '/');
+        }
+        return this.normalizePath(window.location.pathname);
     }
     
     /**
      * Initialize router
      */
     init() {
-        // Handle browser back/forward
-        window.addEventListener('popstate', (e) => {
-            const path = e.state?.path || window.location.pathname;
-            this.navigate(path);
-        });
+        if (this.useHash) {
+            // Handle hash changes (browser back/forward and direct navigation)
+            window.addEventListener('hashchange', () => {
+                const path = this.getCurrentPath();
+                this.handleRoute(path);
+            });
+            
+            // Handle initial load
+            const initialPath = this.getCurrentPath();
+            // If no hash is set, set it to empty (which represents '/')
+            if (!window.location.hash || window.location.hash === '#') {
+                window.location.hash = '';
+            }
+            // Handle the route (this will work even if hash is empty)
+            this.handleRoute(initialPath);
+        } else {
+            // Handle browser back/forward
+            window.addEventListener('popstate', (e) => {
+                const path = e.state?.path || this.getCurrentPath();
+                this.handleRoute(path);
+            });
+            
+            // Handle initial load
+            const initialPath = this.getCurrentPath();
+            this.handleRoute(initialPath);
+        }
+    }
+    
+    /**
+     * Handle route without changing URL (for hash-based routing)
+     */
+    async handleRoute(path) {
+        const normalizedPath = this.normalizePath(path);
         
-        // Handle initial load
-        const initialPath = this.getCurrentPath();
-        this.navigate(initialPath);
+        // Find matching route
+        const route = this.findRoute(normalizedPath);
+        if (!route) {
+            console.error(`Route not found: ${normalizedPath}`);
+            // Fallback to home route
+            if (normalizedPath !== '/') {
+                return this.navigate('/');
+            }
+            return false;
+        }
+        
+        this.currentRoute = route;
+        
+        // Execute route handler
+        if (route.handler) {
+            await route.handler(route.params);
+        }
+        
+        return true;
     }
 }
 

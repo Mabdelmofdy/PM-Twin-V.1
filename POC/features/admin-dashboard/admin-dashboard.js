@@ -98,7 +98,7 @@ async function loadPendingApprovals() {
                 <div class="card-footer">
                     <button onclick="approveUser('${user.id}')" class="btn btn-success btn-sm">Approve</button>
                     <button onclick="rejectUser('${user.id}')" class="btn btn-danger btn-sm">Reject</button>
-                    <a href="/admin/users/${user.id}" class="btn btn-secondary btn-sm">View Details</a>
+                    <a href="#" data-route="/admin/users/${user.id}" class="btn btn-secondary btn-sm">View Details</a>
                 </div>
             </div>
         `).join('');

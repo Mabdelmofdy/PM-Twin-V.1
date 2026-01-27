@@ -67,10 +67,10 @@ async function loadOpportunitiesPipeline() {
             return hasApplications;
         });
         
-        renderKanbanColumn('kanban-draft', draft);
-        renderKanbanColumn('kanban-published', published.filter(o => !inProgress.includes(o)));
-        renderKanbanColumn('kanban-in-progress', inProgress);
-        renderKanbanColumn('kanban-closed', closed);
+        await renderKanbanColumn('kanban-draft', draft);
+        await renderKanbanColumn('kanban-published', published.filter(o => !inProgress.includes(o)));
+        await renderKanbanColumn('kanban-in-progress', inProgress);
+        await renderKanbanColumn('kanban-closed', closed);
         
     } catch (error) {
         console.error('Error loading opportunities pipeline:', error);
@@ -100,11 +100,11 @@ async function loadApplicationsPipeline() {
             })
         );
         
-        renderApplicationColumn('kanban-app-pending', appsWithOpps.filter(a => a.status === 'pending'));
-        renderApplicationColumn('kanban-app-reviewing', appsWithOpps.filter(a => a.status === 'reviewing'));
-        renderApplicationColumn('kanban-app-shortlisted', appsWithOpps.filter(a => a.status === 'shortlisted'));
-        renderApplicationColumn('kanban-app-accepted', appsWithOpps.filter(a => a.status === 'accepted'));
-        renderApplicationColumn('kanban-app-rejected', appsWithOpps.filter(a => a.status === 'rejected'));
+        await renderApplicationColumn('kanban-app-pending', appsWithOpps.filter(a => a.status === 'pending'));
+        await renderApplicationColumn('kanban-app-reviewing', appsWithOpps.filter(a => a.status === 'reviewing'));
+        await renderApplicationColumn('kanban-app-shortlisted', appsWithOpps.filter(a => a.status === 'shortlisted'));
+        await renderApplicationColumn('kanban-app-accepted', appsWithOpps.filter(a => a.status === 'accepted'));
+        await renderApplicationColumn('kanban-app-rejected', appsWithOpps.filter(a => a.status === 'rejected'));
         
     } catch (error) {
         console.error('Error loading applications pipeline:', error);
@@ -128,24 +128,23 @@ async function loadMatchesPipeline() {
             return;
         }
         
-        container.innerHTML = matches.map(match => `
-            <div class="card">
-                <div class="card-header">
-                    <h3>${match.opportunity.title}</h3>
-                    <span class="badge badge-success">${Math.round(match.matchScore * 100)}% Match</span>
-                </div>
-                <div class="card-body">
-                    <p>${match.opportunity.description || 'No description'}</p>
-                    <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
-                        Model: ${match.opportunity.modelType} | 
-                        Status: ${match.opportunity.status}
-                    </p>
-                </div>
-                <div class="card-footer">
-                    <a href="/opportunities/${match.opportunity.id}" class="btn btn-primary btn-sm">View & Apply</a>
-                </div>
-            </div>
-        `).join('');
+        // Load template
+        const template = await templateLoader.load('match-card');
+        
+        // Render matches
+        const html = matches.map(match => {
+            const data = {
+                ...match,
+                opportunity: {
+                    ...match.opportunity,
+                    description: match.opportunity.description || 'No description'
+                },
+                matchScorePercent: Math.round(match.matchScore * 100)
+            };
+            return templateRenderer.render(template, data);
+        }).join('');
+        
+        container.innerHTML = html;
         
     } catch (error) {
         console.error('Error loading matches:', error);
@@ -153,7 +152,7 @@ async function loadMatchesPipeline() {
     }
 }
 
-function renderKanbanColumn(containerId, items) {
+async function renderKanbanColumn(containerId, items) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
@@ -162,14 +161,21 @@ function renderKanbanColumn(containerId, items) {
         return;
     }
     
-    container.innerHTML = items.map(item => `
-        <div class="kanban-item" data-id="${item.id}">
-            <div class="kanban-item-title">${item.title || 'Untitled'}</div>
-            <div class="kanban-item-meta">
-                ${item.modelType || 'N/A'} | ${new Date(item.createdAt).toLocaleDateString()}
-            </div>
-        </div>
-    `).join('');
+    // Load template
+    const template = await templateLoader.load('kanban-item');
+    
+    // Render items
+    const html = items.map(item => {
+        const data = {
+            ...item,
+            title: item.title || 'Untitled',
+            modelType: item.modelType || 'N/A',
+            createdDate: new Date(item.createdAt).toLocaleDateString()
+        };
+        return templateRenderer.render(template, data);
+    }).join('');
+    
+    container.innerHTML = html;
     
     // Add click handlers
     container.querySelectorAll('.kanban-item').forEach(item => {
@@ -180,7 +186,7 @@ function renderKanbanColumn(containerId, items) {
     });
 }
 
-function renderApplicationColumn(containerId, items) {
+async function renderApplicationColumn(containerId, items) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
@@ -189,14 +195,22 @@ function renderApplicationColumn(containerId, items) {
         return;
     }
     
-    container.innerHTML = items.map(item => `
-        <div class="kanban-item" data-id="${item.id}">
-            <div class="kanban-item-title">${item.opportunity?.title || 'Unknown Opportunity'}</div>
-            <div class="kanban-item-meta">
-                Applied: ${new Date(item.createdAt).toLocaleDateString()}
-            </div>
-        </div>
-    `).join('');
+    // Load template
+    const template = await templateLoader.load('application-kanban-item');
+    
+    // Render items
+    const html = items.map(item => {
+        const data = {
+            ...item,
+            opportunity: {
+                title: item.opportunity?.title || 'Unknown Opportunity'
+            },
+            createdDate: new Date(item.createdAt).toLocaleDateString()
+        };
+        return templateRenderer.render(template, data);
+    }).join('');
+    
+    container.innerHTML = html;
     
     // Add click handlers
     container.querySelectorAll('.kanban-item').forEach(item => {
