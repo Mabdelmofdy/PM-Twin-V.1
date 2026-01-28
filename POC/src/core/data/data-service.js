@@ -9,7 +9,7 @@ class DataService {
         this.storage = window.storageService || storageService;
         this.initialized = false;
         this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
-        this.CURRENT_SEED_VERSION = '1.0.1'; // Increment this to force re-seed
+        this.CURRENT_SEED_VERSION = '1.3.0'; // Increment this to force re-seed (connections + messages)
     }
     
     /**
@@ -45,7 +45,7 @@ class DataService {
             }
             
             // Load from JSON files
-            const domains = ['users', 'opportunities', 'applications', 'matches', 'notifications', 'audit', 'sessions'];
+            const domains = ['users', 'companies', 'opportunities', 'applications', 'matches', 'notifications', 'connections', 'messages', 'audit', 'sessions'];
             
             for (const domain of domains) {
                 try {
@@ -104,10 +104,13 @@ class DataService {
     getStorageKeyForDomain(domain) {
         const keyMap = {
             'users': CONFIG.STORAGE_KEYS.USERS,
+            'companies': CONFIG.STORAGE_KEYS.COMPANIES,
             'opportunities': CONFIG.STORAGE_KEYS.OPPORTUNITIES,
             'applications': CONFIG.STORAGE_KEYS.APPLICATIONS,
             'matches': CONFIG.STORAGE_KEYS.MATCHES,
             'notifications': CONFIG.STORAGE_KEYS.NOTIFICATIONS,
+            'connections': CONFIG.STORAGE_KEYS.CONNECTIONS,
+            'messages': CONFIG.STORAGE_KEYS.MESSAGES,
             'audit': CONFIG.STORAGE_KEYS.AUDIT,
             'sessions': CONFIG.STORAGE_KEYS.SESSIONS
         };
@@ -141,9 +144,24 @@ class DataService {
         return users.find(u => u.id === id) || null;
     }
     
+    // Get user or company by ID (checks both)
+    async getUserOrCompanyById(id) {
+        const user = await this.getUserById(id);
+        if (user) return user;
+        return await this.getCompanyById(id);
+    }
+    
     async getUserByEmail(email) {
         const users = await this.getUsers();
         return users.find(u => u.email === email) || null;
+    }
+    
+    // Get user or company by email (for login - checks both)
+    async getUserOrCompanyByEmail(email) {
+        const user = await this.getUserByEmail(email);
+        if (user) return user;
+        const companies = await this.getCompanies();
+        return companies.find(c => c.email === email) || null;
     }
     
     async createUser(userData) {
@@ -171,6 +189,65 @@ class DataService {
         };
         this.storage.set(CONFIG.STORAGE_KEYS.USERS, users);
         return users[index];
+    }
+    
+    // Company Operations
+    async getCompanies() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.COMPANIES) || [];
+    }
+    
+    async getCompanyById(id) {
+        const companies = await this.getCompanies();
+        return companies.find(c => c.id === id) || null;
+    }
+    
+    async createCompany(companyData) {
+        const companies = await this.getCompanies();
+        const newCompany = {
+            id: this.generateId(),
+            ...companyData,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        companies.push(newCompany);
+        this.storage.set(CONFIG.STORAGE_KEYS.COMPANIES, companies);
+        return newCompany;
+    }
+    
+    async updateCompany(id, updates) {
+        const companies = await this.getCompanies();
+        const index = companies.findIndex(c => c.id === id);
+        if (index === -1) return null;
+        
+        companies[index] = {
+            ...companies[index],
+            ...updates,
+            updatedAt: new Date().toISOString()
+        };
+        this.storage.set(CONFIG.STORAGE_KEYS.COMPANIES, companies);
+        return companies[index];
+    }
+    
+    async deleteCompany(id) {
+        const companies = await this.getCompanies();
+        const filtered = companies.filter(c => c.id !== id);
+        this.storage.set(CONFIG.STORAGE_KEYS.COMPANIES, filtered);
+        return true;
+    }
+    
+    // Combined User/Company Operations (for People module)
+    async getAllPeople() {
+        const users = await this.getUsers();
+        const companies = await this.getCompanies();
+        return [...users, ...companies];
+    }
+    
+    async getPersonById(id) {
+        // Check users first
+        const user = await this.getUserById(id);
+        if (user) return user;
+        // Then check companies
+        return await this.getCompanyById(id);
     }
     
     // Session Operations
@@ -328,6 +405,152 @@ class DataService {
             notifications[index].read = true;
             this.storage.set(CONFIG.STORAGE_KEYS.NOTIFICATIONS, notifications);
         }
+    }
+
+    // Connection Operations (user-to-user connections)
+    async getConnections() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.CONNECTIONS) || [];
+    }
+
+    async getConnectionBetweenUsers(userIdA, userIdB) {
+        const connections = await this.getConnections();
+        return connections.find(c =>
+            (c.fromUserId === userIdA && c.toUserId === userIdB) ||
+            (c.fromUserId === userIdB && c.toUserId === userIdA)
+        ) || null;
+    }
+
+    /** Returns connection status for current user viewing another user: 'none' | 'pending_sent' | 'pending_received' | 'accepted' */
+    async getConnectionStatus(currentUserId, otherUserId) {
+        if (currentUserId === otherUserId) return 'self';
+        const conn = await this.getConnectionBetweenUsers(currentUserId, otherUserId);
+        if (!conn) return 'none';
+        if (conn.status === CONFIG.CONNECTION_STATUS.ACCEPTED) return 'accepted';
+        if (conn.fromUserId === currentUserId) return 'pending_sent';
+        return 'pending_received';
+    }
+
+    async getConnectionsForUser(userId, status = CONFIG.CONNECTION_STATUS.ACCEPTED) {
+        const connections = await this.getConnections();
+        return connections.filter(c =>
+            (c.fromUserId === userId || c.toUserId === userId) && c.status === status
+        );
+    }
+
+    async createConnection(fromUserId, toUserId) {
+        const existing = await this.getConnectionBetweenUsers(fromUserId, toUserId);
+        if (existing) return existing;
+        const connections = await this.getConnections();
+        const newConnection = {
+            id: this.generateId(),
+            fromUserId,
+            toUserId,
+            status: CONFIG.CONNECTION_STATUS.PENDING,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        connections.push(newConnection);
+        this.storage.set(CONFIG.STORAGE_KEYS.CONNECTIONS, connections);
+        return newConnection;
+    }
+
+    async updateConnection(id, updates) {
+        const connections = await this.getConnections();
+        const index = connections.findIndex(c => c.id === id);
+        if (index === -1) return null;
+        connections[index] = {
+            ...connections[index],
+            ...updates,
+            updatedAt: new Date().toISOString()
+        };
+        this.storage.set(CONFIG.STORAGE_KEYS.CONNECTIONS, connections);
+        return connections[index];
+    }
+
+    async acceptConnection(connectionId) {
+        return this.updateConnection(connectionId, { status: CONFIG.CONNECTION_STATUS.ACCEPTED });
+    }
+
+    async rejectConnection(connectionId) {
+        return this.updateConnection(connectionId, { status: CONFIG.CONNECTION_STATUS.REJECTED });
+    }
+
+    // Message Operations (1:1 messages between users)
+    async getMessages() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.MESSAGES) || [];
+    }
+
+    async getMessagesBetween(userIdA, userIdB) {
+        const messages = await this.getMessages();
+        return messages
+            .filter(m =>
+                (m.senderId === userIdA && m.receiverId === userIdB) ||
+                (m.senderId === userIdB && m.receiverId === userIdA)
+            )
+            .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    }
+
+    async createMessage(senderId, receiverId, text) {
+        const messages = await this.getMessages();
+        const newMessage = {
+            id: this.generateId(),
+            senderId,
+            receiverId,
+            text: (text || '').trim(),
+            read: false,
+            createdAt: new Date().toISOString()
+        };
+        messages.push(newMessage);
+        this.storage.set(CONFIG.STORAGE_KEYS.MESSAGES, messages);
+        return newMessage;
+    }
+
+    async markMessagesAsRead(senderId, receiverId) {
+        const messages = await this.getMessages();
+        let changed = false;
+        messages.forEach(m => {
+            if (m.senderId === senderId && m.receiverId === receiverId && !m.read) {
+                m.read = true;
+                changed = true;
+            }
+        });
+        if (changed) this.storage.set(CONFIG.STORAGE_KEYS.MESSAGES, messages);
+    }
+
+    /** Get list of conversation partners for a user (people they have messages with), with last message and unread count */
+    async getConversationsForUser(userId) {
+        const messages = await this.getMessages();
+        const partnerMap = new Map(); // partnerId -> { partnerId, lastMessage, lastAt, unread }
+        messages.forEach(m => {
+            const isReceiver = m.receiverId === userId;
+            const isSender = m.senderId === userId;
+            const partnerId = isReceiver ? m.senderId : m.receiverId;
+            if (!partnerMap.has(partnerId)) {
+                partnerMap.set(partnerId, { partnerId, lastMessage: m.text, lastAt: m.createdAt, unread: 0 });
+            }
+            const entry = partnerMap.get(partnerId);
+            if (new Date(m.createdAt) > new Date(entry.lastAt)) {
+                entry.lastMessage = m.text;
+                entry.lastAt = m.createdAt;
+            }
+            if (isReceiver && !m.read) entry.unread++;
+        });
+        
+        // Also include connected people even if no messages yet
+        const connections = await this.getConnectionsForUser(userId, CONFIG.CONNECTION_STATUS.ACCEPTED);
+        connections.forEach(conn => {
+            const partnerId = conn.fromUserId === userId ? conn.toUserId : conn.fromUserId;
+            if (!partnerMap.has(partnerId)) {
+                partnerMap.set(partnerId, { partnerId, lastMessage: null, lastAt: conn.updatedAt || conn.createdAt, unread: 0 });
+            }
+        });
+        
+        return Array.from(partnerMap.values()).sort((a, b) => {
+            // Sort by last message time, or connection time if no messages
+            const timeA = a.lastMessage ? new Date(a.lastAt) : new Date(0);
+            const timeB = b.lastMessage ? new Date(b.lastAt) : new Date(0);
+            return timeB - timeA;
+        });
     }
     
     // Audit Log Operations

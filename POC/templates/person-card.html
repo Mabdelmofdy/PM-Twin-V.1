@@ -1,0 +1,47 @@
+<div class="person-card" data-id="{{id}}">
+    <div class="person-avatar">
+        {{#if avatarInitials}}
+            <div class="avatar-placeholder">{{avatarInitials}}</div>
+        {{else}}
+            <div class="avatar-placeholder">{{avatarInitials}}</div>
+        {{/if}}
+    </div>
+    <div class="person-info">
+        <div class="person-header">
+            <h3 class="person-name">{{name}}</h3>
+            {{#if isCompany}}
+                <span class="badge badge-primary">Company</span>
+            {{else}}
+                <span class="badge badge-secondary">{{availability}}</span>
+            {{/if}}
+        </div>
+        <p class="person-headline">{{headline}}</p>
+        <p class="person-location">{{location}}</p>
+        <div class="person-meta">
+            {{#if isCompany}}
+                <span class="meta-item">{{employeeCount}} employees</span>
+                <span class="meta-item">Est. {{yearEstablished}}</span>
+            {{else}}
+                <span class="meta-item">{{experience}} years exp.</span>
+                <span class="meta-item">{{connectionCount}} connections</span>
+            {{/if}}
+        </div>
+        {{#if skills}}
+            <div class="person-skills">
+                {{{skillsHtml}}}
+            </div>
+        {{/if}}
+    </div>
+    <div class="person-actions">
+        <a href="#" data-route="/people/{{id}}" class="btn btn-primary btn-sm">View Profile</a>
+        {{#if connectionStatusAccepted}}
+        <a href="#" data-route="/messages/{{id}}" class="btn btn-secondary btn-sm">Message</a>
+        {{else}}
+        {{#if connectionStatusPending}}
+        <button class="btn btn-warning btn-sm" disabled>Pending</button>
+        {{else}}
+        <button class="btn btn-secondary btn-sm btn-connect" data-user-id="{{id}}">Connect</button>
+        {{/if}}
+        {{/if}}
+    </div>
+</div>

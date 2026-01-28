@@ -1,0 +1,241 @@
+<div class="people-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>People</h1>
+            <p class="page-subtitle">Explore professionals and companies in your network</p>
+        </div>
+    </div>
+    
+    <div class="people-layout">
+        <aside class="people-filters">
+            <div class="filter-section">
+                <h3>Search</h3>
+                <input type="text" id="search-people" class="form-input" placeholder="Search by name, skills, or services...">
+            </div>
+            
+            <div class="filter-section">
+                <h3>Profile Type</h3>
+                <div class="filter-options">
+                    <label class="filter-checkbox">
+                        <input type="checkbox" name="type" value="professional" checked>
+                        <span>Professionals</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" name="type" value="company" checked>
+                        <span>Companies</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <h3>Location</h3>
+                <select id="filter-location" class="form-select">
+                    <option value="">All Locations</option>
+                    <option value="Riyadh">Riyadh</option>
+                    <option value="Jeddah">Jeddah</option>
+                    <option value="Dammam">Dammam</option>
+                </select>
+            </div>
+            
+            <div class="filter-section">
+                <h3>Availability</h3>
+                <select id="filter-availability" class="form-select">
+                    <option value="">Any</option>
+                    <option value="Available">Available</option>
+                    <option value="Limited">Limited</option>
+                </select>
+            </div>
+            
+            <div class="filter-section">
+                <h3>Skills</h3>
+                <div id="skills-filter" class="skills-filter-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button id="apply-filters" class="btn btn-primary btn-block">Apply Filters</button>
+                <button id="clear-filters" class="btn btn-secondary btn-block">Clear All</button>
+            </div>
+        </aside>
+        
+        <main class="people-content">
+            <div class="people-header">
+                <div id="results-count" class="results-count">Loading...</div>
+                <div class="sort-options">
+                    <label>Sort by:</label>
+                    <select id="sort-people" class="form-select">
+                        <option value="connections">Most Connections</option>
+                        <option value="name">Name (A-Z)</option>
+                        <option value="experience">Experience</option>
+                        <option value="recent">Recently Joined</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="people-list" class="people-list">
+                <div class="spinner"></div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+.people-page {
+    width: 100%;
+}
+
+.page-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-header h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+}
+
+.people-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-xl);
+}
+
+.people-filters {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    height: fit-content;
+    position: sticky;
+    top: calc(var(--header-height) + var(--spacing-lg));
+}
+
+.filter-section {
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+}
+
+.filter-section h3 {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+}
+
+.filter-checkbox input {
+    width: 16px;
+    height: 16px;
+}
+
+.skills-filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.skill-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.skill-filter-tag:hover {
+    border-color: var(--primary-color);
+}
+
+.skill-filter-tag.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.people-content {
+    min-height: 400px;
+}
+
+.people-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.results-count {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.sort-options label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.sort-options .form-select {
+    width: auto;
+    min-width: 160px;
+}
+
+.people-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+@media (max-width: 900px) {
+    .people-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .people-filters {
+        position: static;
+    }
+}
+</style>

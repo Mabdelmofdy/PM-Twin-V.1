@@ -19,8 +19,13 @@ async function loadUsersForFilter() {
     
     try {
         const users = await dataService.getUsers();
-        userSelect.innerHTML = '<option value="">All Users</option>' +
-            users.map(u => `<option value="${u.id}">${u.email}</option>`).join('');
+        const companies = await dataService.getCompanies();
+        const allPeople = [...users, ...companies];
+        userSelect.innerHTML = '<option value="">All Users & Companies</option>' +
+            allPeople.map(u => {
+                const typeLabel = u.profile?.type === 'company' ? ' (Company)' : '';
+                return `<option value="${u.id}">${u.email}${typeLabel}</option>`;
+            }).join('');
     } catch (error) {
         console.error('Error loading users:', error);
     }
@@ -53,10 +58,10 @@ async function loadAuditLogs() {
             logs = logs.filter(log => log.action === actionFilter);
         }
         
-        // Load user info for each log
+        // Load user/company info for each log
         const logsWithUsers = await Promise.all(
             logs.map(async (log) => {
-                const user = await dataService.getUserById(log.userId);
+                const user = await dataService.getUserOrCompanyById(log.userId);
                 return { ...log, user };
             })
         );

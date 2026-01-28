@@ -1,138 +1,79 @@
-<div class="dashboard-page">
-    <div class="dashboard-header">
-        <h1>Dashboard</h1>
-        <p class="dashboard-subtitle">Welcome back, <span id="user-name"></span></p>
+<div class="w-full">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold mb-2">Dashboard</h1>
+        <p class="text-gray-600 text-lg">Welcome back, <span id="user-name"></span></p>
     </div>
     
-    <div class="dashboard-stats">
-        <div class="stat-card">
-            <div class="stat-value" id="stat-opportunities">0</div>
-            <div class="stat-label">My Opportunities</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <div class="text-3xl font-bold text-primary mb-2" id="stat-opportunities">0</div>
+            <div class="text-gray-600 text-sm">My Opportunities</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="stat-applications">0</div>
-            <div class="stat-label">Applications</div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <div class="text-3xl font-bold text-primary mb-2" id="stat-applications">0</div>
+            <div class="text-gray-600 text-sm">Applications</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="stat-matches">0</div>
-            <div class="stat-label">Matches</div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <div class="text-3xl font-bold text-primary mb-2" id="stat-matches">0</div>
+            <div class="text-gray-600 text-sm">Matches</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="stat-notifications">0</div>
-            <div class="stat-label">Notifications</div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <div class="text-3xl font-bold text-primary mb-2" id="stat-notifications">0</div>
+            <div class="text-gray-600 text-sm">Notifications</div>
         </div>
     </div>
     
-    <div class="dashboard-actions">
-        <a href="#" data-route="/opportunities/create" class="btn btn-primary">Create Opportunity</a>
-        <a href="#" data-route="/opportunities" class="btn btn-secondary">Browse Opportunities</a>
+    <div class="flex gap-4 mb-8">
+        <a href="#" data-route="/opportunities/create" class="inline-block px-6 py-2 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md no-underline">Create Opportunity</a>
+        <a href="#" data-route="/opportunities" class="inline-block px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all no-underline">Browse Opportunities</a>
     </div>
     
-    <div class="dashboard-content">
-        <div class="dashboard-section">
-            <h2>Recent Opportunities</h2>
-            <div id="recent-opportunities" class="opportunities-list">
-                <p class="text-muted">No opportunities yet. <a href="#" data-route="/opportunities/create">Create your first opportunity</a></p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-6 pb-4 border-b border-gray-200">Recent Opportunities</h2>
+            <div id="recent-opportunities" class="min-h-[300px]">
+                <div class="flex flex-col items-center justify-center py-12 px-8 text-center min-h-[300px]">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary/90 to-primary-light flex items-center justify-center mb-6 text-white opacity-90">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">No opportunities yet</h3>
+                    <p class="text-base text-gray-600 max-w-md mb-8 leading-relaxed">Start building your network by creating your first opportunity. Share projects, find partners, and grow together.</p>
+                    <a href="#" data-route="/opportunities/create" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md hover:-translate-y-0.5 hover:shadow-lg no-underline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Create Your First Opportunity
+                    </a>
+                </div>
             </div>
         </div>
         
-        <div class="dashboard-section">
-            <h2>Recent Applications</h2>
-            <div id="recent-applications" class="applications-list">
-                <p class="text-muted">No applications yet.</p>
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-6 pb-4 border-b border-gray-200">Recent Applications</h2>
+            <div id="recent-applications" class="min-h-[300px]">
+                <div class="flex flex-col items-center justify-center py-12 px-8 text-center min-h-[300px]">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary/90 to-primary-light flex items-center justify-center mb-6 text-white opacity-90">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">No applications yet</h3>
+                    <p class="text-base text-gray-600 max-w-md mb-8 leading-relaxed">When you apply to opportunities, they'll appear here. Start exploring available opportunities to get started.</p>
+                    <a href="#" data-route="/opportunities" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md hover:-translate-y-0.5 hover:shadow-lg no-underline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        Browse Opportunities
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.dashboard-page {
-    width: 100%;
-}
-
-.dashboard-header {
-    margin-bottom: var(--spacing-xl);
-}
-
-.dashboard-header h1 {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-sm);
-}
-
-.dashboard-subtitle {
-    color: var(--text-secondary);
-    font-size: var(--font-size-lg);
-}
-
-.dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-}
-
-.stat-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    text-align: center;
-}
-
-.stat-value {
-    font-size: var(--font-size-3xl);
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-sm);
-}
-
-.stat-label {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
-}
-
-.dashboard-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-xl);
-}
-
-.dashboard-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-xl);
-}
-
-.dashboard-section {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-}
-
-.dashboard-section h2 {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-lg);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.opportunities-list,
-.applications-list {
-    min-height: 200px;
-}
-
-.text-muted {
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-.text-muted a {
-    color: var(--primary-color);
-    text-decoration: none;
-}
-
-.text-muted a:hover {
-    text-decoration: underline;
-}
-</style>

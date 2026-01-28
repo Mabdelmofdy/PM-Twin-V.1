@@ -16,12 +16,14 @@ async function initAdminDashboard() {
 async function loadDashboardStats() {
     try {
         const users = await dataService.getUsers();
+        const companies = await dataService.getCompanies();
+        const allPeople = [...users, ...companies];
         const opportunities = await dataService.getOpportunities();
         const applications = await dataService.getApplications();
         
-        document.getElementById('stat-total-users').textContent = users.length;
+        document.getElementById('stat-total-users').textContent = allPeople.length;
         document.getElementById('stat-pending-users').textContent = 
-            users.filter(u => u.status === 'pending').length;
+            allPeople.filter(u => u.status === 'pending').length;
         document.getElementById('stat-total-opportunities').textContent = opportunities.length;
         document.getElementById('stat-total-applications').textContent = applications.length;
         
@@ -43,10 +45,10 @@ async function loadRecentActivity() {
             return;
         }
         
-        // Load user info for each log
+        // Load user/company info for each log
         const logsWithUsers = await Promise.all(
             recentLogs.map(async (log) => {
-                const user = await dataService.getUserById(log.userId);
+                const user = await dataService.getUserOrCompanyById(log.userId);
                 return { ...log, user };
             })
         );
@@ -77,18 +79,24 @@ async function loadPendingApprovals() {
     
     try {
         const users = await dataService.getUsers();
-        const pendingUsers = users.filter(u => u.status === 'pending').slice(0, 10);
+        const companies = await dataService.getCompanies();
+        const allPeople = [...users, ...companies];
+        const pendingUsers = allPeople.filter(u => u.status === 'pending').slice(0, 10);
         
         if (pendingUsers.length === 0) {
             container.innerHTML = '<p class="text-muted">No pending approvals</p>';
             return;
         }
         
-        container.innerHTML = pendingUsers.map(user => `
+        container.innerHTML = pendingUsers.map(user => {
+            const isCompany = user.profile?.type === 'company';
+            const typeLabel = isCompany ? 'Company' : 'User';
+            return `
             <div class="card" style="margin-bottom: var(--spacing-md);">
                 <div class="card-header">
                     <h3>${user.email}</h3>
                     <span class="badge badge-warning">Pending</span>
+                    <span class="badge badge-secondary">${typeLabel}</span>
                 </div>
                 <div class="card-body">
                     <p><strong>Role:</strong> ${user.role}</p>
@@ -96,12 +104,13 @@ async function loadPendingApprovals() {
                     ${user.profile?.name ? `<p><strong>Name:</strong> ${user.profile.name}</p>` : ''}
                 </div>
                 <div class="card-footer">
-                    <button onclick="approveUser('${user.id}')" class="btn btn-success btn-sm">Approve</button>
-                    <button onclick="rejectUser('${user.id}')" class="btn btn-danger btn-sm">Reject</button>
+                    <button onclick="approveUser('${user.id}', ${isCompany})" class="btn btn-success btn-sm">Approve</button>
+                    <button onclick="rejectUser('${user.id}', ${isCompany})" class="btn btn-danger btn-sm">Reject</button>
                     <a href="#" data-route="/admin/users/${user.id}" class="btn btn-secondary btn-sm">View Details</a>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
         
     } catch (error) {
         console.error('Error loading pending approvals:', error);
@@ -109,11 +118,15 @@ async function loadPendingApprovals() {
     }
 }
 
-async function approveUser(userId) {
-    if (!confirm('Approve this user?')) return;
+async function approveUser(userId, isCompany = false) {
+    if (!confirm(`Approve this ${isCompany ? 'company' : 'user'}?`)) return;
     
     try {
-        await dataService.updateUser(userId, { status: 'active' });
+        if (isCompany) {
+            await dataService.updateCompany(userId, { status: 'active' });
+        } else {
+            await dataService.updateUser(userId, { status: 'active' });
+        }
         
         // Create notification
         await dataService.createNotification({
@@ -127,29 +140,33 @@ async function approveUser(userId) {
         const admin = authService.getCurrentUser();
         await dataService.createAuditLog({
             userId: admin.id,
-            action: 'user_approved',
-            entityType: 'user',
+            action: isCompany ? 'company_approved' : 'user_approved',
+            entityType: isCompany ? 'company' : 'user',
             entityId: userId,
             details: {}
         });
         
-        alert('User approved successfully');
+        alert(`${isCompany ? 'Company' : 'User'} approved successfully`);
         await loadPendingApprovals();
         await loadDashboardStats();
         
     } catch (error) {
-        console.error('Error approving user:', error);
-        alert('Failed to approve user. Please try again.');
+        console.error('Error approving:', error);
+        alert('Failed to approve. Please try again.');
     }
 }
 
-async function rejectUser(userId) {
-    if (!confirm('Reject this user? They will be notified.')) return;
+async function rejectUser(userId, isCompany = false) {
+    if (!confirm(`Reject this ${isCompany ? 'company' : 'user'}? They will be notified.`)) return;
     
     const reason = prompt('Rejection reason (optional):');
     
     try {
-        await dataService.updateUser(userId, { status: 'rejected' });
+        if (isCompany) {
+            await dataService.updateCompany(userId, { status: 'rejected' });
+        } else {
+            await dataService.updateUser(userId, { status: 'rejected' });
+        }
         
         // Create notification
         await dataService.createNotification({
@@ -163,19 +180,19 @@ async function rejectUser(userId) {
         const admin = authService.getCurrentUser();
         await dataService.createAuditLog({
             userId: admin.id,
-            action: 'user_rejected',
-            entityType: 'user',
+            action: isCompany ? 'company_rejected' : 'user_rejected',
+            entityType: isCompany ? 'company' : 'user',
             entityId: userId,
             details: { reason: reason || 'No reason provided' }
         });
         
-        alert('User rejected');
+        alert(`${isCompany ? 'Company' : 'User'} rejected`);
         await loadPendingApprovals();
         await loadDashboardStats();
         
     } catch (error) {
-        console.error('Error rejecting user:', error);
-        alert('Failed to reject user. Please try again.');
+        console.error('Error rejecting:', error);
+        alert('Failed to reject. Please try again.');
     }
 }
 

@@ -13,72 +13,8 @@ class TemplateRenderer {
     render(template, data = {}) {
         let rendered = template;
         
-        // Process conditionals first (innermost to outermost, handles nesting)
-        let iterations = 0;
-        const maxIterations = 50; // Prevent infinite loops
-        
-        while (iterations < maxIterations) {
-            const beforeRender = rendered;
-            
-            // Handle conditionals with else: {{#if property}}...{{else}}...{{/if}}
-            rendered = rendered.replace(
-                /\{\{#if\s+(\w+(?:\.\w+)*)\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g,
-                (match, path, ifContent, elseContent) => {
-                    const value = this.getNestedValue(data, path);
-                    const condition = this.isTruthy(value);
-                    const content = condition ? ifContent : elseContent;
-                    return this.render(content, data); // Recursively render chosen content
-                }
-            );
-            
-            // Handle conditionals without else: {{#if property}}...{{/if}}
-            rendered = rendered.replace(
-                /\{\{#if\s+(\w+(?:\.\w+)*)\}\}([\s\S]*?)\{\{\/if\}\}/g,
-                (match, path, content) => {
-                    const value = this.getNestedValue(data, path);
-                    const condition = this.isTruthy(value);
-                    return condition ? this.render(content, data) : '';
-                }
-            );
-            
-            // Handle negative conditionals: {{#unless property}}...{{/unless}}
-            rendered = rendered.replace(
-                /\{\{#unless\s+(\w+(?:\.\w+)*)\}\}([\s\S]*?)\{\{\/unless\}\}/g,
-                (match, path, content) => {
-                    const value = this.getNestedValue(data, path);
-                    const condition = !this.isTruthy(value);
-                    return condition ? this.render(content, data) : '';
-                }
-            );
-            
-            // Handle loops: {{#each array}}...{{/each}}
-            rendered = rendered.replace(
-                /\{\{#each\s+(\w+(?:\.\w+)*)\}\}([\s\S]*?)\{\{\/each\}\}/g,
-                (match, path, content) => {
-                    const array = this.getNestedValue(data, path);
-                    if (!Array.isArray(array)) {
-                        return '';
-                    }
-                    
-                    return array.map((item, index) => {
-                        const itemData = {
-                            ...data,
-                            ...(typeof item === 'object' ? item : { this: item }),
-                            '@index': index,
-                            '@first': index === 0,
-                            '@last': index === array.length - 1
-                        };
-                        return this.render(content, itemData);
-                    }).join('');
-                }
-            );
-            
-            // If no changes were made, we're done with block helpers
-            if (rendered === beforeRender) {
-                break;
-            }
-            iterations++;
-        }
+        // Process block helpers with proper nesting support
+        rendered = this.processBlocks(rendered, data);
         
         // Handle unescaped placeholders: {{{property}}}
         rendered = rendered.replace(/\{\{\{(\w+(?:\.\w+)*)\}\}\}/g, (match, path) => {
@@ -93,6 +29,161 @@ class TemplateRenderer {
         });
         
         return rendered;
+    }
+    
+    /**
+     * Process block helpers (if, unless, each) with proper nesting
+     */
+    processBlocks(template, data) {
+        let result = '';
+        let i = 0;
+        
+        while (i < template.length) {
+            // Look for block start
+            const blockStart = template.indexOf('{{#', i);
+            
+            if (blockStart === -1) {
+                // No more blocks, append rest
+                result += template.substring(i);
+                break;
+            }
+            
+            // Append content before block
+            result += template.substring(i, blockStart);
+            
+            // Parse block type and variable
+            const blockMatch = template.substring(blockStart).match(/^\{\{#(\w+)\s+(\w+(?:\.\w+)*)\}\}/);
+            if (!blockMatch) {
+                // Not a valid block, append and continue
+                result += '{{#';
+                i = blockStart + 3;
+                continue;
+            }
+            
+            const blockType = blockMatch[1]; // 'if', 'unless', 'each'
+            const blockVar = blockMatch[2];  // variable name
+            const blockOpenEnd = blockStart + blockMatch[0].length;
+            
+            // Find matching closing tag
+            const closeTag = `{{/${blockType}}}`;
+            const blockContent = this.findMatchingClose(template, blockOpenEnd, blockType);
+            
+            if (!blockContent) {
+                // No matching close, append and continue
+                result += blockMatch[0];
+                i = blockOpenEnd;
+                continue;
+            }
+            
+            const { content, elseContent, endIndex } = blockContent;
+            
+            // Process based on block type
+            if (blockType === 'if') {
+                const value = this.getNestedValue(data, blockVar);
+                const condition = this.isTruthy(value);
+                const selectedContent = condition ? content : (elseContent || '');
+                result += this.render(selectedContent, data);
+            } else if (blockType === 'unless') {
+                const value = this.getNestedValue(data, blockVar);
+                const condition = !this.isTruthy(value);
+                result += condition ? this.render(content, data) : '';
+            } else if (blockType === 'each') {
+                const array = this.getNestedValue(data, blockVar);
+                if (Array.isArray(array)) {
+                    result += array.map((item, index) => {
+                        const itemData = {
+                            ...data,
+                            ...(typeof item === 'object' ? item : { this: item }),
+                            '@index': index,
+                            '@first': index === 0,
+                            '@last': index === array.length - 1
+                        };
+                        return this.render(content, itemData);
+                    }).join('');
+                }
+            }
+            
+            i = endIndex;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Find matching closing tag, accounting for nesting
+     */
+    findMatchingClose(template, startIndex, blockType) {
+        const openPattern = new RegExp(`\\{\\{#${blockType}\\s+\\w+(?:\\.\\w+)*\\}\\}`, 'g');
+        const closePattern = `{{/${blockType}}}`;
+        const elsePattern = '{{else}}';
+        
+        let depth = 1;
+        let i = startIndex;
+        let contentStart = startIndex;
+        let elseIndex = -1;
+        
+        while (i < template.length && depth > 0) {
+            // Check for nested open
+            const remainingTemplate = template.substring(i);
+            const nextOpen = remainingTemplate.search(openPattern);
+            const nextClose = remainingTemplate.indexOf(closePattern);
+            const nextElse = remainingTemplate.indexOf(elsePattern);
+            
+            // Determine which comes first
+            let nextEvent = -1;
+            let eventType = '';
+            
+            if (nextClose !== -1) {
+                nextEvent = nextClose;
+                eventType = 'close';
+            }
+            
+            if (nextOpen !== -1 && (nextEvent === -1 || nextOpen < nextEvent)) {
+                nextEvent = nextOpen;
+                eventType = 'open';
+            }
+            
+            // Check for else at current depth
+            if (depth === 1 && nextElse !== -1 && (nextEvent === -1 || nextElse < nextEvent)) {
+                elseIndex = i + nextElse;
+                i = elseIndex + elsePattern.length;
+                continue;
+            }
+            
+            if (nextEvent === -1) {
+                // No more tags found
+                return null;
+            }
+            
+            if (eventType === 'open') {
+                depth++;
+                const match = remainingTemplate.match(openPattern);
+                i += nextOpen + (match ? match[0].length : 3);
+            } else if (eventType === 'close') {
+                depth--;
+                if (depth === 0) {
+                    // Found matching close
+                    const endIndex = i + nextClose + closePattern.length;
+                    
+                    if (elseIndex !== -1) {
+                        return {
+                            content: template.substring(contentStart, elseIndex),
+                            elseContent: template.substring(elseIndex + elsePattern.length, i + nextClose),
+                            endIndex
+                        };
+                    } else {
+                        return {
+                            content: template.substring(contentStart, i + nextClose),
+                            elseContent: null,
+                            endIndex
+                        };
+                    }
+                }
+                i += nextClose + closePattern.length;
+            }
+        }
+        
+        return null;
     }
     
     /**

@@ -1,29 +1,29 @@
-<div class="auth-page">
-    <div class="auth-container">
-        <div class="auth-card">
-            <h1>Login to PMTwin</h1>
-            <p class="auth-subtitle">Access your account to start collaborating</p>
+<div class="min-h-[calc(100vh-16rem)] flex items-center justify-center p-8">
+    <div class="w-full max-w-md">
+        <div class="bg-white rounded-lg p-8 shadow-lg">
+            <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Login to PMTwin</h1>
+            <p class="text-center text-gray-600 mb-8">Access your account to start collaborating</p>
             
-            <form id="login-form" class="auth-form">
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
+            <form id="login-form" class="mt-6">
+                <div class="mb-6">
+                    <label for="email" class="block mb-2 font-medium text-gray-900">Email</label>
                     <input 
                         type="email" 
                         id="email" 
                         name="email" 
-                        class="form-input" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" 
                         required 
                         placeholder="your@email.com"
                     >
                 </div>
                 
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
+                <div class="mb-6">
+                    <label for="password" class="block mb-2 font-medium text-gray-900">Password</label>
                     <input 
                         type="password" 
                         id="password" 
                         name="password" 
-                        class="form-input" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" 
                         required 
                         placeholder="Enter your password"
                     >
@@ -31,72 +31,12 @@
                 
                 <div id="login-error" class="alert alert-error" style="display: none;"></div>
                 
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="w-full mt-4 px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md">Login</button>
                 
-                <p class="auth-footer">
-                    Don't have an account? <a href="#" data-route="/register">Register here</a>
+                <p class="text-center mt-6 text-gray-600">
+                    Don't have an account? <a href="#" data-route="/register" class="text-primary no-underline font-medium hover:underline">Register here</a>
                 </p>
             </form>
         </div>
     </div>
 </div>
-
-<style>
-.auth-page {
-    min-height: calc(100vh - var(--header-height) - var(--footer-height));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-xl);
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 400px;
-}
-
-.auth-card {
-    background: var(--bg-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-lg);
-}
-
-.auth-card h1 {
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--spacing-sm);
-    text-align: center;
-    color: var(--text-primary);
-}
-
-.auth-subtitle {
-    text-align: center;
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-xl);
-}
-
-.auth-form {
-    margin-top: var(--spacing-lg);
-}
-
-.btn-block {
-    width: 100%;
-    margin-top: var(--spacing-md);
-}
-
-.auth-footer {
-    text-align: center;
-    margin-top: var(--spacing-lg);
-    color: var(--text-secondary);
-}
-
-.auth-footer a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.auth-footer a:hover {
-    text-decoration: underline;
-}
-</style>

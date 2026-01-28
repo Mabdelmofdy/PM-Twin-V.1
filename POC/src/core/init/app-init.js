@@ -94,6 +94,7 @@ loadScript('src/core/config/config.js').then(async () => {
     // Load utilities
     await loadScript('src/utils/template-loader.js');
     await loadScript('src/utils/template-renderer.js');
+    await loadScript('src/utils/modal.js');
     
     // Load business logic
     await loadScript('src/business-logic/models/opportunity-models.js');
@@ -141,6 +142,7 @@ async function initializeApp() {
 async function initializeStorage() {
     const defaultData = {
         [CONFIG.STORAGE_KEYS.USERS]: [],
+        [CONFIG.STORAGE_KEYS.COMPANIES]: [],
         [CONFIG.STORAGE_KEYS.SESSIONS]: [],
         [CONFIG.STORAGE_KEYS.OPPORTUNITIES]: [],
         [CONFIG.STORAGE_KEYS.APPLICATIONS]: [],
@@ -270,6 +272,23 @@ function initializeRoutes() {
     // Pipeline route (protected)
     router.register('/pipeline', authGuard.protect(async () => {
         await loadPage('pipeline');
+    }));
+    
+    // People routes (accessible to all users)
+    router.register('/people', authGuard.protect(async () => {
+        await loadPage('people');
+    }));
+    
+    router.register('/people/:id', authGuard.protect(async (params) => {
+        await loadPage('person-profile', params);
+    }));
+    
+    router.register(CONFIG.ROUTES.MESSAGES, authGuard.protect(async () => {
+        await loadPage('messages', {});
+    }));
+    
+    router.register('/messages/:id', authGuard.protect(async (params) => {
+        await loadPage('messages', params);
     }));
     
     // Admin routes (protected, admin only)

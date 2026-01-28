@@ -25,8 +25,8 @@ async function loadOpportunity(id) {
             return;
         }
         
-        // Load creator info
-        const creator = await dataService.getUserById(opportunity.creatorId);
+        // Load creator info (user or company)
+        const creator = await dataService.getUserOrCompanyById(opportunity.creatorId);
         
         // Get current user
         const user = authService.getCurrentUser();

@@ -16,12 +16,15 @@ const CONFIG = {
     // Storage Keys
     STORAGE_KEYS: {
         USERS: 'pmtwin_users',
+        COMPANIES: 'pmtwin_companies',
         SESSIONS: 'pmtwin_sessions',
         OPPORTUNITIES: 'pmtwin_opportunities',
         APPLICATIONS: 'pmtwin_applications',
         MATCHES: 'pmtwin_matches',
         AUDIT: 'pmtwin_audit',
         NOTIFICATIONS: 'pmtwin_notifications',
+        CONNECTIONS: 'pmtwin_connections',
+        MESSAGES: 'pmtwin_messages',
         SYSTEM_SETTINGS: 'pmtwin_system_settings'
     },
     
@@ -89,6 +92,13 @@ const CONFIG = {
         WITHDRAWN: 'withdrawn'
     },
     
+    // Connection request status
+    CONNECTION_STATUS: {
+        PENDING: 'pending',
+        ACCEPTED: 'accepted',
+        REJECTED: 'rejected'
+    },
+
     // Matching
     MATCHING: {
         MIN_THRESHOLD: 0.70, // 70% minimum match score
@@ -104,6 +114,10 @@ const CONFIG = {
         OPPORTUNITIES: '/opportunities',
         OPPORTUNITY_CREATE: '/opportunities/create',
         OPPORTUNITY_DETAIL: '/opportunities/:id',
+        PEOPLE: '/people',
+        PERSON_PROFILE: '/people/:id',
+        MESSAGES: '/messages',
+        MESSAGE_THREAD: '/messages/:id',
         PROFILE: '/profile',
         ADMIN: '/admin',
         ADMIN_USERS: '/admin/users',

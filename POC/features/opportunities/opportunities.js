@@ -69,7 +69,25 @@ async function loadOpportunities() {
         opportunities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         
         if (opportunities.length === 0) {
-            container.innerHTML = '<div class="empty-state">No opportunities found. <a href="#" data-route="/opportunities/create">Create the first one!</a></div>';
+            container.innerHTML = `
+                <div class="col-span-full flex flex-col items-center justify-center py-12 px-8 text-center min-h-[300px]">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary/90 to-primary-light flex items-center justify-center mb-6 text-white opacity-90">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">No opportunities found</h3>
+                    <p class="text-base text-gray-600 max-w-md mb-8 leading-relaxed">${searchFilter || modelFilter || statusFilter ? 'Try adjusting your filters to see more results.' : 'Be the first to create an opportunity and start building connections.'}</p>
+                    <a href="#" data-route="/opportunities/create" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md hover:-translate-y-0.5 hover:shadow-lg no-underline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Create Opportunity
+                    </a>
+                </div>
+            `;
             return;
         }
         

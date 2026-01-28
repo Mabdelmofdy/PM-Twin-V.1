@@ -1,7 +1,7 @@
 <div class="admin-users-page">
     <div class="page-header">
-        <h1>User Management</h1>
-        <p class="page-subtitle">Manage platform users and approvals</p>
+        <h1>User & Company Management</h1>
+        <p class="page-subtitle">Manage platform users, companies, and approvals</p>
     </div>
     
     <div class="filters-section">
@@ -23,11 +23,17 @@
                 <option value="consultant">Consultant</option>
             </select>
             
+            <select id="filter-type" class="form-select">
+                <option value="">All Types</option>
+                <option value="user">Users Only</option>
+                <option value="company">Companies Only</option>
+            </select>
+            
             <input 
                 type="text" 
                 id="filter-search" 
                 class="form-input" 
-                placeholder="Search by email..."
+                placeholder="Search by email or name..."
             >
             
             <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>

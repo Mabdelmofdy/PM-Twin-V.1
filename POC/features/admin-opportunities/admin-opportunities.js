@@ -52,7 +52,7 @@ async function loadOpportunities() {
         // Load creator info
         const oppsWithCreators = await Promise.all(
             opportunities.map(async (opp) => {
-                const creator = await dataService.getUserById(opp.creatorId);
+                const creator = await dataService.getUserOrCompanyById(opp.creatorId);
                 return { ...opp, creator };
             })
         );

@@ -48,7 +48,7 @@ class AuthService {
      * Login user
      */
     async login(email, password) {
-        const user = await this.dataService.getUserByEmail(email);
+        const user = await this.dataService.getUserOrCompanyByEmail(email);
         if (!user) {
             throw new Error('Invalid email or password');
         }
@@ -130,7 +130,7 @@ class AuthService {
             return false;
         }
         
-        const user = await this.dataService.getUserById(session.userId);
+        const user = await this.dataService.getUserOrCompanyById(session.userId);
         if (!user || user.status !== 'active') {
             return false;
         }
