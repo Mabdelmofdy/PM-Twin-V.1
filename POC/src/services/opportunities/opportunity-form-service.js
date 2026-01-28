@@ -6,6 +6,29 @@
 class OpportunityFormService {
     constructor() {
         this.models = window.OPPORTUNITY_MODELS || OPPORTUNITY_MODELS;
+        this.lookups = null;
+    }
+    
+    /**
+     * Set lookups data from JSON
+     */
+    setLookups(lookups) {
+        this.lookups = lookups;
+    }
+    
+    /**
+     * Get options for a field, checking lookups first
+     */
+    getOptions(attribute) {
+        const { options, lookupKey } = attribute;
+        
+        // If lookupKey is specified, use lookups data
+        if (lookupKey && this.lookups && this.lookups[lookupKey]) {
+            return this.lookups[lookupKey];
+        }
+        
+        // Otherwise use provided options
+        return options || [];
     }
     
     /**
@@ -50,7 +73,7 @@ class OpportunityFormService {
                         type="text" 
                         id="${key}" 
                         name="${key}" 
-                        class="form-input" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
                         value="${value || ''}"
                         ${requiredAttr}
                         ${maxLengthAttr}
@@ -60,14 +83,36 @@ class OpportunityFormService {
                 break;
                 
             case 'textarea':
+                // Add data-rich-text attribute for long textareas or fields that benefit from rich formatting
+                // Include fields with maxLength > 300 or specific keywords
+                const isLongField = maxLength > 300 || 
+                    key.toLowerCase().includes('description') || 
+                    key.toLowerCase().includes('scope') || 
+                    key.toLowerCase().includes('details') || 
+                    key.toLowerCase().includes('summary') ||
+                    key.toLowerCase().includes('milestones') ||
+                    key.toLowerCase().includes('distribution') ||
+                    key.toLowerCase().includes('contribution') ||
+                    key.toLowerCase().includes('terms') ||
+                    key.toLowerCase().includes('offer') ||
+                    key.toLowerCase().includes('need') ||
+                    key.toLowerCase().includes('notes') ||
+                    key.toLowerCase().includes('requirements') ||
+                    key.toLowerCase().includes('deliverables') ||
+                    key.toLowerCase().includes('agreement') ||
+                    key.toLowerCase().includes('conditions');
+                const richTextAttr = isLongField ? 'data-rich-text="true"' : '';
+                
                 fieldHTML = `
                     <textarea 
                         id="${key}" 
                         name="${key}" 
-                        class="form-textarea" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
                         ${requiredAttr}
                         ${maxLengthAttr}
+                        rows="4"
                         placeholder="${label}"
+                        ${richTextAttr}
                     >${value || ''}</textarea>
                 `;
                 break;
@@ -169,14 +214,15 @@ class OpportunityFormService {
                 break;
                 
             case 'select':
-                const optionsHTML = options.map(opt => 
+                const selectOptions = this.getOptions(attribute);
+                const optionsHTML = selectOptions.map(opt => 
                     `<option value="${opt}" ${value === opt ? 'selected' : ''}>${opt}</option>`
                 ).join('');
                 fieldHTML = `
                     <select 
                         id="${key}" 
                         name="${key}" 
-                        class="form-select" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
                         ${requiredAttr}
                     >
                         <option value="">Select ${label}</option>
@@ -186,7 +232,8 @@ class OpportunityFormService {
                 break;
                 
             case 'multi-select':
-                const multiOptionsHTML = options.map(opt => {
+                const multiSelectOptions = this.getOptions(attribute);
+                const multiOptionsHTML = multiSelectOptions.map(opt => {
                     const selected = Array.isArray(value) && value.includes(opt) ? 'selected' : '';
                     return `<option value="${opt}" ${selected}>${opt}</option>`;
                 }).join('');
@@ -194,13 +241,13 @@ class OpportunityFormService {
                     <select 
                         id="${key}" 
                         name="${key}" 
-                        class="form-select" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
                         multiple
                         ${requiredAttr}
                     >
                         ${multiOptionsHTML}
                     </select>
-                    <small class="form-help">Hold Ctrl/Cmd to select multiple</small>
+                    <small class="text-sm text-gray-500 mt-1 block">Hold Ctrl/Cmd to select multiple</small>
                 `;
                 break;
                 
@@ -276,7 +323,7 @@ class OpportunityFormService {
             <div class="form-group" ${conditionalAttr} ${conditional ? 'style="display: none;"' : ''}>
                 <label for="${key}" class="form-label">
                     ${label}
-                    ${required ? '<span style="color: var(--danger-color);">*</span>' : ''}
+                    ${required ? '<span class="text-red-600">*</span>' : ''}
                 </label>
                 ${fieldHTML}
             </div>

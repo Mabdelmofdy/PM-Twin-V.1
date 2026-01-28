@@ -1,117 +1,417 @@
 <div class="opportunity-detail-page">
     <div id="loading" class="spinner"></div>
     <div id="content" style="display: none;">
-        <div class="opportunity-header">
-            <div>
-                <h1 id="opportunity-title"></h1>
-                <div class="opportunity-meta">
-                    <span id="opportunity-model" class="badge badge-primary"></span>
-                    <span id="opportunity-status" class="badge"></span>
-                </div>
+        
+        <!-- Wizard Steps Indicator -->
+        <div id="wizard-steps" class="wizard-steps" style="display: none;">
+            <div class="wizard-step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Overview</div>
             </div>
-            <div class="opportunity-actions" id="opportunity-actions">
-                <!-- Actions will be populated by JS -->
+            <div class="wizard-step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Proposal</div>
+            </div>
+            <div class="wizard-step" data-step="3" id="step-indicator-3">
+                <div class="step-number">3</div>
+                <div class="step-label">Requirements</div>
+            </div>
+            <div class="wizard-step" data-step="4" id="step-indicator-4">
+                <div class="step-number">4</div>
+                <div class="step-label">Bidding</div>
+            </div>
+            <div class="wizard-step" data-step="5">
+                <div class="step-number">5</div>
+                <div class="step-label">Review</div>
             </div>
         </div>
-        
-        <div class="opportunity-content">
-            <div class="opportunity-main">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Description</h2>
-                    </div>
-                    <div class="card-body">
-                        <p id="opportunity-description"></p>
-                    </div>
-                </div>
-                
-                <div class="card" id="model-details-card">
-                    <div class="card-header">
-                        <h2>Model-Specific Details</h2>
-                    </div>
-                    <div class="card-body" id="model-details">
-                        <!-- Details will be populated by JS -->
+
+        <!-- Step 1: Comprehensive View -->
+        <div id="step-1" class="wizard-step-content">
+            <div class="opportunity-header">
+                <div>
+                    <h1 id="opportunity-title"></h1>
+                    <div class="opportunity-meta">
+                        <span id="opportunity-model" class="badge badge-primary"></span>
+                        <span id="opportunity-status" class="badge"></span>
                     </div>
                 </div>
-                
-                <div class="card" id="applications-card" style="display: none;">
-                    <div class="card-header">
-                        <h2>Applications</h2>
-                    </div>
-                    <div class="card-body" id="applications-list">
-                        <!-- Applications will be populated by JS -->
-                    </div>
+                <div class="opportunity-actions" id="opportunity-actions">
+                    <!-- Actions will be populated by JS -->
                 </div>
             </div>
             
-            <div class="opportunity-sidebar">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Opportunity Info</h3>
+            <div class="opportunity-full-view">
+                <!-- Quick Info Bar -->
+                <div class="quick-info-bar">
+                    <div class="info-chip">
+                        <i class="ph-duotone ph-calendar"></i>
+                        <span>Posted: <strong id="info-created"></strong></span>
                     </div>
-                    <div class="card-body">
-                        <div class="info-item">
-                            <strong>Created:</strong>
-                            <span id="opportunity-created"></span>
-                        </div>
-                        <div class="info-item">
-                            <strong>Creator:</strong>
-                            <span id="opportunity-creator"></span>
-                        </div>
-                        <div class="info-item" id="applications-count-item" style="display: none;">
-                            <strong>Applications:</strong>
-                            <span id="applications-count"></span>
-                        </div>
+                    <div class="info-chip">
+                        <i class="ph-duotone ph-user"></i>
+                        <span>By: <strong id="info-creator"></strong></span>
+                    </div>
+                    <div class="info-chip" id="info-location-chip" style="display: none;">
+                        <i class="ph-duotone ph-map-pin"></i>
+                        <span id="info-location"></span>
+                    </div>
+                    <div class="info-chip" id="info-exchange-chip" style="display: none;">
+                        <i class="ph-duotone ph-currency-circle-dollar"></i>
+                        <span>Exchange: <strong id="info-exchange"></strong></span>
                     </div>
                 </div>
-                
-                <div class="card" id="apply-card" style="display: none;">
-                    <div class="card-header">
-                        <h3>Apply for this Opportunity</h3>
+
+                <!-- Description Section -->
+                <div class="detail-section">
+                    <h2><i class="ph-duotone ph-text-align-left"></i> Description</h2>
+                    <div class="detail-content" id="opportunity-description"></div>
+                </div>
+
+                <!-- Exchange Terms Section -->
+                <div class="detail-section" id="exchange-section" style="display: none;">
+                    <h2><i class="ph-duotone ph-handshake"></i> Exchange Terms</h2>
+                    <div class="detail-content" id="exchange-details"></div>
+                </div>
+
+                <!-- Model-Specific Details -->
+                <div class="detail-section">
+                    <h2><i class="ph-duotone ph-list-checks"></i> Opportunity Details</h2>
+                    <div class="detail-content detail-grid" id="model-details">
+                        <!-- Details will be populated by JS -->
                     </div>
-                    <div class="card-body">
-                        <form id="application-form">
-                            <div class="form-group">
-                                <label for="application-proposal" class="form-label">Your Proposal</label>
-                                <textarea 
-                                    id="application-proposal" 
-                                    name="proposal" 
-                                    class="form-textarea" 
-                                    required
-                                    placeholder="Describe why you're a good fit for this opportunity..."
-                                ></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Submit Application</button>
-                        </form>
+                </div>
+
+                <!-- Applications Section (for owners) -->
+                <div class="detail-section" id="applications-section" style="display: none;">
+                    <h2><i class="ph-duotone ph-users"></i> Applications (<span id="applications-count">0</span>)</h2>
+                    <div class="detail-content" id="applications-list">
+                        <!-- Applications will be populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Apply Button -->
+                <div id="apply-section" class="apply-section" style="display: none;">
+                    <div class="apply-cta">
+                        <div class="apply-info">
+                            <h3>Interested in this opportunity?</h3>
+                            <p>Submit your application to express your interest and qualifications.</p>
+                        </div>
+                        <button id="btn-start-apply" class="btn btn-primary btn-lg">
+                            <i class="ph-duotone ph-paper-plane-tilt"></i>
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Already Applied Message -->
+                <div id="already-applied-section" class="already-applied-section" style="display: none;">
+                    <div class="applied-info">
+                        <i class="ph-duotone ph-check-circle"></i>
+                        <div>
+                            <h3>You've already applied</h3>
+                            <p>Application submitted on <span id="applied-date"></span></p>
+                            <p>Status: <span id="applied-status" class="badge"></span></p>
+                        </div>
+                        <button id="btn-edit-application" class="btn btn-secondary">
+                            <i class="ph-duotone ph-pencil"></i>
+                            Edit Application
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Step 2: Proposal -->
+        <div id="step-2" class="wizard-step-content" style="display: none;">
+            <div class="step-header">
+                <h2>Your Proposal</h2>
+                <p>Tell us why you're a great fit for this opportunity</p>
+            </div>
+            <div class="step-body">
+                <div class="form-group">
+                    <label for="application-proposal" class="form-label">
+                        Proposal Overview <span class="text-red-600">*</span>
+                    </label>
+                    <textarea 
+                        id="application-proposal" 
+                        name="proposal" 
+                        class="form-textarea" 
+                        rows="8"
+                        placeholder="Describe your interest, relevant experience, and why you're the right fit for this opportunity..."
+                    ></textarea>
+                    <p class="text-sm text-gray-500 mt-2">
+                        Include your background, relevant experience, and what unique value you bring.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Detailed Responses -->
+        <div id="step-3" class="wizard-step-content" style="display: none;">
+            <div class="step-header">
+                <h2>Detailed Responses</h2>
+                <p>Please provide specific responses to each requirement</p>
+            </div>
+            <div class="step-body" id="detailed-responses-container">
+                <!-- Dynamically generated based on opportunity attributes -->
+            </div>
+        </div>
+
+        <!-- Step 4: Task Bidding -->
+        <div id="step-4" class="wizard-step-content" style="display: none;">
+            <div class="step-header">
+                <h2>Your Bid</h2>
+                <p>Provide your pricing and approach for this task</p>
+            </div>
+            <div class="step-body" id="task-bidding-container">
+                <!-- Dynamically generated for task-based opportunities -->
+            </div>
+        </div>
+
+        <!-- Step 5: Review & Submit -->
+        <div id="step-5" class="wizard-step-content" style="display: none;">
+            <div class="step-header">
+                <h2>Review Your Application</h2>
+                <p>Please review your responses before submitting</p>
+            </div>
+            <div class="step-body">
+                <div class="review-section">
+                    <h3><i class="ph-duotone ph-text-align-left"></i> Your Proposal</h3>
+                    <div class="review-content" id="review-proposal"></div>
+                </div>
+                <div class="review-section" id="review-responses-section" style="display: none;">
+                    <h3><i class="ph-duotone ph-list-checks"></i> Your Responses</h3>
+                    <div class="review-content" id="review-responses"></div>
+                </div>
+                <div class="review-section" id="review-bid-section" style="display: none;">
+                    <h3><i class="ph-duotone ph-currency-circle-dollar"></i> Your Bid</h3>
+                    <div class="review-content" id="review-bid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wizard Navigation -->
+        <div id="wizard-nav" class="wizard-nav" style="display: none;">
+            <div class="wizard-nav-left">
+                <button id="btn-prev" class="btn btn-secondary" style="display: none;">
+                    <i class="ph-duotone ph-arrow-left"></i> Previous
+                </button>
+                <button id="btn-cancel" class="btn btn-ghost">Cancel</button>
+            </div>
+            <div class="wizard-nav-center">
+                <button id="btn-demo-fill" class="btn btn-demo" title="Fill form with sample data for demo">
+                    <i class="ph-duotone ph-magic-wand"></i> Demo Fill
+                </button>
+            </div>
+            <div class="wizard-nav-right">
+                <button id="btn-next" class="btn btn-primary">
+                    Next <i class="ph-duotone ph-arrow-right"></i>
+                </button>
+                <button id="btn-submit" class="btn btn-success" style="display: none;">
+                    <i class="ph-duotone ph-paper-plane-tilt"></i> Submit Application
+                </button>
+            </div>
+        </div>
+
+        <!-- Hidden form for data collection -->
+        <form id="application-form" style="display: none;"></form>
     </div>
 </div>
 
 <style>
 .opportunity-detail-page {
     width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
+/* Wizard Steps Indicator */
+.wizard-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    position: relative;
+}
+
+.wizard-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 20px;
+    width: 30px;
+    height: 2px;
+    background: var(--border-color);
+}
+
+.wizard-step.active:not(:last-child)::after,
+.wizard-step.completed:not(:last-child)::after {
+    background: var(--primary-color);
+}
+
+.wizard-step .step-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--border-color);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    transition: all 0.3s ease;
+}
+
+.wizard-step.active .step-number {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.wizard-step.completed .step-number {
+    background: var(--success-color, #10b981);
+    color: white;
+}
+
+.wizard-step .step-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.wizard-step.active .step-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Wizard Step Content */
+.wizard-step-content {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.step-header h2 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.step-header p {
+    color: var(--text-secondary);
+}
+
+.step-body {
+    padding: var(--spacing-lg);
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+/* Wizard Navigation */
+.wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    gap: var(--spacing-md);
+}
+
+.wizard-nav-left,
+.wizard-nav-right {
+    display: flex;
+    gap: var(--spacing-sm);
+    min-width: 180px;
+}
+
+.wizard-nav-left {
+    justify-content: flex-start;
+}
+
+.wizard-nav-right {
+    justify-content: flex-end;
+}
+
+.wizard-nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.wizard-nav .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.wizard-nav .btn-ghost:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Demo Fill Button */
+.btn-demo {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn-demo:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.btn-demo i {
+    margin-right: 4px;
+}
+
+/* Opportunity Header */
 .opportunity-header {
     display: flex;
     justify-content: space-between;
     align-items: start;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-lg);
     border-bottom: 2px solid var(--border-color);
 }
 
 .opportunity-header h1 {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
 }
 
 .opportunity-meta {
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     align-items: center;
 }
 
@@ -120,76 +420,378 @@
     gap: var(--spacing-md);
 }
 
-.opportunity-content {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: var(--spacing-xl);
-}
-
-.opportunity-main {
+/* Quick Info Bar */
+.quick-info-bar {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
 }
 
-.opportunity-sidebar {
+.info-chip {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-}
-
-.info-item {
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.info-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.info-item strong {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    color: var(--text-secondary);
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
     font-size: var(--font-size-sm);
+    color: var(--text-secondary);
 }
 
-.info-item span {
+.info-chip i {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.info-chip strong {
     color: var(--text-primary);
 }
 
-.detail-item {
+/* Detail Sections */
+.detail-section {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.detail-section h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--border-color);
 }
 
-.detail-item:last-child {
-    border-bottom: none;
+.detail-section h2 i {
+    color: var(--primary-color);
+}
+
+.detail-content {
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.detail-item {
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.detail-item.budget-highlight {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 1px solid #10b981;
+}
+
+.detail-item.budget-highlight .detail-label {
+    color: #065f46;
+}
+
+.detail-item.budget-highlight .budget-value {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: #047857;
 }
 
 .detail-label {
-    font-weight: 600;
+    font-size: var(--font-size-xs);
     color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: var(--spacing-xs);
-    font-size: var(--font-size-sm);
 }
 
 .detail-value {
     color: var(--text-primary);
+    font-weight: 500;
 }
 
-@media (max-width: 968px) {
-    .opportunity-content {
-        grid-template-columns: 1fr;
+/* Apply Section */
+.apply-section {
+    margin-top: var(--spacing-xl);
+}
+
+.apply-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--primary-color), #4f46e5);
+    border-radius: var(--radius-lg);
+    color: white;
+}
+
+.apply-info h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-xs);
+}
+
+.apply-info p {
+    opacity: 0.9;
+}
+
+.apply-cta .btn {
+    background: white;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.apply-cta .btn:hover {
+    background: var(--bg-secondary);
+}
+
+/* Already Applied Section */
+.already-applied-section {
+    margin-top: var(--spacing-xl);
+}
+
+.applied-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--success-color, #10b981);
+}
+
+.applied-info > i {
+    font-size: 3rem;
+    color: var(--success-color, #10b981);
+}
+
+.applied-info h3 {
+    margin-bottom: var(--spacing-xs);
+}
+
+.applied-info p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.applied-info .btn {
+    margin-left: auto;
+}
+
+/* Review Sections */
+.review-section {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.review-section h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.review-section h3 i {
+    color: var(--primary-color);
+}
+
+.review-content {
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    white-space: pre-wrap;
+}
+
+/* Requirement Response Item */
+.requirement-response-item {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.requirement-response-item label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    display: block;
+}
+
+.requirement-value {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Task Bid Item */
+.task-bid-item {
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.task-bid-item .task-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.task-bid-item .task-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: var(--font-size-lg);
+}
+
+.task-bid-item .task-scope {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    white-space: pre-wrap;
+}
+
+.bid-input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wizard-steps {
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+    
+    .wizard-step:not(:last-child)::after {
+        display: none;
+    }
+    
+    .wizard-step .step-label {
+        display: none;
     }
     
     .opportunity-header {
         flex-direction: column;
         gap: var(--spacing-md);
     }
+    
+    .quick-info-bar {
+        flex-direction: column;
+    }
+    
+    .apply-cta {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .applied-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .applied-info .btn {
+        margin-left: 0;
+        margin-top: var(--spacing-md);
+    }
+    
+    .bid-input-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Application Cards */
+.application-card {
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border-color);
+}
+
+.application-card:last-child {
+    margin-bottom: 0;
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.application-proposal {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.application-meta {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-sm);
+}
+
+.application-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Button sizes */
+.btn-lg {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.btn-success {
+    background: var(--success-color, #10b981);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #059669;
+}
+
+/* Alert styles */
+.alert-info {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: #e0f2fe;
+    border: 1px solid #0ea5e9;
+    border-radius: var(--radius-md);
+    color: #0369a1;
 }
 </style>

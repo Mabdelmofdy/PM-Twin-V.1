@@ -21,19 +21,11 @@
                 <p class="profile-headline" id="profile-headline">-</p>
                 <div class="profile-meta">
                     <span class="meta-item" id="profile-location">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
+                        <i class="ph-duotone ph-map-pin" style="font-size: 16px;" aria-hidden="true"></i>
                         <span>-</span>
                     </span>
                     <span class="meta-item" id="profile-connections">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
+                        <i class="ph-duotone ph-users" style="font-size: 16px;" aria-hidden="true"></i>
                         <span>0 connections</span>
                     </span>
                 </div>
@@ -397,11 +389,17 @@
 }
 
 .service-item::before {
-    content: '✓';
+    content: '';
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: var(--spacing-xs);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 256 256'%3E%3Cpath d='M232,56V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56Z' fill='currentColor' opacity='0.2'/%3E%3Cpath d='M104,144a8,8,0,0,1-5.66-2.34l-32-32a8,8,0,0,1,11.32-11.32L104,124.69l74.34-74.35a8,8,0,0,1,11.32,11.32l-80,80A8,8,0,0,1,104,144Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
     color: var(--success-color);
-    font-weight: bold;
-    font-size: var(--font-size-lg);
-    flex-shrink: 0;
 }
 
 /* Enhanced Skills Tags */
@@ -611,8 +609,16 @@
 }
 
 .contact-card-header h3::before {
-    content: '📧';
-    font-size: var(--font-size-lg);
+    content: '';
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: var(--spacing-xs);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 256 256'%3E%3Cpath d='M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-8,144H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L224,74.19V192ZM98.71,128,40,181.81V74.19Zm22.63,20.71L128,152.49l6.66,6.22L192,74.19V181.81Z' fill='currentColor' opacity='0.2'/%3E%3Cpath d='M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-8,144H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L224,74.19V192ZM98.71,128,40,181.81V74.19Zm22.63,20.71L128,152.49l6.66,6.22L192,74.19V181.81Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
 }
 
 .contact-list {

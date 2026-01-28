@@ -1,206 +1,616 @@
-<div class="opportunity-edit-page">
-    <div class="page-header">
-        <h1>Edit Opportunity</h1>
-        <p class="page-subtitle">Update your collaboration opportunity</p>
+<div class="opportunity-edit-page max-w-5xl mx-auto px-6 py-8">
+    <div class="page-header mb-8">
+        <h1 class="text-3xl font-bold mb-2">Edit Opportunity</h1>
+        <p class="text-gray-600 text-lg">Update your collaboration opportunity</p>
     </div>
     
-    <div id="edit-loading" class="loading-state">
-        <p>Loading opportunity...</p>
+    <div id="edit-loading" class="bg-white border border-gray-200 rounded-lg p-12 text-center">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+        <p class="text-gray-600">Loading opportunity...</p>
     </div>
     
-    <form id="opportunity-edit-form" class="opportunity-form" style="display: none;">
+    <form id="opportunity-edit-form" class="bg-white border border-gray-200 rounded-lg p-8 space-y-8" style="display: none;">
         <!-- Hidden ID field -->
         <input type="hidden" id="opportunity-id" name="id">
         
         <!-- Model Info (Read-only) -->
-        <div class="form-section">
-            <h2>Collaboration Model</h2>
-            <div class="form-group">
-                <label class="form-label">Model Type</label>
-                <input type="text" id="model-type-display" class="form-input" readonly>
-                <input type="hidden" id="model-type" name="modelType">
+        <div class="form-section border-b border-gray-200 pb-8">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900">Collaboration Model</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Model Type</label>
+                    <input 
+                        type="text" 
+                        id="model-type-display" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed" 
+                        readonly
+                    >
+                    <input type="hidden" id="model-type" name="modelType">
+                </div>
+                
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Sub-Model Type</label>
+                    <input 
+                        type="text" 
+                        id="submodel-type-display" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed" 
+                        readonly
+                    >
+                    <input type="hidden" id="submodel-type" name="subModelType">
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label class="form-label">Sub-Model Type</label>
-                <input type="text" id="submodel-type-display" class="form-input" readonly>
-                <input type="hidden" id="submodel-type" name="subModelType">
-            </div>
-            <p class="text-muted" style="font-size: var(--font-size-sm);">
+            <p class="text-sm text-gray-500 mt-4 flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
                 Model type cannot be changed after creation.
             </p>
         </div>
         
         <!-- Basic Information -->
-        <div class="form-section">
-            <h2>Basic Information</h2>
-            <div class="form-group">
-                <label for="title" class="form-label">Title <span style="color: var(--danger-color);">*</span></label>
-                <input 
-                    type="text" 
-                    id="title" 
-                    name="title" 
-                    class="form-input" 
-                    required 
-                    maxlength="150"
-                    placeholder="Enter opportunity title"
-                >
-            </div>
-            
-            <div class="form-group">
-                <label for="description" class="form-label">Description</label>
-                <textarea 
-                    id="description" 
-                    name="description" 
-                    class="form-textarea" 
-                    maxlength="2000"
-                    placeholder="Brief description of the opportunity"
-                ></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="status" class="form-label">Status</label>
-                <select id="status" name="status" class="form-select">
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                    <option value="closed">Closed</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
+        <div class="form-section border-b border-gray-200 pb-8">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900">Basic Information</h2>
+            <div class="space-y-6">
+                <div class="form-group">
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                        Title <span class="text-red-600">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                        required 
+                        maxlength="150"
+                        placeholder="Enter opportunity title"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                        rows="4"
+                        maxlength="2000"
+                        placeholder="Brief description of the opportunity"
+                        data-rich-text="true"
+                    ></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select 
+                        id="status" 
+                        name="status" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="closed">Closed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
             </div>
         </div>
         
+        <!-- Location Section -->
+        <div class="form-section border-b border-gray-200 pb-8">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900">Location</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="location-country-search" class="block text-sm font-medium text-gray-700 mb-2">
+                        Country <span class="text-red-600">*</span>
+                    </label>
+                    <div class="location-dropdown-container">
+                        <input 
+                            type="text" 
+                            id="location-country-search" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            placeholder="Search country..."
+                            autocomplete="off"
+                            required
+                        >
+                        <input type="hidden" id="location-country" name="locationCountry" required>
+                        <div id="location-country-dropdown" class="searchable-dropdown hidden"></div>
+                        <div id="location-country-display" class="selected-display hidden mt-2">
+                            <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                <span class="text-sm font-medium text-gray-900" id="location-country-name"></span>
+                                <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="editClearLocationSelection('country')">Change</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="location-region-search" class="block text-sm font-medium text-gray-700 mb-2">
+                        Region <span class="text-red-600">*</span>
+                    </label>
+                    <div class="location-dropdown-container">
+                        <input 
+                            type="text" 
+                            id="location-region-search" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
+                            placeholder="Select country first..."
+                            autocomplete="off"
+                            required
+                            disabled
+                        >
+                        <input type="hidden" id="location-region" name="locationRegion" required>
+                        <div id="location-region-dropdown" class="searchable-dropdown hidden"></div>
+                        <div id="location-region-display" class="selected-display hidden mt-2">
+                            <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                <span class="text-sm font-medium text-gray-900" id="location-region-name"></span>
+                                <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="editClearLocationSelection('region')">Change</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="location-city-search" class="block text-sm font-medium text-gray-700 mb-2">
+                        City <span class="text-red-600">*</span>
+                    </label>
+                    <div class="location-dropdown-container">
+                        <input 
+                            type="text" 
+                            id="location-city-search" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
+                            placeholder="Select region first..."
+                            autocomplete="off"
+                            required
+                            disabled
+                        >
+                        <input type="hidden" id="location-city" name="locationCity" required>
+                        <div id="location-city-dropdown" class="searchable-dropdown hidden"></div>
+                        <div id="location-city-display" class="selected-display hidden mt-2">
+                            <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                <span class="text-sm font-medium text-gray-900" id="location-city-name"></span>
+                                <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="editClearLocationSelection('city')">Change</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="location-district-search" class="block text-sm font-medium text-gray-700 mb-2">District</label>
+                    <div class="location-dropdown-container">
+                        <input 
+                            type="text" 
+                            id="location-district-search" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
+                            placeholder="Select city first..."
+                            autocomplete="off"
+                            disabled
+                        >
+                        <input type="hidden" id="location-district" name="locationDistrict">
+                        <div id="location-district-dropdown" class="searchable-dropdown hidden"></div>
+                        <div id="location-district-display" class="selected-display hidden mt-2">
+                            <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                <span class="text-sm font-medium text-gray-900" id="location-district-name"></span>
+                                <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="editClearLocationSelection('district')">Change</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="location" name="location">
+        </div>
+        
         <!-- Dynamic Fields -->
-        <div class="form-section" id="dynamic-fields-section">
-            <h2>Model-Specific Details</h2>
-            <div id="dynamic-fields">
-                <p class="text-muted">Loading model fields...</p>
+        <div class="form-section border-b border-gray-200 pb-8" id="dynamic-fields-section">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900">Model-Specific Details</h2>
+            <div id="dynamic-fields" class="space-y-6">
+                <p class="text-gray-500 italic">Loading model fields...</p>
+            </div>
+        </div>
+        
+        <!-- Exchange Mode & Payment Section -->
+        <div class="form-section border-b border-gray-200 pb-8" id="exchange-mode-section">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900">Exchange Mode & Payment</h2>
+            <p class="text-gray-600 mb-6">PMTwin enables multiple value exchange modes beyond cash.</p>
+            
+            <!-- Budget Range Section -->
+            <div class="form-group mb-6" id="budget-range-section">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Budget Range <span class="text-red-600">*</span></label>
+                <p class="text-sm text-gray-500 mb-3">Specify the expected budget range for this opportunity</p>
+                <div class="budget-range-inputs">
+                    <div class="budget-input-group">
+                        <label for="budgetRange_min" class="text-sm text-gray-600">Minimum</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">SAR</span>
+                            <input 
+                                type="number" 
+                                id="budgetRange_min" 
+                                name="budgetRange_min" 
+                                class="budget-input"
+                                placeholder="50,000"
+                                min="0"
+                                required
+                            >
+                        </div>
+                    </div>
+                    <div class="budget-separator">
+                        <span>to</span>
+                    </div>
+                    <div class="budget-input-group">
+                        <label for="budgetRange_max" class="text-sm text-gray-600">Maximum</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">SAR</span>
+                            <input 
+                                type="number" 
+                                id="budgetRange_max" 
+                                name="budgetRange_max" 
+                                class="budget-input"
+                                placeholder="100,000"
+                                min="0"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Exchange Mode Selection -->
+            <div class="form-group mb-6">
+                <label for="exchange-mode" class="block text-sm font-medium text-gray-700 mb-4">
+                    Exchange Mode <span class="text-red-600">*</span>
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="exchange-mode-card" data-mode="cash">
+                        <div class="exchange-mode-icon"><i class="ph-duotone ph-currency-dollar" style="font-size: 32px;" aria-hidden="true"></i></div>
+                        <div class="exchange-mode-title">Cash</div>
+                        <div class="exchange-mode-description">Standard payments with defined terms and milestones</div>
+                    </div>
+                    <div class="exchange-mode-card" data-mode="equity">
+                        <div class="exchange-mode-icon"><i class="ph-duotone ph-chart-bar" style="font-size: 32px;" aria-hidden="true"></i></div>
+                        <div class="exchange-mode-title">Equity</div>
+                        <div class="exchange-mode-description">Ownership stake for contribution; includes vesting</div>
+                    </div>
+                    <div class="exchange-mode-card" data-mode="profit_sharing">
+                        <div class="exchange-mode-icon"><i class="ph-duotone ph-percent" style="font-size: 32px;" aria-hidden="true"></i></div>
+                        <div class="exchange-mode-title">Profit-Sharing</div>
+                        <div class="exchange-mode-description">Share revenue or profit without ownership transfer</div>
+                    </div>
+                    <div class="exchange-mode-card" data-mode="barter">
+                        <div class="exchange-mode-icon"><i class="ph-duotone ph-arrows-clockwise" style="font-size: 32px;" aria-hidden="true"></i></div>
+                        <div class="exchange-mode-title">Barter</div>
+                        <div class="exchange-mode-description">Direct exchange of resources or services; no cash</div>
+                    </div>
+                    <div class="exchange-mode-card" data-mode="hybrid">
+                        <div class="exchange-mode-icon"><i class="ph-duotone ph-link" style="font-size: 32px;" aria-hidden="true"></i></div>
+                        <div class="exchange-mode-title">Hybrid</div>
+                        <div class="exchange-mode-description">Mix cash, equity, barter for flexible deals</div>
+                    </div>
+                </div>
+                <input type="hidden" id="exchange-mode" name="exchangeMode" required>
+                <div id="selected-exchange-display" class="selected-exchange-display hidden mt-4">
+                    <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-md">
+                        <div>
+                            <div class="text-sm text-gray-600 mb-1">Selected Exchange Mode:</div>
+                            <div class="font-semibold text-gray-900" id="selected-exchange-name"></div>
+                        </div>
+                        <button type="button" id="clear-exchange-selection" class="text-red-600 hover:text-red-800 font-medium">
+                            Change
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dynamic Exchange Mode Fields -->
+            <div id="exchange-mode-fields" class="exchange-mode-fields mb-6">
+                <p class="text-gray-500 italic">Please select an exchange mode to see specific fields.</p>
+            </div>
+            
+            <!-- Currency (for Cash and Hybrid modes) -->
+            <div id="currency-group" class="form-group hidden">
+                <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">
+                    Currency <span class="text-red-600">*</span>
+                </label>
+                <select 
+                    id="currency" 
+                    name="currency" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                    <option value="SAR">SAR (Saudi Riyal)</option>
+                    <option value="USD">USD (US Dollar)</option>
+                    <option value="EUR">EUR (Euro)</option>
+                    <option value="AED">AED (UAE Dirham)</option>
+                    <option value="KWD">KWD (Kuwaiti Dinar)</option>
+                </select>
+            </div>
+            
+            <!-- Additional Terms -->
+            <div class="form-group">
+                <label for="exchange-terms-summary" class="block text-sm font-medium text-gray-700 mb-2">Additional Terms & Notes</label>
+                <textarea 
+                    id="exchange-terms-summary" 
+                    name="exchangeTermsSummary" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                    rows="3"
+                    placeholder="Describe any additional terms, conditions, or special arrangements..."
+                    data-rich-text="true"
+                ></textarea>
+            </div>
+            
+            <!-- Agreement -->
+            <div class="form-group">
+                <label class="flex items-center">
+                    <input type="checkbox" id="exchange-agreement" name="exchangeAgreement" class="mr-2" required>
+                    <span class="text-sm text-gray-700">I agree to the exchange terms and understand that details will be finalized during the collaboration agreement phase.</span>
+                </label>
             </div>
         </div>
         
         <!-- Error/Success Messages -->
-        <div id="form-error" class="alert alert-error" style="display: none;"></div>
-        <div id="form-success" class="alert alert-success" style="display: none;"></div>
+        <div id="form-error" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-md text-red-700"></div>
+        <div id="form-success" class="hidden mb-4 p-4 bg-green-50 border border-green-200 rounded-md text-green-700"></div>
         
         <!-- Form Actions -->
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+        <div class="form-actions flex justify-between items-center pt-6 border-t border-gray-200">
+            <button 
+                type="button" 
+                id="delete-opportunity" 
+                class="px-6 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition-all"
+            >
+                Delete Opportunity
+            </button>
+            <div class="flex gap-4">
+                <button 
+                    type="button" 
+                    id="cancel-edit" 
+                    class="px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all"
+                >
+                    Cancel
+                </button>
+                <button 
+                    type="submit" 
+                    class="px-6 py-2 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md"
+                >
+                    Save Changes
+                </button>
+            </div>
         </div>
     </form>
     
-    <div id="edit-error" class="error-state" style="display: none;">
-        <p>Failed to load opportunity. It may have been deleted or you don't have permission to edit it.</p>
-        <a href="#" data-route="/opportunities" class="btn btn-primary">Back to Opportunities</a>
+    <div id="edit-error" class="hidden bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+        <p class="text-red-700 mb-4">Failed to load opportunity. It may have been deleted or you don't have permission to edit it.</p>
+        <a href="#" data-route="/opportunities" class="inline-block px-6 py-2 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all no-underline">
+            Back to Opportunities
+        </a>
     </div>
 </div>
 
 <style>
-.opportunity-edit-page {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
+.location-dropdown-container {
+    position: relative;
 }
 
-.page-header {
-    margin-bottom: var(--spacing-xl);
+.searchable-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0.25rem;
 }
 
-.page-header h1 {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-sm);
+.searchable-dropdown-content {
+    padding: 0.5rem;
 }
 
-.page-subtitle {
-    color: var(--text-secondary);
-    font-size: var(--font-size-lg);
+.searchable-dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s;
 }
 
-.opportunity-form {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
+.searchable-dropdown-item:hover {
+    background-color: #f3f4f6;
 }
 
-.form-section {
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-xl);
-    border-bottom: 1px solid var(--border-color);
+.searchable-dropdown-item.selected {
+    background-color: #eff6ff;
+    color: #2563eb;
 }
 
-.form-section:last-child {
-    border-bottom: none;
-}
-
-.form-section h2 {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-lg);
-    color: var(--text-primary);
-}
-
-.form-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-xl);
-}
-
-.loading-state,
-.error-state {
+.exchange-mode-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
     text-align: center;
-    padding: var(--spacing-2xl);
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
+    background: white;
 }
 
-.error-state {
-    background: var(--danger-bg);
-    color: var(--danger-color);
+.exchange-mode-card:hover {
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-input[readonly] {
-    background: var(--bg-secondary);
-    cursor: not-allowed;
+.exchange-mode-card.selected {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
 }
 
-.currency-range,
-.date-range {
+.exchange-mode-icon {
+    margin-bottom: 0.75rem;
     display: flex;
-    gap: var(--spacing-md);
     align-items: center;
+    justify-content: center;
+    color: #2563eb;
 }
 
-.currency-range input,
-.date-range input {
+.exchange-mode-icon i {
+    font-size: 32px;
+}
+
+.exchange-mode-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.exchange-mode-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.selected-exchange-display.hidden {
+    display: none;
+}
+
+.exchange-mode-fields {
+    margin-bottom: 1.5rem;
+}
+
+/* Budget Range Inputs */
+.budget-range-inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.budget-input-group {
     flex: 1;
+    min-width: 180px;
 }
 
-.array-objects-container {
-    margin-bottom: var(--spacing-md);
+.budget-input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
 }
 
-.array-object-item {
+.input-with-prefix {
     display: flex;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-    align-items: center;
+    align-items: stretch;
 }
 
-.array-object-item input {
+.input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-right: none;
+    border-radius: 0.375rem 0 0 0.375rem;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.budget-input {
     flex: 1;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0 0.375rem 0.375rem 0;
+    font-size: 1rem;
+    min-width: 120px;
 }
 
-.form-checkbox {
+.budget-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.budget-separator {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    padding-bottom: 0.5rem;
+    color: #6b7280;
+    font-weight: 500;
 }
 
-.form-checkbox input[type="checkbox"] {
-    width: auto;
+@media (max-width: 640px) {
+    .budget-range-inputs {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .budget-input-group {
+        width: 100%;
+    }
+    
+    .budget-separator {
+        display: none;
+    }
 }
 
-.btn-sm {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
+/* Rich Text Editor Styles */
+.rich-text-editor-container .ql-container {
+    font-family: inherit;
+    font-size: 0.875rem;
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+    border-color: #d1d5db;
+}
+
+.rich-text-editor-container .ql-toolbar {
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+.rich-text-editor-container .ql-editor {
+    min-height: 120px;
+}
+
+.rich-text-editor-container .ql-editor.ql-blank::before {
+    color: #9ca3af;
+    font-style: normal;
+}
+
+.rich-text-editor-container .ql-snow .ql-stroke {
+    stroke: #6b7280;
+}
+
+.rich-text-editor-container .ql-snow .ql-fill {
+    fill: #6b7280;
+}
+
+.rich-text-editor-container .ql-snow .ql-picker-label:hover,
+.rich-text-editor-container .ql-snow .ql-picker-label.ql-active,
+.rich-text-editor-container .ql-snow .ql-picker-item:hover,
+.rich-text-editor-container .ql-snow .ql-picker-item.ql-selected {
+    color: #2563eb;
+}
+
+.rich-text-editor-container .ql-snow .ql-stroke.ql-thin,
+.rich-text-editor-container .ql-snow .ql-thin {
+    stroke-width: 1;
+}
+
+.rich-text-editor-container .ql-snow .ql-tooltip {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.rich-text-editor-container .ql-snow .ql-tooltip input[type=text] {
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.rich-text-editor-container .ql-snow .ql-tooltip a.ql-action::after {
+    border-right: 1px solid #d1d5db;
 }
 </style>

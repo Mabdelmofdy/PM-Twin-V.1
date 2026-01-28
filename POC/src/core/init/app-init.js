@@ -92,6 +92,7 @@ loadScript('src/core/config/config.js').then(async () => {
     await loadScript('src/core/api/api-service.js');
     
     // Load utilities
+    await loadScript('src/utils/icon-helper.js');
     await loadScript('src/utils/template-loader.js');
     await loadScript('src/utils/template-renderer.js');
     await loadScript('src/utils/modal.js');

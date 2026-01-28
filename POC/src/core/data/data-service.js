@@ -9,7 +9,7 @@ class DataService {
         this.storage = window.storageService || storageService;
         this.initialized = false;
         this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
-        this.CURRENT_SEED_VERSION = '1.3.0'; // Increment this to force re-seed (connections + messages)
+        this.CURRENT_SEED_VERSION = '1.6.0'; // Increment this to force re-seed (connections + messages + opportunities with attributes)
     }
     
     /**

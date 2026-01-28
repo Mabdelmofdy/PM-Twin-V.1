@@ -1,16 +1,30 @@
 {
   "domain": "opportunities",
-  "version": "1.0",
+  "version": "1.1",
   "data": [
     {
       "id": "opp-001",
       "title": "NEOM Bay Infrastructure - Consortium Partners Needed",
-      "description": "Seeking qualified contractors to join a consortium for the NEOM Bay infrastructure development project. This is a major infrastructure project requiring expertise in marine works, utilities, and road construction.",
+      "description": "Seeking qualified contractors to join a consortium for the NEOM Bay infrastructure development project. This is a major infrastructure project requiring expertise in marine works, utilities, and road construction. The project represents a significant opportunity to contribute to Saudi Vision 2030's flagship development.",
       "creatorId": "user-company-002",
       "modelType": "project_based",
       "subModelType": "consortium",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Tabuk > NEOM > The Line",
+      "locationCountry": "sa",
+      "locationRegion": "tabuk",
+      "locationCity": "neom",
+      "locationDistrict": "The Line",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Payment will be distributed per scope of work completed. Initial mobilization payment of 10% upon contract signing, followed by monthly progress payments based on certified work.",
+        "cashAmount": 500000000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": "10% mobilization, 20% monthly progress payments, 5% retention released upon completion"
+      },
+      "attributes": {
         "projectTitle": "NEOM Bay Infrastructure Development",
         "projectType": "Infrastructure",
         "projectValue": 500000000,
@@ -19,10 +33,10 @@
         "leadMember": true,
         "requiredMembers": 4,
         "memberRoles": [
-          {"role": "Marine Works Contractor", "scope": "Port and coastal infrastructure"},
-          {"role": "Utilities Contractor", "scope": "Water, electricity, telecommunications"},
-          {"role": "Roads Contractor", "scope": "Primary and secondary road networks"},
-          {"role": "Landscaping Contractor", "scope": "Green spaces and environmental works"}
+          {"role": "Marine Works Contractor", "scope": "Port and coastal infrastructure including breakwaters, quay walls, and dredging works"},
+          {"role": "Utilities Contractor", "scope": "Water supply networks, electrical distribution, telecommunications infrastructure, and wastewater systems"},
+          {"role": "Roads Contractor", "scope": "Primary and secondary road networks, bridges, tunnels, and associated drainage"},
+          {"role": "Landscaping Contractor", "scope": "Green spaces, environmental works, and public realm development"}
         ],
         "scopeDivision": "By Trade",
         "liabilityStructure": "Joint & Several",
@@ -30,9 +44,11 @@
         "tenderDeadline": "2026-03-15",
         "prequalificationRequired": true,
         "minimumRequirements": [
-          {"requirement": "Contractor Grade 1 Classification"},
-          {"requirement": "5+ years experience in mega projects"},
-          {"requirement": "Financial capability of 100M+ SAR"}
+          {"requirement": "Contractor Grade 1 Classification from Saudi Contractors Authority"},
+          {"requirement": "Minimum 5 years experience in mega infrastructure projects valued at 100M+ SAR"},
+          {"requirement": "Financial capability demonstrating ability to handle 100M+ SAR project value"},
+          {"requirement": "ISO 9001, ISO 14001, and ISO 45001 certifications"},
+          {"requirement": "Proven track record in similar marine/utilities/road projects"}
         ],
         "consortiumAgreement": true,
         "paymentDistribution": "Per Scope"
@@ -43,25 +59,39 @@
     {
       "id": "opp-002",
       "title": "Senior Structural Engineer - Riyadh Metro Extension",
-      "description": "Looking for an experienced structural engineer to join our team for the Riyadh Metro Line 7 extension project. Must have experience with underground structures and transit systems.",
+      "description": "Looking for an experienced structural engineer to join our team for the Riyadh Metro Line 7 extension project. Must have experience with underground structures and transit systems. This is a high-profile project contributing to Riyadh's public transportation infrastructure.",
       "creatorId": "user-company-001",
       "modelType": "hiring",
       "subModelType": "professional_hiring",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City > King Fahd District",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "King Fahd District",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Monthly salary payment via bank transfer. Housing allowance and transportation provided separately. Medical insurance and annual tickets included.",
+        "cashAmount": 50000,
+        "cashPaymentTerms": "Monthly",
+        "cashMilestones": ""
+      },
+      "attributes": {
         "jobTitle": "Senior Structural Engineer",
         "jobCategory": "Engineering",
         "employmentType": "Contract",
         "contractDuration": 24,
-        "jobDescription": "Lead structural design and analysis for metro station structures. Coordinate with MEP and architectural teams. Review contractor submissions and provide technical oversight.",
-        "requiredQualifications": ["BSc Civil/Structural Engineering", "PE or equivalent"],
+        "jobDescription": "Lead structural design and analysis for metro station structures including underground stations, elevated sections, and transition zones. Coordinate with MEP and architectural teams to ensure integrated design solutions. Review contractor submissions and provide technical oversight during construction. Prepare technical reports, calculations, and design documentation. Participate in design review meetings and client presentations.",
+        "requiredQualifications": ["BSc Civil/Structural Engineering", "PE or equivalent professional registration", "Master's degree preferred"],
         "requiredExperience": 10,
-        "requiredSkills": ["Structural Analysis", "SAP2000", "ETABS", "Underground Structures"],
-        "preferredSkills": ["Metro/Transit Experience", "Arabic Language"],
+        "requiredSkills": ["Structural Analysis", "SAP2000", "ETABS", "Underground Structures", "Seismic Design", "Reinforced Concrete Design", "Steel Design"],
+        "preferredSkills": ["Metro/Transit Experience", "Arabic Language", "BIM/Revit", "Tunnel Design"],
         "location": "Riyadh, Saudi Arabia",
         "workMode": "On-Site",
         "salaryRange": {"min": 35000, "max": 50000, "currency": "SAR", "period": "monthly"},
-        "benefits": ["Housing Allowance", "Transportation", "Medical Insurance", "Annual Tickets"],
+        "benefits": ["Housing Allowance", "Transportation", "Medical Insurance", "Annual Tickets", "Professional Development", "Performance Bonus"],
         "startDate": "2026-03-01",
         "reportingTo": "Project Director",
         "teamSize": 8,
@@ -73,12 +103,26 @@
     {
       "id": "opp-003",
       "title": "Bulk Purchasing - Structural Steel (5000 Tons)",
-      "description": "Organizing bulk purchase of structural steel for multiple construction projects. Join to benefit from volume discounts of 15-20% off market price.",
+      "description": "Organizing bulk purchase of structural steel for multiple construction projects. Join to benefit from volume discounts of 15-20% off market price. This is an opportunity to reduce material costs through collective purchasing power.",
       "creatorId": "user-company-003",
       "modelType": "resource_pooling",
       "subModelType": "bulk_purchasing",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City > Al Olaya",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "Al Olaya",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Payment via escrow account. 30% deposit upon order confirmation, 60% upon delivery, 10% retention released after quality inspection. Payment must be made within 7 days of invoice.",
+        "cashAmount": 17500000,
+        "cashPaymentTerms": "Escrow",
+        "cashMilestones": "30% deposit, 60% on delivery, 10% retention"
+      },
+      "attributes": {
         "productService": "Structural Steel (H-Beams, Channels, Angles)",
         "category": "Materials",
         "quantityNeeded": 5000,
@@ -101,23 +145,39 @@
     {
       "id": "opp-004",
       "title": "Sustainable Design Competition - KAFD Tower",
-      "description": "Design competition for a 40-story sustainable office tower in King Abdullah Financial District. Open to architectural firms and independent architects.",
+      "description": "Design competition for a 40-story sustainable office tower in King Abdullah Financial District. Open to architectural firms and independent architects. Winner will be awarded the full design contract worth 5M SAR.",
       "creatorId": "user-company-004",
       "modelType": "competition",
       "subModelType": "competition_rfp",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City > King Fahd District",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "King Fahd District",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Winner receives full design contract of 5M SAR. Top 3 finalists receive cash prizes: 1st place 5M SAR contract, 2nd place 500K SAR, 3rd place 250K SAR. Submission fee of 5,000 SAR required.",
+        "cashAmount": 5000000,
+        "cashPaymentTerms": "Upon Completion",
+        "cashMilestones": ""
+      },
+      "attributes": {
         "competitionTitle": "KAFD Sustainable Tower Design Competition",
         "competitionType": "Design Competition",
-        "competitionScope": "Design a 40-story net-zero energy office tower incorporating latest sustainable technologies, biophilic design principles, and Saudi architectural heritage elements.",
+        "competitionScope": "Design a 40-story net-zero energy office tower incorporating latest sustainable technologies, biophilic design principles, and Saudi architectural heritage elements. The design must achieve LEED Platinum certification and integrate smart building systems.",
         "participantType": "Both",
         "competitionFormat": "Open to All",
         "eligibilityCriteria": [
-          {"criteria": "Licensed architectural firm or registered architect"},
-          {"criteria": "Portfolio of at least 3 high-rise projects"},
-          {"criteria": "LEED or equivalent certification experience"}
+          {"criteria": "Licensed architectural firm or registered architect with valid professional license"},
+          {"criteria": "Portfolio demonstrating at least 3 completed high-rise projects (30+ stories)"},
+          {"criteria": "LEED or equivalent green building certification experience"},
+          {"criteria": "Minimum 5 years professional practice"},
+          {"criteria": "Financial capability to complete design work"}
         ],
-        "submissionRequirements": ["Concept Design", "3D Renderings", "Sustainability Report", "Cost Estimate"],
+        "submissionRequirements": ["Concept Design", "3D Renderings", "Sustainability Report", "Cost Estimate", "Technical Drawings", "Presentation Materials"],
         "evaluationCriteria": [
           {"criteria": "Design Innovation", "weight": 30},
           {"criteria": "Sustainability Features", "weight": 25},
@@ -130,7 +190,7 @@
         "numberOfWinners": 3,
         "submissionDeadline": "2026-04-30",
         "announcementDate": "2026-06-15",
-        "competitionRules": "All submissions become property of the organizer. Winner will be awarded the full design contract. Top 3 finalists receive cash prizes.",
+        "competitionRules": "All submissions become property of the organizer. Winner will be awarded the full design contract. Top 3 finalists receive cash prizes. Submissions must be original work. No collaboration between participants allowed.",
         "intellectualProperty": "Winner Transfers",
         "submissionFee": 5000
       },
@@ -140,15 +200,32 @@
     {
       "id": "opp-005",
       "title": "Strategic JV - Smart City Technology Solutions",
-      "description": "Seeking technology partner for long-term joint venture to deliver smart city solutions across Saudi Arabia's giga-projects.",
+      "description": "Seeking technology partner for long-term joint venture to deliver smart city solutions across Saudi Arabia's giga-projects. This strategic partnership aims to establish market leadership in smart city infrastructure.",
       "creatorId": "user-company-002",
       "modelType": "strategic_partnership",
       "subModelType": "strategic_jv",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City > Al Olaya",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "Al Olaya",
+      "exchangeMode": "hybrid",
+      "exchangeData": {
+        "exchangeMode": "hybrid",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Hybrid structure: 60% equity stake for lead partner, 40% for technology partner. Initial capital investment of 50M SAR. Ongoing funding through mixed model of partner contributions and retained earnings.",
+        "hybridCash": 50000000,
+        "hybridEquity": 0,
+        "hybridBarter": 0,
+        "hybridCashDetails": "Initial capital of 50M SAR split 60/40. Additional funding as needed for projects.",
+        "hybridEquityDetails": "60% equity for lead partner (market access, local expertise), 40% for technology partner (IP, R&D)",
+        "hybridBarterDetails": ""
+      },
+      "attributes": {
         "jvName": "Saudi Smart Infrastructure JV",
-        "strategicObjective": "Establish market leadership in smart city infrastructure across Saudi giga-projects including NEOM, The Line, and Red Sea Project",
-        "businessScope": "IoT infrastructure, smart building systems, AI-powered facility management, and integrated city management platforms",
+        "strategicObjective": "Establish market leadership in smart city infrastructure across Saudi giga-projects including NEOM, The Line, and Red Sea Project. Create a sustainable, long-term technology partnership that combines local market expertise with global technology innovation.",
+        "businessScope": "IoT infrastructure, smart building systems, AI-powered facility management, and integrated city management platforms. Services include design, implementation, operation, and maintenance of smart city solutions.",
         "targetSectors": ["Technology", "Construction", "Real Estate"],
         "geographicScope": ["Saudi Arabia", "GCC"],
         "duration": "15-20 years",
@@ -157,19 +234,21 @@
         "initialCapital": 50000000,
         "ongoingFunding": "Mixed",
         "partnerContributions": [
-          {"partner": "Lead Partner", "contribution": "Market access, local expertise, government relations"},
-          {"partner": "Technology Partner", "contribution": "Technology IP, R&D capabilities, global expertise"}
+          {"partner": "Lead Partner", "contribution": "Market access, local expertise, government relations, project management, local workforce"},
+          {"partner": "Technology Partner", "contribution": "Technology IP, R&D capabilities, global expertise, software platforms, technical support"}
         ],
         "managementStructure": "Management Committee",
-        "governance": "Board of Directors with equal representation. Major decisions require unanimous consent.",
+        "governance": "Board of Directors with equal representation. Major decisions require unanimous consent. Day-to-day operations managed by professional CEO. Strategic decisions require board approval.",
         "profitDistribution": "Proportional to Equity",
         "exitOptions": ["Buyout", "IPO", "Sale to Third Party"],
         "nonCompete": true,
         "technologyTransfer": true,
         "partnerRequirements": [
-          {"requirement": "Proven smart city technology portfolio"},
-          {"requirement": "Annual revenue > 100M USD"},
-          {"requirement": "R&D investment > 10% of revenue"}
+          {"requirement": "Proven smart city technology portfolio with at least 3 major implementations"},
+          {"requirement": "Annual revenue exceeding 100M USD"},
+          {"requirement": "R&D investment exceeding 10% of annual revenue"},
+          {"requirement": "International presence and proven track record"},
+          {"requirement": "Strong IP portfolio in IoT and smart building technologies"}
         ]
       },
       "createdAt": "2026-01-16T08:00:00.000Z",
@@ -178,12 +257,26 @@
     {
       "id": "opp-006",
       "title": "Equipment Sharing - Tower Cranes (3 Units)",
-      "description": "Looking for partners to co-own 3 Liebherr tower cranes. Ideal for contractors with intermittent crane needs.",
+      "description": "Looking for partners to co-own 3 Liebherr tower cranes. Ideal for contractors with intermittent crane needs. Shared ownership reduces individual capital investment while ensuring equipment availability.",
       "creatorId": "user-company-003",
       "modelType": "resource_pooling",
       "subModelType": "equipment_sharing",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Initial investment of 3M SAR per co-owner. Ongoing costs shared proportionally based on usage. Monthly cost allocation based on actual usage hours.",
+        "cashAmount": 3000000,
+        "cashPaymentTerms": "Upfront",
+        "cashMilestones": ""
+      },
+      "attributes": {
         "assetDescription": "Liebherr 280 EC-H Tower Cranes (3 units)",
         "assetType": "Heavy Equipment",
         "purchasePrice": 9000000,
@@ -194,7 +287,8 @@
         "ongoingCosts": [
           {"cost": "Maintenance", "amount": 50000, "frequency": "Annual per unit"},
           {"cost": "Insurance", "amount": 30000, "frequency": "Annual per unit"},
-          {"cost": "Storage", "amount": 10000, "frequency": "Monthly when not in use"}
+          {"cost": "Storage", "amount": 10000, "frequency": "Monthly when not in use"},
+          {"cost": "Operator", "amount": 15000, "frequency": "Monthly per unit when in use"}
         ],
         "costSharing": "Proportional to Usage",
         "usageSchedule": "Booking System",
@@ -210,25 +304,40 @@
     {
       "id": "opp-007",
       "title": "Sustainability Consultant - LEED Certification",
-      "description": "Need experienced sustainability consultant for LEED Platinum certification of our new headquarters building.",
+      "description": "Need experienced sustainability consultant for LEED Platinum certification of our new headquarters building. Seeking expert with proven track record in LEED certification processes.",
       "creatorId": "user-company-001",
       "modelType": "hiring",
       "subModelType": "consultant_hiring",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City > Al Olaya",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "Al Olaya",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Payment milestones: 30% upon contract signing, 40% upon completion of design phase documentation, 20% upon construction phase completion, 10% upon final LEED certification.",
+        "cashAmount": 500000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": "30% contract signing, 40% design phase, 20% construction phase, 10% certification"
+      },
+      "attributes": {
         "consultationTitle": "LEED Platinum Certification Consultant",
         "consultationType": "Sustainability",
-        "scopeOfWork": "Lead LEED certification process from design through construction. Coordinate with design team, review specifications, manage documentation, and interface with GBCI.",
-        "deliverables": ["LEED Scorecard", "Credit Documentation", "Energy Model", "Commissioning Plan", "GBCI Submission"],
+        "scopeOfWork": "Lead LEED certification process from design through construction. Coordinate with design team, review specifications, manage documentation, and interface with GBCI. Provide guidance on sustainable design strategies, energy modeling, material selection, and indoor environmental quality. Conduct site visits and prepare all required documentation for LEED submission.",
+        "deliverables": ["LEED Scorecard", "Credit Documentation", "Energy Model", "Commissioning Plan", "GBCI Submission", "Technical Reports", "Design Recommendations"],
         "duration": 18,
-        "requiredExpertise": ["LEED Certification", "Energy Modeling", "Green Building"],
+        "requiredExpertise": ["LEED Certification", "Energy Modeling", "Green Building", "Sustainable Design", "Building Performance"],
         "requiredCertifications": ["LEED AP BD+C"],
         "experienceLevel": "Expert",
         "locationRequirement": "Hybrid",
         "budget": {"min": 300000, "max": 500000, "currency": "SAR"},
         "paymentTerms": "Milestone-Based",
         "startDate": "2026-02-15",
-        "exchangeType": "Cash"
+        "exchangeType": "Cash",
+        "barterOffer": ""
       },
       "createdAt": "2026-01-18T10:00:00.000Z",
       "updatedAt": "2026-01-18T10:00:00.000Z"
@@ -236,24 +345,39 @@
     {
       "id": "opp-008",
       "title": "Task-Based: Structural Review of Bridge Design",
-      "description": "Independent structural review required for a 500m cable-stayed bridge design. Peer review for client submission.",
+      "description": "Independent structural review required for a 500m cable-stayed bridge design. Peer review for client submission. Seeking expert structural engineer with bridge design experience.",
       "creatorId": "user-company-004",
       "modelType": "project_based",
       "subModelType": "task_based",
       "status": "published",
-      "modelData": {
+      "location": "Remote",
+      "locationCountry": "remote",
+      "locationRegion": "remote",
+      "locationCity": "",
+      "locationDistrict": "",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Payment upon completion and delivery of review report. Full payment within 14 days of report acceptance.",
+        "cashAmount": 200000,
+        "cashPaymentTerms": "Upon Completion",
+        "cashMilestones": ""
+      },
+      "attributes": {
         "taskTitle": "Structural Peer Review - Cable-Stayed Bridge",
         "taskType": "Review",
-        "detailedScope": "Comprehensive peer review of structural design calculations, drawings, and specifications for a 500m cable-stayed bridge. Review includes foundation design, deck structure, cable system, and seismic analysis.",
+        "detailedScope": "Comprehensive peer review of structural design calculations, drawings, and specifications for a 500m cable-stayed bridge. Review includes foundation design, deck structure, cable system, and seismic analysis. Provide detailed review report with recommendations and marked-up drawings.",
         "duration": 30,
         "budgetRange": {"min": 150000, "max": 200000, "currency": "SAR"},
-        "requiredSkills": ["Bridge Design", "Cable Structures", "Seismic Analysis", "Structural Review"],
+        "requiredSkills": ["Bridge Design", "Cable Structures", "Seismic Analysis", "Structural Review", "Finite Element Analysis"],
         "experienceLevel": "Expert",
         "locationRequirement": "Remote",
         "startDate": "2026-02-01",
-        "deliverableFormat": "Technical Review Report with marked-up drawings",
+        "deliverableFormat": "Technical Review Report with marked-up drawings, calculation review, and recommendations in PDF format",
         "paymentTerms": "Upon Completion",
-        "exchangeType": "Cash"
+        "exchangeType": "Cash",
+        "barterOffer": ""
       },
       "createdAt": "2026-01-19T11:00:00.000Z",
       "updatedAt": "2026-01-19T11:00:00.000Z"
@@ -261,27 +385,43 @@
     {
       "id": "opp-009",
       "title": "Mentorship Program - Young Engineers",
-      "description": "Experienced engineers wanted to mentor fresh graduates entering the construction industry. Part of our Vision 2030 workforce development initiative.",
+      "description": "Experienced engineers wanted to mentor fresh graduates entering the construction industry. Part of our Vision 2030 workforce development initiative. Paid mentorship opportunity.",
       "creatorId": "user-company-002",
       "modelType": "strategic_partnership",
       "subModelType": "mentorship",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Riyadh > Riyadh City > Al Olaya",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "Al Olaya",
+      "exchangeMode": "cash",
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Monthly compensation of 5,000 SAR per mentee. Payment made at the end of each month upon submission of mentorship activity report.",
+        "cashAmount": 5000,
+        "cashPaymentTerms": "Monthly",
+        "cashMilestones": ""
+      },
+      "attributes": {
         "mentorshipTitle": "Vision 2030 Young Engineer Mentorship",
         "mentorshipType": "Career Development",
         "experienceLevel": "Entry-Level",
-        "targetSkills": ["Project Management", "Technical Writing", "Professional Development", "Industry Knowledge"],
+        "targetSkills": ["Project Management", "Technical Writing", "Professional Development", "Industry Knowledge", "Communication Skills", "Problem Solving"],
         "duration": 12,
         "frequency": "Bi-Weekly",
         "format": "Hybrid",
         "compensation": "Paid Monthly",
+        "barterOffer": "",
         "mentorRequirements": [
           {"requirement": "10+ years industry experience"},
           {"requirement": "PE or equivalent certification"},
-          {"requirement": "Previous mentoring experience preferred"}
+          {"requirement": "Previous mentoring experience preferred"},
+          {"requirement": "Strong communication and teaching skills"}
         ],
-        "menteeBackground": "Recent engineering graduates (0-2 years experience) from Saudi universities",
-        "successMetrics": ["Mentee promotion/advancement", "Skill acquisition", "Professional network growth"]
+        "menteeBackground": "Recent engineering graduates (0-2 years experience) from Saudi universities. Focus on civil, mechanical, and electrical engineering disciplines.",
+        "successMetrics": ["Mentee promotion/advancement", "Skill acquisition", "Professional network growth", "Certification achievement", "Job satisfaction"]
       },
       "createdAt": "2026-01-20T08:00:00.000Z",
       "updatedAt": "2026-01-20T08:00:00.000Z"
@@ -289,16 +429,30 @@
     {
       "id": "opp-010",
       "title": "Surplus Construction Materials - Sell/Barter",
-      "description": "Excess materials from completed project available for sale or barter. Includes rebar, formwork, and electrical supplies.",
+      "description": "Excess materials from completed project available for sale or barter. Includes rebar, formwork, and electrical supplies. All items in good condition, stored properly. Open to barter for materials, equipment, or services.",
       "creatorId": "user-company-003",
       "modelType": "resource_pooling",
       "subModelType": "resource_sharing",
       "status": "published",
-      "modelData": {
+      "location": "Saudi Arabia > Makkah > Jeddah > Al Balad",
+      "locationCountry": "sa",
+      "locationRegion": "makkah",
+      "locationCity": "jeddah",
+      "locationDistrict": "Al Balad",
+      "exchangeMode": "barter",
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "exchangeTermsSummary": "Open to barter exchange for precast elements, ready-mix concrete credits, equipment rental credits, or professional services. Estimated value 2.5M SAR. Willing to negotiate terms.",
+        "barterOffer": "Package includes: 200 tons rebar (various sizes), 5000 sqm aluminum formwork (PERI system), 500 electrical panels, and miscellaneous MEP materials. All items in good condition, stored properly.",
+        "barterNeed": "Precast elements, ready-mix concrete credits, equipment rental credits, or professional services (engineering, design, consulting)",
+        "barterValue": "2,500,000"
+      },
+      "attributes": {
         "resourceTitle": "Surplus Construction Materials Package",
         "resourceType": "Materials",
         "transactionType": "Barter",
-        "detailedDescription": "Package includes: 200 tons rebar (various sizes), 5000 sqm aluminum formwork (PERI system), 500 electrical panels, and miscellaneous MEP materials. All items in good condition, stored properly.",
+        "detailedDescription": "Package includes: 200 tons rebar (various sizes: 12mm, 16mm, 20mm, 25mm), 5000 sqm aluminum formwork (PERI system, excellent condition), 500 electrical panels (various ratings), and miscellaneous MEP materials including conduits, cables, and fixtures. All items in good condition, stored properly in covered warehouse.",
         "quantity": 1,
         "unitOfMeasure": "Package",
         "condition": "Good",
@@ -307,7 +461,9 @@
         "barterOffer": "Open to barter for: precast elements, ready-mix concrete credits, equipment rental credits, or professional services",
         "barterPreferences": ["Materials", "Equipment", "Services"],
         "delivery": "Buyer Pickup",
-        "urgency": "Within 1 Month"
+        "urgency": "Within 1 Month",
+        "price": 0,
+        "paymentTerms": ""
       },
       "createdAt": "2026-01-21T09:00:00.000Z",
       "updatedAt": "2026-01-21T09:00:00.000Z"

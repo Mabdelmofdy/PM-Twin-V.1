@@ -1,80 +1,460 @@
 <div class="opportunity-create-page">
     <div class="page-header">
-        <h1>Create Opportunity</h1>
-        <p class="page-subtitle">Post a new collaboration opportunity</p>
+        <div class="flex justify-between items-center">
+            <div>
+                <h1>Create Opportunity</h1>
+                <p class="page-subtitle">Post a new collaboration opportunity</p>
+            </div>
+            <button type="button" id="fill-demo-data" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-all text-sm border border-gray-300">
+                <i class="ph-duotone ph-magic-wand" style="font-size: 18px;" aria-hidden="true"></i>
+                Fill Demo Data
+            </button>
+        </div>
+    </div>
+    
+    <!-- Wizard Progress -->
+    <div class="wizard-progress mb-8">
+        <div class="flex items-center justify-between">
+            <div class="wizard-step" data-step="1">
+                <div class="wizard-step-number">1</div>
+                <div class="wizard-step-label">Model</div>
+            </div>
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step" data-step="2">
+                <div class="wizard-step-number">2</div>
+                <div class="wizard-step-label">Details</div>
+            </div>
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step" data-step="3">
+                <div class="wizard-step-number">3</div>
+                <div class="wizard-step-label">Specifics</div>
+            </div>
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step" data-step="4">
+                <div class="wizard-step-number">4</div>
+                <div class="wizard-step-label">Payment</div>
+            </div>
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step" data-step="5">
+                <div class="wizard-step-number">5</div>
+                <div class="wizard-step-label">Publish</div>
+            </div>
+        </div>
     </div>
     
     <form id="opportunity-form" class="opportunity-form">
-        <!-- Model Selection -->
-        <div class="form-section">
-            <h2>Select Collaboration Model</h2>
-            <div class="form-group">
-                <label for="model-type" class="form-label">Model Type <span style="color: var(--danger-color);">*</span></label>
-                <select id="model-type" name="modelType" class="form-select" required>
-                    <option value="">Select a model...</option>
-                </select>
-            </div>
-            
-            <div class="form-group" id="submodel-group" style="display: none;">
-                <label for="submodel-type" class="form-label">Sub-Model Type <span style="color: var(--danger-color);">*</span></label>
-                <select id="submodel-type" name="subModelType" class="form-select" required>
-                    <option value="">Select a sub-model...</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Basic Information -->
-        <div class="form-section">
-            <h2>Basic Information</h2>
-            <div class="form-group">
-                <label for="title" class="form-label">Title <span style="color: var(--danger-color);">*</span></label>
-                <input 
-                    type="text" 
-                    id="title" 
-                    name="title" 
-                    class="form-input" 
-                    required 
-                    maxlength="150"
-                    placeholder="Enter opportunity title"
-                >
-            </div>
-            
-            <div class="form-group">
-                <label for="description" class="form-label">Description</label>
-                <textarea 
-                    id="description" 
-                    name="description" 
-                    class="form-textarea" 
-                    maxlength="2000"
-                    placeholder="Brief description of the opportunity"
-                ></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="status" class="form-label">Status</label>
-                <select id="status" name="status" class="form-select">
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                </select>
+        <!-- Step 1: Model Selection -->
+        <div class="wizard-step-content" id="step-1" data-step="1">
+            <div class="form-section">
+                <h2>Step 1: Select Collaboration Model</h2>
+                <div class="form-group">
+                    <label for="model-search" class="form-label">Search Collaboration Type <span class="text-red-600">*</span></label>
+                    <div class="model-search-container">
+                        <input 
+                            type="text" 
+                            id="model-search" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            placeholder="Search by model name (e.g., Consortium, Task-Based, Hiring...)"
+                            autocomplete="off"
+                        >
+                        <input type="hidden" id="model-type" name="modelType" required>
+                        <input type="hidden" id="submodel-type" name="subModelType" required>
+                        
+                        <div id="model-dropdown" class="model-dropdown hidden">
+                            <div class="model-dropdown-content"></div>
+                        </div>
+                        
+                        <div id="selected-model-display" class="selected-model-display hidden">
+                            <div class="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-md mt-2">
+                                <div>
+                                    <div class="text-sm text-gray-600 mb-1">Selected Model:</div>
+                                    <div class="font-semibold text-gray-900" id="selected-model-name"></div>
+                                    <div class="text-sm text-gray-600" id="selected-model-category"></div>
+                                </div>
+                                <button type="button" id="clear-model-selection" class="text-red-600 hover:text-red-800 font-medium">
+                                    Change
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Start typing to search through all 13 collaboration models</p>
+                </div>
             </div>
         </div>
         
-        <!-- Dynamic Fields -->
-        <div class="form-section" id="dynamic-fields-section">
-            <h2>Model-Specific Details</h2>
-            <div id="dynamic-fields">
-                <p class="text-muted">Please select a model and sub-model to see specific fields.</p>
+        <!-- Step 2: Basic Information & Location -->
+        <div class="wizard-step-content hidden" id="step-2" data-step="2">
+            <div class="form-section">
+                <h2>Step 2: Basic Information & Location</h2>
+                
+                <div class="form-group">
+                    <label for="title" class="form-label">Title <span class="text-red-600">*</span></label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                        required 
+                        maxlength="150"
+                        placeholder="Enter opportunity title"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                        maxlength="2000"
+                        rows="4"
+                        placeholder="Brief description of the opportunity"
+                        data-rich-text="true"
+                    ></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Location <span class="text-red-600">*</span></label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="location-country-search" class="block text-sm font-medium text-gray-700 mb-2">Country <span class="text-red-600">*</span></label>
+                            <div class="location-dropdown-container">
+                                <input 
+                                    type="text" 
+                                    id="location-country-search" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    placeholder="Search country..."
+                                    autocomplete="off"
+                                    required
+                                >
+                                <input type="hidden" id="location-country" name="locationCountry" required>
+                                <div id="location-country-dropdown" class="searchable-dropdown hidden">
+                                    <div class="searchable-dropdown-content"></div>
+                                </div>
+                                <div id="location-country-display" class="selected-display hidden mt-2">
+                                    <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                        <span class="text-sm font-medium text-gray-900" id="location-country-name"></span>
+                                        <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="clearLocationSelection('country')">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="location-region-search" class="block text-sm font-medium text-gray-700 mb-2">Region <span class="text-red-600">*</span></label>
+                            <div class="location-dropdown-container">
+                                <input 
+                                    type="text" 
+                                    id="location-region-search" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
+                                    placeholder="Select country first..."
+                                    autocomplete="off"
+                                    required
+                                    disabled
+                                >
+                                <input type="hidden" id="location-region" name="locationRegion" required>
+                                <div id="location-region-dropdown" class="searchable-dropdown hidden">
+                                    <div class="searchable-dropdown-content"></div>
+                                </div>
+                                <div id="location-region-display" class="selected-display hidden mt-2">
+                                    <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                        <span class="text-sm font-medium text-gray-900" id="location-region-name"></span>
+                                        <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="clearLocationSelection('region')">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="location-city-search" class="block text-sm font-medium text-gray-700 mb-2">City <span class="text-red-600">*</span></label>
+                            <div class="location-dropdown-container">
+                                <input 
+                                    type="text" 
+                                    id="location-city-search" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
+                                    placeholder="Select region first..."
+                                    autocomplete="off"
+                                    required
+                                    disabled
+                                >
+                                <input type="hidden" id="location-city" name="locationCity" required>
+                                <div id="location-city-dropdown" class="searchable-dropdown hidden">
+                                    <div class="searchable-dropdown-content"></div>
+                                </div>
+                                <div id="location-city-display" class="selected-display hidden mt-2">
+                                    <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                        <span class="text-sm font-medium text-gray-900" id="location-city-name"></span>
+                                        <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="clearLocationSelection('city')">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="location-district-search" class="block text-sm font-medium text-gray-700 mb-2">District</label>
+                            <div class="location-dropdown-container">
+                                <input 
+                                    type="text" 
+                                    id="location-district-search" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
+                                    placeholder="Select city first..."
+                                    autocomplete="off"
+                                    disabled
+                                >
+                                <input type="hidden" id="location-district" name="locationDistrict">
+                                <div id="location-district-dropdown" class="searchable-dropdown hidden">
+                                    <div class="searchable-dropdown-content"></div>
+                                </div>
+                                <div id="location-district-display" class="selected-display hidden mt-2">
+                                    <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                        <span class="text-sm font-medium text-gray-900" id="location-district-name"></span>
+                                        <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="clearLocationSelection('district')">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Search and select country, region, city, and optionally district for this opportunity</p>
+                    <input type="hidden" id="location" name="location">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 3: Model-Specific Details -->
+        <div class="wizard-step-content hidden" id="step-3" data-step="3">
+            <div class="form-section">
+                <h2>Step 3: Model-Specific Details</h2>
+                <div id="dynamic-fields">
+                    <p class="text-gray-500 italic">Please complete previous steps to see specific fields.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 4: Exchange Mode & Payment Details -->
+        <div class="wizard-step-content hidden" id="step-4" data-step="4">
+            <div class="form-section">
+                <h2>Step 4: Exchange Mode & Payment Details</h2>
+                <p class="text-gray-600 mb-6">PMTwin enables multiple value exchange modes beyond cash. Select the exchange mode that best fits your opportunity.</p>
+                
+                <!-- Budget Range Section -->
+                <div class="form-group mb-6" id="budget-range-section">
+                    <label class="form-label">Budget Range <span class="text-red-600">*</span></label>
+                    <p class="text-sm text-gray-500 mb-3">Specify the expected budget range for this opportunity</p>
+                    <div class="budget-range-inputs">
+                        <div class="budget-input-group">
+                            <label for="budgetRange_min" class="text-sm text-gray-600">Minimum</label>
+                            <div class="input-with-prefix">
+                                <span class="input-prefix">SAR</span>
+                                <input 
+                                    type="number" 
+                                    id="budgetRange_min" 
+                                    name="budgetRange_min" 
+                                    class="budget-input"
+                                    placeholder="50,000"
+                                    min="0"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        <div class="budget-separator">
+                            <span>to</span>
+                        </div>
+                        <div class="budget-input-group">
+                            <label for="budgetRange_max" class="text-sm text-gray-600">Maximum</label>
+                            <div class="input-with-prefix">
+                                <span class="input-prefix">SAR</span>
+                                <input 
+                                    type="number" 
+                                    id="budgetRange_max" 
+                                    name="budgetRange_max" 
+                                    class="budget-input"
+                                    placeholder="100,000"
+                                    min="0"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Exchange Mode Selection -->
+                <div class="form-group mb-6">
+                    <label for="exchange-mode" class="form-label">Exchange Mode <span class="text-red-600">*</span></label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="exchange-mode-card" data-mode="cash">
+                            <div class="exchange-mode-icon"><i class="ph-duotone ph-currency-dollar" style="font-size: 32px;" aria-hidden="true"></i></div>
+                            <div class="exchange-mode-title">Cash</div>
+                            <div class="exchange-mode-description">Standard payments with defined terms and milestones</div>
+                        </div>
+                        <div class="exchange-mode-card" data-mode="equity">
+                            <div class="exchange-mode-icon"><i class="ph-duotone ph-chart-bar" style="font-size: 32px;" aria-hidden="true"></i></div>
+                            <div class="exchange-mode-title">Equity</div>
+                            <div class="exchange-mode-description">Ownership stake for contribution; includes vesting</div>
+                        </div>
+                        <div class="exchange-mode-card" data-mode="profit_sharing">
+                            <div class="exchange-mode-icon"><i class="ph-duotone ph-percent" style="font-size: 32px;" aria-hidden="true"></i></div>
+                            <div class="exchange-mode-title">Profit-Sharing</div>
+                            <div class="exchange-mode-description">Share revenue or profit without ownership transfer</div>
+                        </div>
+                        <div class="exchange-mode-card" data-mode="barter">
+                            <div class="exchange-mode-icon"><i class="ph-duotone ph-arrows-clockwise" style="font-size: 32px;" aria-hidden="true"></i></div>
+                            <div class="exchange-mode-title">Barter</div>
+                            <div class="exchange-mode-description">Direct exchange of resources or services; no cash</div>
+                        </div>
+                        <div class="exchange-mode-card" data-mode="hybrid">
+                            <div class="exchange-mode-icon"><i class="ph-duotone ph-link" style="font-size: 32px;" aria-hidden="true"></i></div>
+                            <div class="exchange-mode-title">Hybrid</div>
+                            <div class="exchange-mode-description">Mix cash, equity, barter for flexible deals</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="exchange-mode" name="exchangeMode" required>
+                    <div id="selected-exchange-display" class="selected-exchange-display hidden mt-4">
+                        <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-md">
+                            <div>
+                                <div class="text-sm text-gray-600 mb-1">Selected Exchange Mode:</div>
+                                <div class="font-semibold text-gray-900" id="selected-exchange-name"></div>
+                            </div>
+                            <button type="button" id="clear-exchange-selection" class="text-red-600 hover:text-red-800 font-medium">
+                                Change
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dynamic Exchange Mode Fields -->
+                <div id="exchange-mode-fields" class="exchange-mode-fields">
+                    <p class="text-gray-500 italic">Please select an exchange mode to see specific fields.</p>
+                </div>
+                
+                <!-- Currency (for Cash and Hybrid modes) -->
+                <div id="currency-group" class="form-group hidden">
+                    <label for="currency" class="form-label">Currency <span class="text-red-600">*</span></label>
+                    <select id="currency" name="currency" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="SAR">SAR (Saudi Riyal)</option>
+                        <option value="USD">USD (US Dollar)</option>
+                        <option value="EUR">EUR (Euro)</option>
+                        <option value="AED">AED (UAE Dirham)</option>
+                        <option value="KWD">KWD (Kuwaiti Dinar)</option>
+                    </select>
+                </div>
+                
+                <!-- Additional Terms -->
+                <div class="form-group">
+                    <label for="exchange-terms-summary" class="form-label">Additional Terms & Notes</label>
+                    <textarea 
+                        id="exchange-terms-summary" 
+                        name="exchangeTermsSummary" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                        rows="3"
+                        placeholder="Describe any additional terms, conditions, or special arrangements..."
+                        data-rich-text="true"
+                    ></textarea>
+                </div>
+                
+                <!-- Agreement -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="exchange-agreement" name="exchangeAgreement" class="mr-2" required>
+                        I agree to the exchange terms and understand that details will be finalized during the collaboration agreement phase.
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 5: Publish Status -->
+        <div class="wizard-step-content hidden" id="step-5" data-step="5">
+            <div class="form-section">
+                <h2>Step 5: Publish Status</h2>
+                <p class="text-gray-600 mb-6">Choose whether to save as draft or publish your opportunity immediately.</p>
+                
+                <div class="form-group">
+                    <label for="status" class="form-label">Status <span class="text-red-600">*</span></label>
+                    <select 
+                        id="status" 
+                        name="status" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        required
+                    >
+                        <option value="draft">Draft - Save for later editing</option>
+                        <option value="published">Published - Make visible to other users</option>
+                    </select>
+                    <p class="text-sm text-gray-500 mt-2">
+                        <strong>Draft:</strong> Your opportunity will be saved but not visible to others. You can edit and publish it later.<br>
+                        <strong>Published:</strong> Your opportunity will be immediately visible to all users on the platform.
+                    </p>
+                </div>
+                
+                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                    <div class="flex items-start">
+                        <i class="ph-duotone ph-info" style="font-size: 20px; color: #2563eb; margin-right: 12px; margin-top: 2px;" aria-hidden="true"></i>
+                        <div>
+                            <p class="text-sm text-gray-700 font-medium mb-1">Ready to publish?</p>
+                            <p class="text-sm text-gray-600">
+                                Review all your information before publishing. Once published, your opportunity will be visible to all users and you can still edit it later if needed.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <!-- Error/Success Messages -->
-        <div id="form-error" class="alert alert-error" style="display: none;"></div>
-        <div id="form-success" class="alert alert-success" style="display: none;"></div>
+        <div id="form-error" class="alert alert-error hidden mb-4"></div>
+        <div id="form-success" class="alert alert-success hidden mb-4"></div>
         
-        <!-- Form Actions -->
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Create Opportunity</button>
-            <button type="button" class="btn btn-secondary" onclick="router.navigate('/opportunities')">Cancel</button>
+        <!-- Demo Data Confirmation Modal -->
+        <div id="demo-data-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900">Fill Demo Data?</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        This will fill all form fields with demo data. Any existing data will be replaced. Do you want to continue?
+                    </p>
+                    <div class="flex justify-end gap-3">
+                        <button 
+                            type="button" 
+                            id="demo-modal-cancel" 
+                            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-all font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="button" 
+                            id="demo-modal-confirm" 
+                            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-all font-medium"
+                        >
+                            Fill Demo Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wizard Navigation -->
+        <div class="form-actions flex justify-between items-center">
+            <button type="button" id="prev-step" class="px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all hidden inline-flex items-center gap-2">
+                <i class="ph-duotone ph-arrow-left" style="font-size: 18px;" aria-hidden="true"></i>
+                Previous
+            </button>
+            <div class="flex gap-4 ml-auto">
+                <button type="button" id="next-step" class="px-6 py-2 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md inline-flex items-center gap-2">
+                    Next
+                    <i class="ph-duotone ph-arrow-right" style="font-size: 18px;" aria-hidden="true"></i>
+                </button>
+                <button type="submit" id="submit-form" class="px-6 py-2 bg-success text-white font-medium rounded-md hover:bg-green-600 transition-all shadow-md hidden">
+                    Create Opportunity
+                </button>
+                <button type="button" class="px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all" onclick="router.navigate('/opportunities')">
+                    Cancel
+                </button>
+            </div>
         </div>
     </form>
 </div>
@@ -87,30 +467,105 @@
 }
 
 .page-header {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: 2rem;
 }
 
 .page-header h1 {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-sm);
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
-    color: var(--text-secondary);
-    font-size: var(--font-size-lg);
+    color: #6b7280;
+    font-size: 1.125rem;
+}
+
+.wizard-progress {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.wizard-step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s;
+}
+
+.wizard-step.active .wizard-step-number {
+    background: #2563eb;
+    color: white;
+}
+
+.wizard-step.completed .wizard-step-number {
+    background: #10b981;
+    color: white;
+}
+
+.wizard-step-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.wizard-step.active .wizard-step-label {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.wizard-step.completed .wizard-step-label {
+    color: #10b981;
+}
+
+.wizard-step-line {
+    flex: 1;
+    height: 2px;
+    background: #e5e7eb;
+    margin: 0 1rem;
+    margin-top: -20px;
+    transition: all 0.3s;
+}
+
+.wizard-step.completed + .wizard-step-line {
+    background: #10b981;
 }
 
 .opportunity-form {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 2rem;
+}
+
+.wizard-step-content {
+    min-height: 400px;
+}
+
+.wizard-step-content.hidden {
+    display: none;
 }
 
 .form-section {
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-xl);
-    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .form-section:last-child {
@@ -118,21 +573,274 @@
 }
 
 .form-section h2 {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-lg);
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #111827;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.model-search-container {
+    position: relative;
+}
+
+.model-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0.25rem;
+}
+
+.model-dropdown.hidden {
+    display: none;
+}
+
+.model-group {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.model-group:last-child {
+    border-bottom: none;
+}
+
+.model-group-header {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.model-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.model-option:hover {
+    background: #f9fafb;
+}
+
+.model-option.highlighted {
+    background: #eff6ff;
+}
+
+.model-option-name {
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.model-option-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.no-results {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.selected-model-display.hidden {
+    display: none;
+}
+
+select:disabled,
+input:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.exchange-mode-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    background: white;
+}
+
+.exchange-mode-card:hover {
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.exchange-mode-card.selected {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.exchange-mode-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: bold;
+}
+
+.exchange-mode-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.exchange-mode-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.selected-exchange-display.hidden {
+    display: none;
+}
+
+.exchange-mode-fields {
+    margin-bottom: 1.5rem;
+}
+
+/* Rich Text Editor Styles */
+.rich-text-editor-container .ql-container {
+    font-family: inherit;
+    font-size: 0.875rem;
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+    border-color: #d1d5db;
+}
+
+.rich-text-editor-container .ql-toolbar {
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+.rich-text-editor-container .ql-editor {
+    min-height: 120px;
+}
+
+.rich-text-editor-container .ql-editor.ql-blank::before {
+    color: #9ca3af;
+    font-style: normal;
+}
+
+.rich-text-editor-container .ql-snow .ql-stroke {
+    stroke: #6b7280;
+}
+
+.rich-text-editor-container .ql-snow .ql-fill {
+    fill: #6b7280;
+}
+
+.rich-text-editor-container .ql-snow .ql-picker-label:hover,
+.rich-text-editor-container .ql-snow .ql-picker-label.ql-active,
+.rich-text-editor-container .ql-snow .ql-picker-item:hover,
+.rich-text-editor-container .ql-snow .ql-picker-item.ql-selected {
+    color: #2563eb;
+}
+
+.rich-text-editor-container .ql-snow .ql-stroke.ql-thin,
+.rich-text-editor-container .ql-snow .ql-thin {
+    stroke-width: 1;
+}
+
+.rich-text-editor-container .ql-snow .ql-tooltip {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.rich-text-editor-container .ql-snow .ql-tooltip input[type=text] {
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.rich-text-editor-container .ql-snow .ql-tooltip a.ql-action::after {
+    border-right: 1px solid #d1d5db;
+}
+
+.location-dropdown-container {
+    position: relative;
+}
+
+.searchable-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0.25rem;
+}
+
+.searchable-dropdown.hidden {
+    display: none;
+}
+
+.searchable-dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.searchable-dropdown-item:hover {
+    background: #f9fafb;
+}
+
+.searchable-dropdown-item.highlighted {
+    background: #eff6ff;
+}
+
+.searchable-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.selected-display.hidden {
+    display: none;
 }
 
 .form-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-xl);
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
 }
 
 .currency-range,
 .date-range {
     display: flex;
-    gap: var(--spacing-md);
+    gap: 1rem;
     align-items: center;
 }
 
@@ -142,13 +850,13 @@
 }
 
 .array-objects-container {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 1rem;
 }
 
 .array-object-item {
     display: flex;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    gap: 1rem;
+    margin-bottom: 1rem;
     align-items: center;
 }
 
@@ -159,15 +867,85 @@
 .form-checkbox {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 0.5rem;
 }
 
 .form-checkbox input[type="checkbox"] {
     width: auto;
 }
 
-.btn-sm {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
+/* Budget Range Inputs */
+.budget-range-inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.budget-input-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.budget-input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.input-with-prefix {
+    display: flex;
+    align-items: stretch;
+}
+
+.input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-right: none;
+    border-radius: 0.375rem 0 0 0.375rem;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.budget-input {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0 0.375rem 0.375rem 0;
+    font-size: 1rem;
+    min-width: 120px;
+}
+
+.budget-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.budget-separator {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .budget-range-inputs {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .budget-input-group {
+        width: 100%;
+    }
+    
+    .budget-separator {
+        display: none;
+    }
 }
 </style>

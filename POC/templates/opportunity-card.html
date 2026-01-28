@@ -1,9 +1,18 @@
-<div class="opportunity-card" data-id="{{id}}">
+<div class="opportunity-card {{categoryClass}}" data-id="{{id}}">
+    {{#if showCategoryBadge}}
+    <div class="category-ribbon">
+        <i class="{{categoryIcon}}"></i>
+        <span>{{categoryLabel}}</span>
+    </div>
+    {{/if}}
     <div class="opportunity-header">
         <div>
             <h3 class="opportunity-title">{{title}}</h3>
             <div class="opportunity-meta">
                 <span class="badge badge-primary">{{modelType}}</span>
+                {{#if subModelType}}
+                <span class="badge badge-outline">{{subModelType}}</span>
+                {{/if}}
                 <span class="badge badge-{{statusBadgeClass}}">{{status}}</span>
             </div>
         </div>
@@ -11,17 +20,33 @@
     <div class="opportunity-description">
         {{{description}}}
     </div>
+    {{#if hasApplied}}
+    <div class="application-status-bar {{applicationStatusClass}}">
+        <i class="ph-duotone ph-clock"></i>
+        <span>Application: <strong>{{applicationStatusLabel}}</strong></span>
+    </div>
+    {{/if}}
     <div class="opportunity-footer">
         <span class="text-muted" style="font-size: var(--font-size-xs);">
             {{createdDate}}
         </span>
         {{#if isOwner}}
-            <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-secondary">Manage</a>
+            <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-secondary">
+                <i class="ph-duotone ph-gear"></i> Manage
+            </a>
         {{else}}
-            {{#if canApply}}
-                <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-primary">View & Apply</a>
+            {{#if hasApplied}}
+                <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-outline">
+                    <i class="ph-duotone ph-eye"></i> View Application
+                </a>
             {{else}}
-                <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-secondary">View</a>
+                {{#if canApply}}
+                    <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-primary">
+                        <i class="ph-duotone ph-paper-plane-tilt"></i> View & Apply
+                    </a>
+                {{else}}
+                    <a href="#" data-route="/opportunities/{{id}}" class="btn btn-sm btn-secondary">View</a>
+                {{/if}}
             {{/if}}
         {{/if}}
     </div>

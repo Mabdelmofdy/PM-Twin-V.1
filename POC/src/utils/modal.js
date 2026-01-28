@@ -40,21 +40,23 @@ class ModalService {
             const modal = document.createElement('div');
             modal.className = 'modal-dialog';
             
+            // Use Phosphor Duotone icons
             const iconMap = {
-                success: '✓',
-                error: '✕',
-                warning: '⚠',
-                info: 'ℹ'
+                success: IconHelper ? IconHelper.render('check-circle', { size: 64, weight: 'duotone' }) : '✓',
+                error: IconHelper ? IconHelper.render('x-circle', { size: 64, weight: 'duotone' }) : '✕',
+                warning: IconHelper ? IconHelper.render('warning-circle', { size: 64, weight: 'duotone' }) : '⚠',
+                info: IconHelper ? IconHelper.render('info-circle', { size: 64, weight: 'duotone' }) : 'ℹ'
             };
 
             const icon = iconMap[type] || iconMap.info;
             const iconClass = `modal-icon modal-icon-${type}`;
+            const closeIcon = IconHelper ? IconHelper.render('x', { size: 24, weight: 'duotone' }) : '&times;';
 
             modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
                         <h3 class="modal-title">${title}</h3>
-                        <button class="modal-close" aria-label="Close">&times;</button>
+                        <button class="modal-close" aria-label="Close">${closeIcon}</button>
                     </div>
                     <div class="modal-body">
                         <div class="${iconClass}">${icon}</div>

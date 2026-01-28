@@ -1,0 +1,393 @@
+{
+  "countries": [
+    {
+      "id": "sa",
+      "name": "Saudi Arabia",
+      "code": "SA",
+      "regions": [
+        {
+          "id": "riyadh",
+          "name": "Riyadh",
+          "cities": [
+            {
+              "id": "riyadh-city",
+              "name": "Riyadh City",
+              "districts": [
+                "Al Olaya",
+                "Al Malaz",
+                "Al Naseem",
+                "Al Wurud",
+                "Al Murabba",
+                "King Fahd District",
+                "Al Nakheel",
+                "Al Malqa",
+                "Al Shumaisi",
+                "Al Faisaliah"
+              ]
+            },
+            {
+              "id": "diriyah",
+              "name": "Diriyah",
+              "districts": []
+            },
+            {
+              "id": "al-kharj",
+              "name": "Al Kharj",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "makkah",
+          "name": "Makkah",
+          "cities": [
+            {
+              "id": "makkah-city",
+              "name": "Makkah",
+              "districts": [
+                "Al Aziziyah",
+                "Al Nuzha",
+                "Al Shara'i",
+                "Al Misfalah",
+                "Al Ma'abdah"
+              ]
+            },
+            {
+              "id": "jeddah",
+              "name": "Jeddah",
+              "districts": [
+                "Al Balad",
+                "Al Hamra",
+                "Al Shati",
+                "Al Rawdah",
+                "Al Andalus",
+                "Al Salama",
+                "Al Faisaliah",
+                "Al Naeem",
+                "Al Samer"
+              ]
+            },
+            {
+              "id": "taif",
+              "name": "Taif",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "eastern-province",
+          "name": "Eastern Province",
+          "cities": [
+            {
+              "id": "dammam",
+              "name": "Dammam",
+              "districts": [
+                "Al Faisaliah",
+                "Al Aziziyah",
+                "Al Khobar",
+                "Al Corniche",
+                "Al Danah"
+              ]
+            },
+            {
+              "id": "khobar",
+              "name": "Al Khobar",
+              "districts": [
+                "Al Aziziyah",
+                "Al Corniche",
+                "Al Danah",
+                "Al Hamra",
+                "Al Rakah"
+              ]
+            },
+            {
+              "id": "dhahran",
+              "name": "Dhahran",
+              "districts": []
+            },
+            {
+              "id": "jubail",
+              "name": "Jubail",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "qassim",
+          "name": "Qassim",
+          "cities": [
+            {
+              "id": "buraydah",
+              "name": "Buraydah",
+              "districts": []
+            },
+            {
+              "id": "unayzah",
+              "name": "Unaizah",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "tabuk",
+          "name": "Tabuk",
+          "cities": [
+            {
+              "id": "tabuk-city",
+              "name": "Tabuk",
+              "districts": []
+            },
+            {
+              "id": "neom",
+              "name": "NEOM",
+              "districts": [
+                "The Line",
+                "Trojena",
+                "Oxagon",
+                "Sindalah"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "asir",
+          "name": "Asir",
+          "cities": [
+            {
+              "id": "abha",
+              "name": "Abha",
+              "districts": []
+            },
+            {
+              "id": "khamis-mushait",
+              "name": "Khamis Mushait",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "hail",
+          "name": "Hail",
+          "cities": [
+            {
+              "id": "hail-city",
+              "name": "Hail",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "northern-borders",
+          "name": "Northern Borders",
+          "cities": [
+            {
+              "id": "arar",
+              "name": "Arar",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "jazan",
+          "name": "Jazan",
+          "cities": [
+            {
+              "id": "jazan-city",
+              "name": "Jazan",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "najran",
+          "name": "Najran",
+          "cities": [
+            {
+              "id": "najran-city",
+              "name": "Najran",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "al-bahah",
+          "name": "Al Bahah",
+          "cities": [
+            {
+              "id": "al-bahah-city",
+              "name": "Al Bahah",
+              "districts": []
+            }
+          ]
+        },
+        {
+          "id": "al-jouf",
+          "name": "Al Jouf",
+          "cities": [
+            {
+              "id": "sakaka",
+              "name": "Sakaka",
+              "districts": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "uae",
+      "name": "United Arab Emirates",
+      "code": "AE",
+      "regions": [
+        {
+          "id": "dubai-emirate",
+          "name": "Dubai",
+          "cities": [
+            {
+              "id": "dubai",
+              "name": "Dubai",
+              "districts": [
+                "Downtown Dubai",
+                "Dubai Marina",
+                "Business Bay",
+                "Jumeirah",
+                "Palm Jumeirah",
+                "Al Barsha",
+                "Deira"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "abu-dhabi-emirate",
+          "name": "Abu Dhabi",
+          "cities": [
+            {
+              "id": "abu-dhabi",
+              "name": "Abu Dhabi",
+              "districts": [
+                "Al Khalidiyah",
+                "Al Markaziyah",
+                "Al Zahiyah",
+                "Corniche",
+                "Al Bateen"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sharjah-emirate",
+          "name": "Sharjah",
+          "cities": [
+            {
+              "id": "sharjah",
+              "name": "Sharjah",
+              "districts": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa",
+      "name": "Qatar",
+      "code": "QA",
+      "regions": [
+        {
+          "id": "doha-region",
+          "name": "Doha",
+          "cities": [
+            {
+              "id": "doha",
+              "name": "Doha",
+              "districts": [
+                "West Bay",
+                "Al Sadd",
+                "Al Dafna",
+                "The Pearl",
+                "Al Waab"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kw",
+      "name": "Kuwait",
+      "code": "KW",
+      "regions": [
+        {
+          "id": "kuwait-region",
+          "name": "Kuwait",
+          "cities": [
+            {
+              "id": "kuwait-city",
+              "name": "Kuwait City",
+              "districts": [
+                "Sharq",
+                "Dasma",
+                "Salmiya",
+                "Hawalli",
+                "Jabriya"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bh",
+      "name": "Bahrain",
+      "code": "BH",
+      "regions": [
+        {
+          "id": "bahrain-region",
+          "name": "Manama",
+          "cities": [
+            {
+              "id": "manama",
+              "name": "Manama",
+              "districts": [
+                "Adliya",
+                "Juffair",
+                "Seef",
+                "Diplomatic Area",
+                "Al Seef"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "om",
+      "name": "Oman",
+      "code": "OM",
+      "regions": [
+        {
+          "id": "muscat-region",
+          "name": "Muscat",
+          "cities": [
+            {
+              "id": "muscat",
+              "name": "Muscat",
+              "districts": [
+                "Al Khuwair",
+                "Al Ghubra",
+                "Al Seeb",
+                "Ruwi",
+                "Qurum"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "remote",
+      "name": "Remote",
+      "code": "REMOTE",
+      "regions": []
+    }
+  ]
+}

@@ -1,0 +1,369 @@
+{
+  "taskTypes": [
+    "Design",
+    "Engineering",
+    "Consultation",
+    "Review",
+    "Analysis",
+    "Other"
+  ],
+  "experienceLevels": [
+    "Junior",
+    "Mid-Level",
+    "Senior",
+    "Expert"
+  ],
+  "locationRequirements": [
+    "Remote",
+    "On-Site",
+    "Hybrid"
+  ],
+  "paymentTerms": [
+    "Upfront",
+    "Milestone-Based",
+    "Upon Completion",
+    "Monthly"
+  ],
+  "exchangeTypes": [
+    "Cash",
+    "Barter",
+    "Mixed"
+  ],
+  "projectTypes": [
+    "Infrastructure",
+    "Building",
+    "Industrial",
+    "Energy",
+    "Real Estate Development",
+    "Other"
+  ],
+  "employmentTypes": [
+    "Full-Time",
+    "Part-Time",
+    "Contract",
+    "Freelance",
+    "Temporary"
+  ],
+  "jobCategories": [
+    "Engineering",
+    "Project Management",
+    "Architecture",
+    "Quantity Surveying",
+    "Site Supervision",
+    "Safety",
+    "Other"
+  ],
+  "consultationTypes": [
+    "Legal",
+    "Financial",
+    "Technical",
+    "Sustainability",
+    "Safety",
+    "Design",
+    "Project Management",
+    "Other"
+  ],
+  "competitionTypes": [
+    "Design Competition",
+    "RFP",
+    "RFQ",
+    "Solution Challenge",
+    "Innovation Contest",
+    "Other"
+  ],
+  "resourceTypes": [
+    "Materials",
+    "Equipment",
+    "Labor",
+    "Services",
+    "Knowledge",
+    "Other"
+  ],
+  "transactionTypes": [
+    "Sell",
+    "Buy",
+    "Rent",
+    "Barter",
+    "Donate"
+  ],
+  "conditions": [
+    "New",
+    "Like New",
+    "Good",
+    "Fair",
+    "Poor"
+  ],
+  "deliveryOptions": [
+    "Buyer Pickup",
+    "Seller Delivery",
+    "Negotiable"
+  ],
+  "urgencyLevels": [
+    "Immediate",
+    "Within 1 Week",
+    "Within 1 Month",
+    "Flexible"
+  ],
+  "jvStructures": [
+    "Contractual",
+    "Incorporated LLC",
+    "Incorporated Corporation",
+    "Limited Partnership"
+  ],
+  "managementStructures": [
+    "Equal Management",
+    "Lead Partner",
+    "Management Committee",
+    "Professional Manager",
+    "Professional CEO"
+  ],
+  "profitDistributions": [
+    "Proportional to Equity",
+    "Fixed Percentage",
+    "Performance-Based",
+    "Reinvested"
+  ],
+  "exitStrategies": [
+    "Dissolution",
+    "Asset Sale",
+    "Buyout Option",
+    "Conversion to Strategic JV",
+    "Asset Transfer",
+    "Liquidation",
+    "Sale",
+    "Sell Share to Other Owners",
+    "Sell to Third Party",
+    "Liquidate Asset"
+  ],
+  "disputeResolutions": [
+    "Arbitration",
+    "Mediation",
+    "Court",
+    "Other"
+  ],
+  "workModes": [
+    "On-Site",
+    "Remote",
+    "Hybrid"
+  ],
+  "allianceTypes": [
+    "Preferred Supplier",
+    "Technology Licensing",
+    "Market Access",
+    "Knowledge Sharing",
+    "Joint Service Offering",
+    "Other"
+  ],
+  "mentorshipTypes": [
+    "Technical",
+    "Career Development",
+    "Business",
+    "Leadership",
+    "Project Management",
+    "Design",
+    "Other"
+  ],
+  "mentorshipFormats": [
+    "In-Person",
+    "Virtual",
+    "Hybrid",
+    "On-Site Shadowing"
+  ],
+  "meetingFrequencies": [
+    "Weekly",
+    "Bi-Weekly",
+    "Monthly",
+    "As Needed"
+  ],
+  "compensationTypes": [
+    "Unpaid",
+    "Paid Hourly",
+    "Paid Monthly",
+    "Barter"
+  ],
+  "spvLegalForms": [
+    "LLC",
+    "Limited Partnership",
+    "Corporation",
+    "Trust"
+  ],
+  "projectPhases": [
+    "Concept",
+    "Feasibility",
+    "Financing",
+    "Construction",
+    "Operation"
+  ],
+  "revenueModels": [
+    "User Fees",
+    "Government Payments",
+    "Asset Sale",
+    "Lease",
+    "Other"
+  ],
+  "debtTypes": [
+    "Non-Recourse",
+    "Limited Recourse",
+    "Recourse"
+  ],
+  "clientTypes": [
+    "Government",
+    "Private",
+    "PPP",
+    "Other"
+  ],
+  "scopeDivisions": [
+    "By Trade",
+    "By Phase",
+    "By Geography",
+    "Mixed"
+  ],
+  "liabilityStructures": [
+    "Individual",
+    "Joint & Several",
+    "Mixed"
+  ],
+  "paymentDistributions": [
+    "Per Scope",
+    "Proportional",
+    "Fixed Percentage"
+  ],
+  "costSharings": [
+    "Equally",
+    "Proportional to Usage",
+    "Proportional to Ownership"
+  ],
+  "usageSchedules": [
+    "Rotation",
+    "Booking System",
+    "Priority by Ownership %"
+  ],
+  "maintenanceResponsibilities": [
+    "Shared",
+    "Designated Owner",
+    "Third-Party Service"
+  ],
+  "distributionMethods": [
+    "Centralized Pickup",
+    "Individual Delivery",
+    "Organizer Distributes"
+  ],
+  "paymentStructures": [
+    "Upfront Collection",
+    "Escrow",
+    "Pay on Delivery",
+    "Other"
+  ],
+  "ownershipStructures": [
+    "Equal Shares",
+    "Proportional to Investment",
+    "LLC",
+    "Partnership"
+  ],
+  "assetTypes": [
+    "Heavy Equipment",
+    "Vehicles",
+    "Tools",
+    "Technology",
+    "Facility",
+    "Other"
+  ],
+  "categories": [
+    "Materials",
+    "Equipment",
+    "Software",
+    "Services",
+    "Other"
+  ],
+  "geographicScopes": [
+    "Saudi Arabia",
+    "GCC",
+    "MENA",
+    "Global"
+  ],
+  "targetSectors": [
+    "Construction",
+    "Energy",
+    "Real Estate",
+    "Manufacturing",
+    "Technology",
+    "Other"
+  ],
+  "durations": [
+    "10-15 years",
+    "15-20 years",
+    "Indefinite",
+    "Until specific milestone"
+  ],
+  "ongoingFundings": [
+    "Partner Contributions",
+    "Retained Earnings",
+    "External Financing",
+    "Mixed"
+  ],
+  "exitOptions": [
+    "Buyout",
+    "IPO",
+    "Sale to Third Party",
+    "Dissolution"
+  ],
+  "participantTypes": [
+    "Companies Only",
+    "Professionals Only",
+    "Both"
+  ],
+  "competitionFormats": [
+    "Open to All",
+    "Invited Only",
+    "Prequalified Participants"
+  ],
+  "intellectualProperty": [
+    "Submitter Retains",
+    "Client Owns",
+    "Shared",
+    "Winner Transfers"
+  ],
+  "professionalServices": [
+    "Legal",
+    "Financial",
+    "Technical",
+    "Environmental",
+    "Other"
+  ],
+  "barterPreferences": [
+    "Materials",
+    "Equipment",
+    "Labor",
+    "Services",
+    "Knowledge",
+    "Certification",
+    "Other"
+  ],
+  "exchangeModes": [
+    "Cash",
+    "Equity",
+    "Profit-Sharing",
+    "Barter",
+    "Hybrid"
+  ],
+  "cashPaymentTerms": [
+    "Upfront",
+    "Milestone-Based",
+    "Upon Completion",
+    "Monthly",
+    "Installments"
+  ],
+  "equityVestingPeriods": [
+    "Immediate",
+    "1 Year",
+    "2 Years",
+    "3 Years",
+    "4 Years",
+    "Custom"
+  ],
+  "profitBasis": [
+    "Revenue Share",
+    "Profit Share (After Costs)",
+    "Gross Profit Share"
+  ]
+}

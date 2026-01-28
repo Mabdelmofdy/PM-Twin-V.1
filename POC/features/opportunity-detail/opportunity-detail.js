@@ -1,6 +1,13 @@
 /**
- * Opportunity Detail Component
+ * Opportunity Detail Component - Wizard View
  */
+
+let currentOpportunity = null;
+let currentApplication = null;
+let currentWizardStep = 1;
+let hasDetailedResponses = false;
+let hasTaskBidding = false;
+let isEditMode = false;
 
 async function initOpportunityDetail(params) {
     const opportunityId = params.id;
@@ -9,7 +16,28 @@ async function initOpportunityDetail(params) {
         return;
     }
     
+    // Load opportunity models script if not loaded
+    if (!window.OPPORTUNITY_MODELS) {
+        await loadScript('src/business-logic/models/opportunity-models.js');
+    }
+    
     await loadOpportunity(opportunityId);
+}
+
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const existingScript = document.querySelector(`script[src="${src}"]`);
+        if (existingScript) {
+            resolve();
+            return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
 }
 
 async function loadOpportunity(id) {
@@ -25,7 +53,9 @@ async function loadOpportunity(id) {
             return;
         }
         
-        // Load creator info (user or company)
+        currentOpportunity = opportunity;
+        
+        // Load creator info
         const creator = await dataService.getUserOrCompanyById(opportunity.creatorId);
         
         // Get current user
@@ -33,17 +63,28 @@ async function loadOpportunity(id) {
         const isOwner = user && opportunity.creatorId === user.id;
         const canApply = user && !isOwner && opportunity.status === 'published';
         
-        // Render opportunity
-        await renderOpportunity(opportunity, creator, isOwner, canApply);
+        // Check if user has already applied
+        if (canApply) {
+            const allApplications = await dataService.getApplications();
+            currentApplication = allApplications.find(
+                app => app.opportunityId === id && app.applicantId === user.id
+            );
+        }
+        
+        // Determine which steps are needed
+        determineWizardSteps(opportunity);
+        
+        // Render comprehensive view
+        await renderComprehensiveView(opportunity, creator, isOwner, canApply);
         
         // Load applications if owner
         if (isOwner) {
             await loadApplications(id);
         }
         
-        // Setup application form if can apply
+        // Setup wizard navigation
         if (canApply) {
-            setupApplicationForm(id);
+            setupWizardNavigation();
         }
         
         loadingDiv.style.display = 'none';
@@ -56,101 +97,1144 @@ async function loadOpportunity(id) {
     }
 }
 
-async function renderOpportunity(opportunity, creator, isOwner, canApply) {
+function determineWizardSteps(opportunity) {
+    const modelSpecificData = opportunity.attributes || opportunity.modelData;
+    
+    // Check if there are detailed responses needed
+    const modelDef = getModelDefinition(opportunity.modelType, opportunity.subModelType);
+    if (modelDef && modelDef.attributes) {
+        const relevantAttrs = modelDef.attributes.filter(attr => 
+            !['title', 'description', 'status', 'modelType', 'subModelType', 
+              'location', 'locationCountry', 'locationRegion', 'locationCity', 
+              'locationDistrict', 'exchangeMode', 'exchangeData'].includes(attr.key)
+        );
+        hasDetailedResponses = relevantAttrs.length > 0;
+    }
+    
+    // Check if task bidding is needed
+    hasTaskBidding = opportunity.subModelType === 'task_based' && modelSpecificData;
+    
+    // Update step indicators visibility
+    const step3Indicator = document.getElementById('step-indicator-3');
+    const step4Indicator = document.getElementById('step-indicator-4');
+    
+    if (step3Indicator) step3Indicator.style.display = hasDetailedResponses ? 'flex' : 'none';
+    if (step4Indicator) step4Indicator.style.display = hasTaskBidding ? 'flex' : 'none';
+}
+
+async function renderComprehensiveView(opportunity, creator, isOwner, canApply) {
     // Title and meta
     document.getElementById('opportunity-title').textContent = opportunity.title || 'Untitled Opportunity';
-    document.getElementById('opportunity-model').textContent = opportunity.modelType || 'N/A';
+    document.getElementById('opportunity-model').textContent = formatModelType(opportunity.modelType) || 'N/A';
     document.getElementById('opportunity-status').textContent = opportunity.status || 'draft';
     document.getElementById('opportunity-status').className = `badge badge-${getStatusBadgeClass(opportunity.status)}`;
     
+    // Quick info bar
+    document.getElementById('info-created').textContent = new Date(opportunity.createdAt).toLocaleDateString();
+    document.getElementById('info-creator').textContent = creator?.profile?.name || creator?.email || 'Unknown';
+    
+    // Location
+    if (opportunity.location) {
+        document.getElementById('info-location-chip').style.display = 'flex';
+        document.getElementById('info-location').textContent = opportunity.location;
+    }
+    
+    // Exchange mode
+    if (opportunity.exchangeMode) {
+        document.getElementById('info-exchange-chip').style.display = 'flex';
+        document.getElementById('info-exchange').textContent = formatExchangeMode(opportunity.exchangeMode);
+    }
+    
     // Description
-    document.getElementById('opportunity-description').textContent = 
-        opportunity.description || 'No description available';
+    document.getElementById('opportunity-description').innerHTML = 
+        escapeHtml(opportunity.description || 'No description available');
     
-    // Created date
-    document.getElementById('opportunity-created').textContent = 
-        new Date(opportunity.createdAt).toLocaleDateString();
+    // Exchange details
+    if (opportunity.exchangeData && Object.keys(opportunity.exchangeData).length > 0) {
+        document.getElementById('exchange-section').style.display = 'block';
+        renderExchangeDetails(opportunity.exchangeData);
+    }
     
-    // Creator
-    document.getElementById('opportunity-creator').textContent = 
-        creator?.email || 'Unknown';
-    
-    // Actions
+    // Actions for owner
     const actionsDiv = document.getElementById('opportunity-actions');
     if (isOwner) {
         actionsDiv.innerHTML = `
-            <a href="#" data-route="/opportunities/${opportunity.id}/edit" class="btn btn-secondary">Edit</a>
-            <button onclick="deleteOpportunity('${opportunity.id}')" class="btn btn-danger">Delete</button>
+            <a href="#" data-route="/opportunities/${opportunity.id}/edit" class="btn btn-secondary">
+                <i class="ph-duotone ph-pencil"></i> Edit
+            </a>
+            <button onclick="deleteOpportunity('${opportunity.id}')" class="btn btn-danger">
+                <i class="ph-duotone ph-trash"></i> Delete
+            </button>
         `;
     } else {
         actionsDiv.innerHTML = '';
     }
     
     // Model-specific details
-    renderModelDetails(opportunity);
+    await renderModelDetails(opportunity);
     
-    // Show/hide apply card
-    const applyCard = document.getElementById('apply-card');
+    // Show apply section or already applied
     if (canApply) {
-        applyCard.style.display = 'block';
-    } else {
-        applyCard.style.display = 'none';
+        if (currentApplication) {
+            isEditMode = true;
+            document.getElementById('already-applied-section').style.display = 'block';
+            document.getElementById('applied-date').textContent = 
+                new Date(currentApplication.createdAt).toLocaleDateString();
+            document.getElementById('applied-status').textContent = currentApplication.status;
+            document.getElementById('applied-status').className = 
+                `badge badge-${getApplicationStatusBadgeClass(currentApplication.status)}`;
+            
+            // Setup edit button
+            document.getElementById('btn-edit-application').addEventListener('click', () => {
+                startApplicationWizard();
+            });
+        } else {
+            document.getElementById('apply-section').style.display = 'block';
+            
+            // Setup apply button
+            document.getElementById('btn-start-apply').addEventListener('click', () => {
+                startApplicationWizard();
+            });
+        }
     }
+    
+    // Show applications section for owner
+    if (isOwner) {
+        document.getElementById('applications-section').style.display = 'block';
+    }
+}
+
+function renderExchangeDetails(exchangeData) {
+    const container = document.getElementById('exchange-details');
+    let html = '<div class="detail-grid">';
+    
+    // Budget Range (now part of exchange data)
+    if (exchangeData.budgetRange) {
+        const budget = exchangeData.budgetRange;
+        const currency = budget.currency || exchangeData.currency || 'SAR';
+        html += `
+            <div class="detail-item budget-highlight">
+                <div class="detail-label">Budget Range</div>
+                <div class="detail-value budget-value">
+                    ${budget.min?.toLocaleString() || 0} - ${budget.max?.toLocaleString() || 0} ${currency}
+                </div>
+            </div>
+        `;
+    }
+    
+    if (exchangeData.exchangeMode) {
+        html += `
+            <div class="detail-item">
+                <div class="detail-label">Exchange Mode</div>
+                <div class="detail-value">${formatExchangeMode(exchangeData.exchangeMode)}</div>
+            </div>
+        `;
+    }
+    
+    if (exchangeData.currency) {
+        html += `
+            <div class="detail-item">
+                <div class="detail-label">Currency</div>
+                <div class="detail-value">${exchangeData.currency}</div>
+            </div>
+        `;
+    }
+    
+    if (exchangeData.cashAmount) {
+        html += `
+            <div class="detail-item">
+                <div class="detail-label">Amount</div>
+                <div class="detail-value">${exchangeData.cashAmount.toLocaleString()} ${exchangeData.currency || 'SAR'}</div>
+            </div>
+        `;
+    }
+    
+    if (exchangeData.cashPaymentTerms) {
+        html += `
+            <div class="detail-item">
+                <div class="detail-label">Payment Terms</div>
+                <div class="detail-value">${exchangeData.cashPaymentTerms}</div>
+            </div>
+        `;
+    }
+    
+    if (exchangeData.exchangeTermsSummary) {
+        html += `
+            <div class="detail-item" style="grid-column: 1 / -1;">
+                <div class="detail-label">Terms Summary</div>
+                <div class="detail-value">${escapeHtml(exchangeData.exchangeTermsSummary)}</div>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
 }
 
 async function renderModelDetails(opportunity) {
     const container = document.getElementById('model-details');
-    if (!opportunity.attributes) {
+    const modelSpecificData = opportunity.attributes || opportunity.modelData;
+    
+    if (!modelSpecificData || Object.keys(modelSpecificData).length === 0) {
         container.innerHTML = '<p class="text-muted">No additional details available.</p>';
         return;
     }
     
-    const attributes = opportunity.attributes;
-    const detailKeys = Object.keys(attributes)
-        .filter(key => !['title', 'description', 'status', 'modelType', 'subModelType'].includes(key));
+    // Get model definition for labels
+    const modelDef = getModelDefinition(opportunity.modelType, opportunity.subModelType);
+    const attributeMap = {};
+    if (modelDef && modelDef.attributes) {
+        modelDef.attributes.forEach(attr => {
+            attributeMap[attr.key] = attr.label;
+        });
+    }
+    
+    // Filter out system fields
+    const detailKeys = Object.keys(modelSpecificData)
+        .filter(key => !['title', 'description', 'status', 'modelType', 'subModelType', 
+                        'location', 'locationCountry', 'locationRegion', 'locationCity', 
+                        'locationDistrict', 'exchangeMode', 'exchangeData'].includes(key));
     
     if (detailKeys.length === 0) {
         container.innerHTML = '<p class="text-muted">No additional details available.</p>';
         return;
     }
     
-    // Load template
-    const template = await templateLoader.load('model-detail-item');
-    
-    // Render each detail item
+    // Render detail items
     const detailsHTML = detailKeys.map(key => {
-        const value = attributes[key];
-        let displayValue = value;
+        const value = modelSpecificData[key];
+        let displayValue = formatModelDetailValue(value, key);
+        const label = attributeMap[key] || formatLabel(key);
         
-        if (Array.isArray(value)) {
-            displayValue = value.join(', ');
-        } else if (typeof value === 'object' && value !== null) {
-            if (value.min !== undefined && value.max !== undefined) {
-                displayValue = `${value.min} - ${value.max}`;
-            } else if (value.start && value.end) {
-                displayValue = `${value.start} to ${value.end}`;
-            } else {
-                displayValue = JSON.stringify(value);
-            }
-        } else if (typeof value === 'boolean') {
-            displayValue = value ? 'Yes' : 'No';
-        }
-        
-        const data = {
-            label: formatLabel(key),
-            value: displayValue || 'N/A'
-        };
-        return templateRenderer.render(template, data);
+        return `
+            <div class="detail-item">
+                <div class="detail-label">${escapeHtml(label)}</div>
+                <div class="detail-value">${escapeHtml(displayValue)}</div>
+            </div>
+        `;
     }).join('');
     
     container.innerHTML = detailsHTML;
+}
+
+function formatModelDetailValue(value, key) {
+    if (value === null || value === undefined || value === '') return 'N/A';
+    
+    if (Array.isArray(value)) {
+        if (value.length === 0) return 'None';
+        if (typeof value[0] === 'object' && value[0] !== null) {
+            return value.map(item => {
+                if (item.role && item.scope) return `${item.role}: ${item.scope}`;
+                if (item.requirement) return item.requirement;
+                if (item.criteria) return item.criteria;
+                if (item.partner && item.contribution) return `${item.partner}: ${item.contribution}`;
+                if (item.cost && item.amount) return `${item.cost}: ${item.amount.toLocaleString()} SAR`;
+                return JSON.stringify(item);
+            }).join('; ');
+        }
+        return value.join(', ');
+    }
+    
+    if (typeof value === 'object' && value !== null) {
+        if (value.min !== undefined && value.max !== undefined) {
+            return `${value.min.toLocaleString()} - ${value.max.toLocaleString()} ${value.currency || ''}`;
+        }
+        if (value.start && value.end) {
+            return `${new Date(value.start).toLocaleDateString()} to ${new Date(value.end).toLocaleDateString()}`;
+        }
+        return JSON.stringify(value);
+    }
+    
+    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+    if (typeof value === 'number' && value >= 1000) return value.toLocaleString();
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
+        return new Date(value).toLocaleDateString();
+    }
+    
+    return String(value);
+}
+
+function startApplicationWizard() {
+    currentWizardStep = 1;
+    
+    // Show wizard steps and navigation
+    document.getElementById('wizard-steps').style.display = 'flex';
+    document.getElementById('wizard-nav').style.display = 'flex';
+    
+    // Generate form fields
+    generateDetailedResponses(currentOpportunity, currentApplication);
+    generateTaskBidding(currentOpportunity, currentApplication);
+    
+    // Populate if editing
+    if (isEditMode && currentApplication) {
+        populateApplicationForm(currentApplication);
+    }
+    
+    // Go to step 2 (proposal)
+    goToWizardStep(2);
+}
+
+function setupWizardNavigation() {
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnCancel = document.getElementById('btn-cancel');
+    const btnSubmit = document.getElementById('btn-submit');
+    const btnDemoFill = document.getElementById('btn-demo-fill');
+    
+    btnPrev.addEventListener('click', () => {
+        goToWizardStep(getPreviousStep());
+    });
+    
+    btnNext.addEventListener('click', () => {
+        if (validateCurrentStep()) {
+            goToWizardStep(getNextStep());
+        }
+    });
+    
+    btnCancel.addEventListener('click', () => {
+        if (confirm('Are you sure you want to cancel? Your progress will be lost.')) {
+            goToWizardStep(1);
+            document.getElementById('wizard-steps').style.display = 'none';
+            document.getElementById('wizard-nav').style.display = 'none';
+        }
+    });
+    
+    btnSubmit.addEventListener('click', submitApplication);
+    
+    // Demo Fill button
+    if (btnDemoFill) {
+        btnDemoFill.addEventListener('click', fillDemoData);
+    }
+}
+
+function getNextStep() {
+    let next = currentWizardStep + 1;
+    
+    // Skip step 3 if no detailed responses
+    if (next === 3 && !hasDetailedResponses) next = 4;
+    
+    // Skip step 4 if no task bidding
+    if (next === 4 && !hasTaskBidding) next = 5;
+    
+    return next;
+}
+
+function getPreviousStep() {
+    let prev = currentWizardStep - 1;
+    
+    // Skip step 4 if no task bidding
+    if (prev === 4 && !hasTaskBidding) prev = 3;
+    
+    // Skip step 3 if no detailed responses
+    if (prev === 3 && !hasDetailedResponses) prev = 2;
+    
+    // Don't go below step 1
+    if (prev < 1) prev = 1;
+    
+    return prev;
+}
+
+function goToWizardStep(step) {
+    // Hide all steps
+    for (let i = 1; i <= 5; i++) {
+        const stepContent = document.getElementById(`step-${i}`);
+        if (stepContent) stepContent.style.display = 'none';
+        
+        const stepIndicator = document.querySelector(`.wizard-step[data-step="${i}"]`);
+        if (stepIndicator) {
+            stepIndicator.classList.remove('active');
+            if (i < step) stepIndicator.classList.add('completed');
+            else stepIndicator.classList.remove('completed');
+        }
+    }
+    
+    // Show current step
+    const currentStepContent = document.getElementById(`step-${step}`);
+    if (currentStepContent) currentStepContent.style.display = 'block';
+    
+    const currentStepIndicator = document.querySelector(`.wizard-step[data-step="${step}"]`);
+    if (currentStepIndicator) currentStepIndicator.classList.add('active');
+    
+    currentWizardStep = step;
+    
+    // Update navigation buttons
+    updateWizardNav();
+    
+    // If on review step, populate review
+    if (step === 5) {
+        populateReview();
+    }
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateWizardNav() {
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnSubmit = document.getElementById('btn-submit');
+    const btnCancel = document.getElementById('btn-cancel');
+    const wizardNav = document.getElementById('wizard-nav');
+    const wizardSteps = document.getElementById('wizard-steps');
+    
+    // Step 1 = overview (no nav)
+    if (currentWizardStep === 1) {
+        wizardNav.style.display = 'none';
+        wizardSteps.style.display = 'none';
+        return;
+    }
+    
+    wizardNav.style.display = 'flex';
+    wizardSteps.style.display = 'flex';
+    
+    // Previous button
+    btnPrev.style.display = currentWizardStep > 2 ? 'inline-flex' : 'none';
+    
+    // Next/Submit buttons
+    const isLastStep = currentWizardStep === 5;
+    btnNext.style.display = isLastStep ? 'none' : 'inline-flex';
+    btnSubmit.style.display = isLastStep ? 'inline-flex' : 'none';
+    
+    // Update submit button text
+    if (isEditMode) {
+        btnSubmit.innerHTML = '<i class="ph-duotone ph-pencil"></i> Update Application';
+    }
+}
+
+function validateCurrentStep() {
+    switch (currentWizardStep) {
+        case 2: // Proposal
+            const proposal = document.getElementById('application-proposal').value.trim();
+            if (!proposal) {
+                alert('Please provide a proposal');
+                document.getElementById('application-proposal').focus();
+                return false;
+            }
+            break;
+            
+        case 3: // Detailed responses
+            // Optional validation for required fields
+            break;
+            
+        case 4: // Task bidding
+            const bidAmount = document.getElementById('task-bid-amount');
+            const bidComments = document.getElementById('task-bid-comments');
+            if (bidAmount && !bidAmount.value) {
+                alert('Please provide a bid amount');
+                bidAmount.focus();
+                return false;
+            }
+            if (bidComments && !bidComments.value.trim()) {
+                alert('Please provide comments about your approach');
+                bidComments.focus();
+                return false;
+            }
+            break;
+    }
+    
+    return true;
+}
+
+function populateReview() {
+    // Proposal
+    const proposal = document.getElementById('application-proposal').value.trim();
+    document.getElementById('review-proposal').textContent = proposal || 'No proposal provided';
+    
+    // Detailed responses
+    const responsesSection = document.getElementById('review-responses-section');
+    const responsesContainer = document.getElementById('review-responses');
+    
+    if (hasDetailedResponses) {
+        const responses = collectDetailedResponses();
+        if (Object.keys(responses).length > 0) {
+            responsesSection.style.display = 'block';
+            let html = '';
+            for (const [key, value] of Object.entries(responses)) {
+                const label = formatLabel(key.replace('response_', ''));
+                html += `<div style="margin-bottom: 1rem;"><strong>${label}:</strong><br>${escapeHtml(value)}</div>`;
+            }
+            responsesContainer.innerHTML = html;
+        } else {
+            responsesSection.style.display = 'none';
+        }
+    } else {
+        responsesSection.style.display = 'none';
+    }
+    
+    // Task bidding
+    const bidSection = document.getElementById('review-bid-section');
+    const bidContainer = document.getElementById('review-bid');
+    
+    if (hasTaskBidding) {
+        const bids = collectTaskBids();
+        if (bids.taskBidAmount) {
+            bidSection.style.display = 'block';
+            bidContainer.innerHTML = `
+                <div style="margin-bottom: 0.5rem;"><strong>Bid Amount:</strong> ${parseFloat(bids.taskBidAmount).toLocaleString()} SAR</div>
+                ${bids.taskBidDuration ? `<div style="margin-bottom: 0.5rem;"><strong>Duration:</strong> ${bids.taskBidDuration} days</div>` : ''}
+                ${bids.taskBidComments ? `<div><strong>Approach:</strong><br>${escapeHtml(bids.taskBidComments)}</div>` : ''}
+            `;
+        } else {
+            bidSection.style.display = 'none';
+        }
+    } else {
+        bidSection.style.display = 'none';
+    }
+}
+
+async function submitApplication() {
+    const user = authService.getCurrentUser();
+    if (!user) {
+        alert('You must be logged in to apply');
+        return;
+    }
+    
+    const proposal = document.getElementById('application-proposal').value.trim();
+    const detailedResponses = collectDetailedResponses();
+    const taskBids = collectTaskBids();
+    
+    try {
+        if (isEditMode && currentApplication) {
+            // Update existing application
+            const updateData = {
+                proposal,
+                responses: {
+                    ...currentApplication.responses,
+                    ...detailedResponses,
+                    ...taskBids
+                }
+            };
+            
+            await dataService.updateApplication(currentApplication.id, updateData);
+            
+            // Notify opportunity creator
+            await dataService.createNotification({
+                userId: currentOpportunity.creatorId,
+                type: 'application_updated',
+                title: 'Application Updated',
+                message: `${user.email || 'An applicant'} updated their application for "${currentOpportunity.title}"`
+            });
+            
+            alert('Application updated successfully!');
+        } else {
+            // Create new application
+            const applicationData = {
+                opportunityId: currentOpportunity.id,
+                applicantId: user.id,
+                proposal,
+                responses: {
+                    ...detailedResponses,
+                    ...taskBids
+                }
+            };
+            
+            await dataService.createApplication(applicationData);
+            
+            // Notify opportunity creator
+            await dataService.createNotification({
+                userId: currentOpportunity.creatorId,
+                type: 'application_received',
+                title: 'New Application',
+                message: `You received a new application for "${currentOpportunity.title}"`
+            });
+            
+            alert('Application submitted successfully!');
+        }
+        
+        // Reload page
+        location.reload();
+        
+    } catch (error) {
+        console.error('Error submitting application:', error);
+        alert('Failed to submit application. Please try again.');
+    }
+}
+
+/**
+ * Demo Fill - Automatically fills the application form with realistic sample data
+ */
+function fillDemoData() {
+    const opportunity = currentOpportunity;
+    if (!opportunity) return;
+    
+    // Generate demo data based on opportunity type
+    const demoData = generateDemoApplicationData(opportunity);
+    
+    // Fill proposal (Step 2)
+    const proposalField = document.getElementById('application-proposal');
+    if (proposalField) {
+        proposalField.value = demoData.proposal;
+        // Trigger input event for any listeners
+        proposalField.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    
+    // Fill detailed responses (Step 3)
+    if (demoData.responses) {
+        Object.entries(demoData.responses).forEach(([key, value]) => {
+            const field = document.getElementById(`response-${key}`);
+            if (field) {
+                field.value = value;
+                field.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        });
+    }
+    
+    // Fill task bidding (Step 4)
+    if (demoData.bid) {
+        const bidAmount = document.getElementById('task-bid-amount');
+        const bidDuration = document.getElementById('task-bid-duration');
+        const bidComments = document.getElementById('task-bid-comments');
+        
+        if (bidAmount && demoData.bid.amount) {
+            bidAmount.value = demoData.bid.amount;
+            bidAmount.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (bidDuration && demoData.bid.duration) {
+            bidDuration.value = demoData.bid.duration;
+            bidDuration.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (bidComments && demoData.bid.comments) {
+            bidComments.value = demoData.bid.comments;
+            bidComments.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+    
+    // Visual feedback
+    showDemoFillFeedback();
+}
+
+function generateDemoApplicationData(opportunity) {
+    const modelType = opportunity.modelType;
+    const subModelType = opportunity.subModelType;
+    const title = opportunity.title || 'this opportunity';
+    const modelSpecificData = opportunity.attributes || opportunity.modelData || {};
+    
+    // Demo proposals based on model type
+    const proposals = {
+        'project_based': {
+            'task_based': `I am excited to submit my application for ${title}. With over 8 years of experience in project delivery and a proven track record of completing similar tasks on time and within budget, I am confident I can deliver exceptional results.
+
+My approach combines agile methodologies with rigorous quality assurance to ensure deliverables meet the highest standards. I have successfully completed 15+ similar projects in the past year, consistently receiving 5-star ratings from clients.
+
+Key strengths I bring:
+• Deep expertise in the required domain
+• Strong communication and reporting practices
+• Flexible availability to accommodate project needs
+• Access to specialized tools and resources
+
+I am ready to begin immediately upon selection and committed to exceeding expectations.`,
+            
+            'milestone_based': `I am submitting my application for ${title} with great enthusiasm. My background in milestone-driven project delivery makes me an ideal candidate for this opportunity.
+
+Over the past 5 years, I have successfully managed and delivered 20+ milestone-based projects across various industries. My structured approach ensures clear deliverables, transparent progress tracking, and timely completion of each phase.
+
+What sets me apart:
+• Meticulous planning and milestone definition
+• Proactive risk management and mitigation
+• Regular progress updates and stakeholder communication
+• Commitment to quality at every stage
+
+I look forward to discussing how I can contribute to the success of this project.`,
+            
+            'retainer': `I am pleased to express my interest in ${title}. As an experienced professional offering retainer-based services, I understand the value of consistent, reliable support for ongoing needs.
+
+My retainer clients typically report 40% improvement in operational efficiency due to my proactive approach and deep understanding of their business needs. I pride myself on being available, responsive, and always prepared to tackle challenges as they arise.
+
+Benefits of working with me:
+• Dedicated availability during agreed hours
+• Quick response times for urgent matters
+• Comprehensive monthly reporting
+• Continuous improvement recommendations
+
+I am committed to becoming a trusted extension of your team.`
+        },
+        
+        'strategic_partnership': {
+            'joint_venture': `We are excited to propose a strategic partnership for ${title}. Our organization brings complementary capabilities that would create significant synergies with your initiative.
+
+Our partnership value proposition:
+• Combined market reach of 50,000+ potential customers
+• Shared R&D capabilities reducing costs by 30%
+• Joint brand recognition in key markets
+• Aligned values and long-term growth objectives
+
+We have successfully established 5 joint ventures in the past 3 years, all of which have exceeded initial projections. Our collaborative approach ensures transparent governance and equitable value distribution.
+
+We look forward to exploring this partnership opportunity.`,
+            
+            'consortium': `We propose joining the consortium for ${title} as a contributing member with specialized expertise in our domain.
+
+Our consortium contribution includes:
+• Technical expertise in critical areas
+• Established relationships with key stakeholders
+• Financial commitment matching requirements
+• Dedicated team for consortium activities
+
+Our track record in consortium participation includes 3 successful large-scale initiatives, demonstrating our ability to collaborate effectively while delivering our commitments.`,
+            
+            'strategic_alliance': `We are interested in forming a strategic alliance around ${title}. Our organization shares compatible goals and can offer mutual benefits through collaboration.
+
+Alliance benefits we offer:
+• Access to our distribution network
+• Shared technology and best practices
+• Joint marketing opportunities
+• Knowledge exchange programs
+
+We believe this alliance can create lasting value for both parties while maintaining operational independence.`
+        },
+        
+        'resource_pooling': {
+            'equipment_sharing': `I am interested in the equipment sharing arrangement for ${title}. Our facility has complementary equipment that could benefit from shared utilization.
+
+Our contribution:
+• Modern equipment maintained to highest standards
+• Flexible scheduling to maximize utilization
+• Technical support during equipment use
+• Fair cost-sharing arrangements
+
+We have participated in 3 similar equipment sharing arrangements with excellent outcomes for all parties.`,
+            
+            'facility_sharing': `We would like to participate in the facility sharing opportunity for ${title}. Our facilities offer excellent infrastructure that can accommodate shared use.
+
+Facility highlights:
+• Prime location with easy access
+• State-of-the-art amenities
+• Flexible scheduling options
+• Professional management and maintenance
+
+We are experienced in managing shared facility arrangements and committed to ensuring smooth operations for all parties.`,
+            
+            'talent_pooling': `We are excited about the talent pooling opportunity for ${title}. Our team includes skilled professionals who could contribute significantly to shared projects.
+
+Our talent contribution:
+• 5 senior specialists available for pooled projects
+• Diverse skill sets covering required domains
+• Proven collaboration in multi-team environments
+• Commitment to knowledge sharing
+
+We believe talent pooling creates opportunities for professional growth while delivering better outcomes.`
+        },
+        
+        'hiring': {
+            'full_time': `I am applying for the full-time position related to ${title}. With my background and experience, I am confident I can make significant contributions to your organization.
+
+Qualifications:
+• 7+ years of relevant experience
+• Advanced degree in the field
+• Track record of exceeding performance targets
+• Strong references from previous employers
+
+I am seeking a long-term opportunity where I can grow professionally while contributing to organizational success.`,
+            
+            'part_time': `I am interested in the part-time opportunity for ${title}. My current situation allows me to dedicate focused time to this role while maintaining high quality output.
+
+What I offer:
+• Flexible availability matching your needs
+• Consistent and reliable performance
+• Quick ramp-up due to relevant experience
+• Commitment to meeting all deadlines
+
+Part-time arrangements have worked well for me in the past, and I am confident this would be mutually beneficial.`,
+            
+            'contract': `I am submitting my application for the contract position related to ${title}. As an experienced contractor, I understand the importance of delivering results within defined parameters.
+
+Contract experience:
+• 10+ successful contract engagements
+• Clean track record of on-time delivery
+• Flexibility to adjust scope as needed
+• Clear communication throughout engagement
+
+I am ready to begin immediately and committed to delivering exceptional value during the contract period.`
+        },
+        
+        'competition': {
+            'innovation_challenge': `We are thrilled to enter this innovation challenge for ${title}. Our team has developed a novel approach that we believe addresses the challenge requirements in a unique way.
+
+Our innovation:
+• Patent-pending technology solution
+• Validated with pilot customers
+• Scalable and cost-effective
+• Addresses core problem effectively
+
+We are excited to showcase our work and compete for the opportunity to bring this innovation to market.`,
+            
+            'hackathon': `Our team is eager to participate in the hackathon for ${title}. We bring diverse skills and a passion for rapid prototyping and creative problem-solving.
+
+Team composition:
+• Full-stack developer (5 years experience)
+• UX designer (7 years experience)
+• Data scientist (4 years experience)
+• Product manager (6 years experience)
+
+We have won 3 hackathons in the past year and are ready to bring our best ideas to this challenge.`,
+            
+            'pitch_competition': `We are excited to participate in the pitch competition for ${title}. Our venture has gained significant traction and we are ready to showcase our progress.
+
+Venture highlights:
+• $50,000 in revenue in first 6 months
+• 1,000+ active users
+• Growing 20% month-over-month
+• Clear path to profitability
+
+We look forward to presenting our vision and demonstrating why we deserve to win this competition.`
+        }
+    };
+    
+    // Get the proposal based on model type and subtype
+    let proposal = proposals[modelType]?.[subModelType] || 
+        `I am excited to apply for ${title}. With my background and experience, I am confident I can contribute significantly to this opportunity.
+
+My qualifications include:
+• Relevant experience in the domain
+• Strong track record of successful delivery
+• Excellent communication and collaboration skills
+• Commitment to quality and timeliness
+
+I look forward to discussing how I can add value to this initiative.`;
+    
+    // Generate detailed responses based on the opportunity's requirements
+    const responses = {};
+    const modelDef = getModelDefinition(modelType, subModelType);
+    
+    if (modelDef && modelDef.attributes) {
+        const responseTemplates = getDemoResponseTemplates();
+        
+        modelDef.attributes.forEach(attr => {
+            if (!['title', 'description', 'status', 'modelType', 'subModelType', 
+                  'location', 'locationCountry', 'locationRegion', 'locationCity', 
+                  'locationDistrict', 'exchangeMode', 'exchangeData'].includes(attr.key)) {
+                
+                // Get demo response based on attribute key
+                const template = responseTemplates[attr.key] || responseTemplates['default'];
+                responses[attr.key] = template(modelSpecificData[attr.key], attr.label);
+            }
+        });
+    }
+    
+    // Generate bid data for task-based opportunities
+    let bid = null;
+    if (subModelType === 'task_based') {
+        // Budget range is now in exchangeData, fall back to modelSpecificData for backwards compatibility
+        const budgetRange = opportunity.exchangeData?.budgetRange || modelSpecificData?.budgetRange;
+        const budgetMin = budgetRange?.min || 5000;
+        const budgetMax = budgetRange?.max || 50000;
+        
+        // Calculate a competitive bid (slightly below midpoint)
+        const bidAmount = Math.round((budgetMin + budgetMax) / 2 * 0.9);
+        
+        bid = {
+            amount: bidAmount,
+            duration: Math.floor(Math.random() * 20) + 10, // 10-30 days
+            comments: `Based on my analysis of the task requirements, I propose a comprehensive approach that ensures quality delivery within the specified parameters.
+
+My methodology:
+1. Initial Assessment (Days 1-2): Thorough review of requirements and clarification of any questions
+2. Planning Phase (Days 3-5): Detailed work breakdown and timeline confirmation
+3. Execution Phase (Days 6-${Math.floor((Math.random() * 20) + 10) - 5}): Systematic delivery with regular progress updates
+4. Quality Assurance (Final 3 days): Testing, review, and refinement
+5. Delivery: Final handoff with documentation and support
+
+Risk mitigation:
+• Buffer time built into schedule for unexpected challenges
+• Daily progress tracking to identify issues early
+• Clear communication channels for rapid decision-making
+
+I am confident this approach will deliver results that exceed expectations.`
+        };
+    }
+    
+    return { proposal, responses, bid };
+}
+
+function getDemoResponseTemplates() {
+    return {
+        // Project-related
+        'projectTitle': (value, label) => `I have carefully reviewed the ${value || 'project'} and am prepared to contribute effectively to its success.`,
+        'projectObjective': (value, label) => `The objective aligns perfectly with my expertise. I would approach this by first understanding the success criteria, then developing a structured plan to achieve each goal systematically.`,
+        'projectScope': (value, label) => `I have extensive experience with similar scope requirements. My approach would be to break this down into manageable phases, ensuring clear deliverables at each stage while maintaining focus on the overall objectives.`,
+        'detailedScope': (value, label) => `The detailed scope is clear and achievable. I would implement this through a combination of proven methodologies and innovative approaches, ensuring all requirements are met within the defined parameters.`,
+        
+        // Requirements
+        'requirements': (value, label) => `I meet or exceed all listed requirements. My experience directly aligns with these needs, and I can provide specific examples of how I have successfully fulfilled similar requirements in past engagements.`,
+        'skillsRequired': (value, label) => `I possess all the required skills at an advanced level. Additionally, I bring complementary capabilities that would add value beyond the basic requirements.`,
+        'qualifications': (value, label) => `My qualifications include relevant certifications, extensive hands-on experience, and a track record of successful delivery in similar contexts.`,
+        
+        // Timeline
+        'timeline': (value, label) => `The proposed timeline is realistic for my approach. I would establish clear milestones and maintain regular progress updates to ensure we stay on track.`,
+        'estimatedDuration': (value, label) => `Based on my experience, this duration is appropriate. I would implement efficient workflows to maximize productivity while maintaining quality.`,
+        'startDate': (value, label) => `I am available to begin as specified. I would use any lead time to prepare thoroughly and hit the ground running.`,
+        
+        // Budget/Compensation
+        'budgetRange': (value, label) => `The budget range is appropriate for the scope of work. My proposal offers excellent value while ensuring high-quality deliverables.`,
+        'compensation': (value, label) => `The compensation structure works well for my situation. I am committed to delivering value that exceeds expectations.`,
+        
+        // Team/Resources
+        'teamSize': (value, label) => `I can work effectively within this team structure. I bring strong collaboration skills and experience working in diverse team environments.`,
+        'memberRoles': (value, label) => `The role definitions are clear. I understand my responsibilities and how they contribute to the overall success of the initiative.`,
+        'resourceRequirements': (value, label) => `I have access to or can acquire all necessary resources. My infrastructure is set up to support efficient delivery.`,
+        
+        // Deliverables
+        'deliverables': (value, label) => `I understand the deliverable expectations and have produced similar outputs in past engagements. I focus on quality, clarity, and actionability in all deliverables.`,
+        'milestones': (value, label) => `The milestone structure provides clear checkpoints. I would ensure each milestone is met with high-quality, complete work.`,
+        'successCriteria': (value, label) => `The success criteria are well-defined. I would track progress against these metrics and ensure all criteria are met or exceeded.`,
+        
+        // Terms
+        'termsConditions': (value, label) => `I have reviewed the terms and find them acceptable. I am committed to operating within these guidelines throughout the engagement.`,
+        'paymentTerms': (value, label) => `The payment terms are fair and workable. I have no concerns with this structure.`,
+        
+        // Default response
+        'default': (value, label) => `Regarding ${label}: I have reviewed this requirement carefully and confirm my ability to meet or exceed expectations. My experience and capabilities align well with what is needed, and I am committed to delivering quality results.`
+    };
+}
+
+function showDemoFillFeedback() {
+    const btnDemoFill = document.getElementById('btn-demo-fill');
+    if (!btnDemoFill) return;
+    
+    const originalText = btnDemoFill.innerHTML;
+    btnDemoFill.innerHTML = '<i class="ph-duotone ph-check"></i> Filled!';
+    btnDemoFill.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+    
+    setTimeout(() => {
+        btnDemoFill.innerHTML = originalText;
+        btnDemoFill.style.background = '';
+    }, 2000);
+}
+
+function generateDetailedResponses(opportunity, existingApplication = null) {
+    const container = document.getElementById('detailed-responses-container');
+    if (!container) return;
+    
+    const modelSpecificData = opportunity.attributes || opportunity.modelData;
+    if (!modelSpecificData) return;
+    
+    const modelDef = getModelDefinition(opportunity.modelType, opportunity.subModelType);
+    if (!modelDef || !modelDef.attributes) return;
+    
+    const relevantAttributes = modelDef.attributes.filter(attr => 
+        !['title', 'description', 'status', 'modelType', 'subModelType', 
+          'location', 'locationCountry', 'locationRegion', 'locationCity', 
+          'locationDistrict', 'exchangeMode', 'exchangeData'].includes(attr.key)
+    );
+    
+    if (relevantAttributes.length === 0) return;
+    
+    container.innerHTML = relevantAttributes.map(attr => {
+        const value = modelSpecificData[attr.key];
+        const displayValue = formatModelDetailValue(value, attr.key);
+        const existingValue = existingApplication?.responses?.[`response_${attr.key}`] || '';
+        
+        return `
+            <div class="requirement-response-item">
+                <label for="response-${attr.key}">
+                    ${escapeHtml(attr.label)}
+                    ${attr.required ? '<span class="text-red-600">*</span>' : ''}
+                </label>
+                <div class="requirement-value">
+                    <strong>Requirement:</strong> ${escapeHtml(displayValue)}
+                </div>
+                <textarea 
+                    id="response-${attr.key}" 
+                    name="response_${attr.key}" 
+                    class="form-textarea" 
+                    rows="3"
+                    placeholder="Provide your response to this requirement..."
+                >${escapeHtml(existingValue)}</textarea>
+            </div>
+        `;
+    }).join('');
+}
+
+function generateTaskBidding(opportunity, existingApplication = null) {
+    const container = document.getElementById('task-bidding-container');
+    if (!container) return;
+    
+    const modelSpecificData = opportunity.attributes || opportunity.modelData;
+    if (opportunity.subModelType !== 'task_based' || !modelSpecificData) return;
+    
+    const taskTitle = modelSpecificData.taskTitle || 'Main Task';
+    const taskScope = modelSpecificData.detailedScope || '';
+    // Budget range is now in exchangeData, fall back to modelSpecificData for backwards compatibility
+    const budgetRange = opportunity.exchangeData?.budgetRange || modelSpecificData.budgetRange;
+    const budgetMin = budgetRange?.min || 0;
+    const budgetMax = budgetRange?.max || 0;
+    
+    const existingBidAmount = existingApplication?.responses?.taskBidAmount || '';
+    const existingBidDuration = existingApplication?.responses?.taskBidDuration || '';
+    const existingBidComments = existingApplication?.responses?.taskBidComments || '';
+    
+    container.innerHTML = `
+        <div class="task-bid-item">
+            <div class="task-header">
+                <div class="task-title">${escapeHtml(taskTitle)}</div>
+            </div>
+            <div class="task-scope">${escapeHtml(taskScope || 'No detailed scope provided')}</div>
+            ${budgetRange ? `<div class="text-sm text-gray-600 mb-3"><strong>Budget Range:</strong> ${budgetMin.toLocaleString()} - ${budgetMax.toLocaleString()} SAR</div>` : ''}
+            <div class="bid-input-group">
+                <div class="form-group">
+                    <label for="task-bid-amount" class="form-label">Your Bid Amount (SAR) <span class="text-red-600">*</span></label>
+                    <input 
+                        type="number" 
+                        id="task-bid-amount" 
+                        name="taskBidAmount" 
+                        class="form-input" 
+                        required
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter your bid amount"
+                        value="${existingBidAmount}"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="task-bid-duration" class="form-label">Proposed Duration (days)</label>
+                    <input 
+                        type="number" 
+                        id="task-bid-duration" 
+                        name="taskBidDuration" 
+                        class="form-input" 
+                        min="1"
+                        placeholder="Enter duration"
+                        value="${existingBidDuration}"
+                    >
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="task-bid-comments" class="form-label">Your Approach <span class="text-red-600">*</span></label>
+                <textarea 
+                    id="task-bid-comments" 
+                    name="taskBidComments" 
+                    class="form-textarea" 
+                    rows="5"
+                    required
+                    placeholder="Describe your approach, methodology, timeline, and relevant experience..."
+                >${escapeHtml(existingBidComments)}</textarea>
+            </div>
+        </div>
+    `;
+}
+
+function populateApplicationForm(application) {
+    if (!application) return;
+    
+    // Populate proposal
+    const proposalField = document.getElementById('application-proposal');
+    if (proposalField && application.proposal) {
+        proposalField.value = application.proposal;
+    }
+}
+
+function collectDetailedResponses() {
+    const responses = {};
+    const responseFields = document.querySelectorAll('[id^="response-"]');
+    
+    responseFields.forEach(field => {
+        const key = field.id.replace('response-', '');
+        const value = field.value.trim();
+        if (value) {
+            responses[`response_${key}`] = value;
+        }
+    });
+    
+    return responses;
+}
+
+function collectTaskBids() {
+    const bids = {};
+    
+    const bidAmount = document.getElementById('task-bid-amount')?.value;
+    const bidDuration = document.getElementById('task-bid-duration')?.value;
+    const bidComments = document.getElementById('task-bid-comments')?.value.trim();
+    
+    if (bidAmount) bids.taskBidAmount = parseFloat(bidAmount);
+    if (bidDuration) bids.taskBidDuration = parseInt(bidDuration);
+    if (bidComments) bids.taskBidComments = bidComments;
+    
+    return bids;
+}
+
+async function loadApplications(opportunityId) {
+    const applicationsList = document.getElementById('applications-list');
+    const applicationsCount = document.getElementById('applications-count');
+    
+    try {
+        const allApplications = await dataService.getApplications();
+        const opportunityApplications = allApplications.filter(a => a.opportunityId === opportunityId);
+        
+        applicationsCount.textContent = opportunityApplications.length;
+        
+        if (opportunityApplications.length === 0) {
+            applicationsList.innerHTML = '<p class="text-muted">No applications yet.</p>';
+            return;
+        }
+        
+        // Load applicant info
+        const applicationsWithUsers = await Promise.all(
+            opportunityApplications.map(async (app) => {
+                const applicant = await dataService.getUserById(app.applicantId);
+                return { ...app, applicant };
+            })
+        );
+        
+        // Render applications
+        applicationsList.innerHTML = applicationsWithUsers.map(app => `
+            <div class="application-card">
+                <div class="application-header">
+                    <strong>${escapeHtml(app.applicant?.profile?.name || app.applicant?.email || 'Unknown')}</strong>
+                    <span class="badge badge-${getApplicationStatusBadgeClass(app.status)}">${app.status}</span>
+                </div>
+                <p class="application-proposal">${escapeHtml(app.proposal || 'No proposal')}</p>
+                <div class="application-meta">
+                    Applied: ${new Date(app.createdAt).toLocaleDateString()}
+                </div>
+                <div class="application-actions">
+                    <button onclick="updateApplicationStatus('${app.id}', 'accepted')" class="btn btn-success btn-sm">Accept</button>
+                    <button onclick="updateApplicationStatus('${app.id}', 'rejected')" class="btn btn-danger btn-sm">Reject</button>
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading applications:', error);
+        applicationsList.innerHTML = '<p class="text-muted">Error loading applications.</p>';
+    }
+}
+
+// Utility functions
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 function formatLabel(key) {
     return key
         .replace(/([A-Z])/g, ' $1')
         .replace(/^./, str => str.toUpperCase())
+        .replace(/_/g, ' ')
         .trim();
+}
+
+function formatModelType(modelType) {
+    const types = {
+        'project_based': 'Project-Based',
+        'strategic_partnership': 'Strategic Partnership',
+        'resource_pooling': 'Resource Pooling',
+        'hiring': 'Hiring',
+        'competition': 'Competition'
+    };
+    return types[modelType] || modelType;
+}
+
+function formatExchangeMode(mode) {
+    const modes = {
+        'cash': 'Cash Payment',
+        'equity': 'Equity',
+        'profit_sharing': 'Profit Sharing',
+        'barter': 'Barter Exchange',
+        'hybrid': 'Hybrid'
+    };
+    return modes[mode] || mode;
 }
 
 function getStatusBadgeClass(status) {
@@ -161,58 +1245,6 @@ function getStatusBadgeClass(status) {
         'cancelled': 'danger'
     };
     return statusMap[status] || 'secondary';
-}
-
-async function loadApplications(opportunityId) {
-    const applicationsCard = document.getElementById('applications-card');
-    const applicationsList = document.getElementById('applications-list');
-    const applicationsCountItem = document.getElementById('applications-count-item');
-    const applicationsCount = document.getElementById('applications-count');
-    
-    try {
-        const allApplications = await dataService.getApplications();
-        const opportunityApplications = allApplications.filter(a => a.opportunityId === opportunityId);
-        
-        applicationsCard.style.display = 'block';
-        applicationsCountItem.style.display = 'block';
-        applicationsCount.textContent = opportunityApplications.length;
-        
-        if (opportunityApplications.length === 0) {
-            applicationsList.innerHTML = '<p class="text-muted">No applications yet.</p>';
-            return;
-        }
-        
-        // Load applicant info for each application
-        const applicationsWithUsers = await Promise.all(
-            opportunityApplications.map(async (app) => {
-                const applicant = await dataService.getUserById(app.applicantId);
-                return { ...app, applicant };
-            })
-        );
-        
-        // Load template
-        const template = await templateLoader.load('application-detail-card');
-        
-        // Render applications
-        const html = applicationsWithUsers.map(app => {
-            const data = {
-                ...app,
-                applicant: {
-                    email: app.applicant?.email || 'Unknown Applicant'
-                },
-                statusBadgeClass: getApplicationStatusBadgeClass(app.status),
-                proposal: app.proposal || 'No proposal provided',
-                createdDate: new Date(app.createdAt).toLocaleDateString()
-            };
-            return templateRenderer.render(template, data);
-        }).join('');
-        
-        applicationsList.innerHTML = html;
-        
-    } catch (error) {
-        console.error('Error loading applications:', error);
-        applicationsList.innerHTML = '<p class="text-muted">Error loading applications.</p>';
-    }
 }
 
 function getApplicationStatusBadgeClass(status) {
@@ -227,94 +1259,48 @@ function getApplicationStatusBadgeClass(status) {
     return statusMap[status] || 'secondary';
 }
 
-function setupApplicationForm(opportunityId) {
-    const form = document.getElementById('application-form');
-    if (!form) return;
-    
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const proposal = document.getElementById('application-proposal').value;
-        const user = authService.getCurrentUser();
-        
-        if (!user) {
-            alert('You must be logged in to apply');
-            return;
-        }
-        
-        try {
-            const application = await dataService.createApplication({
-                opportunityId,
-                applicantId: user.id,
-                proposal
-            });
-            
-            // Create notification for opportunity creator
-            const opportunity = await dataService.getOpportunityById(opportunityId);
-            await dataService.createNotification({
-                userId: opportunity.creatorId,
-                type: 'application_received',
-                title: 'New Application',
-                message: `You received a new application for "${opportunity.title}"`
-            });
-            
-            alert('Application submitted successfully!');
-            form.reset();
-            
-            // Reload page to show updated state
-            location.reload();
-            
-        } catch (error) {
-            console.error('Error submitting application:', error);
-            alert('Failed to submit application. Please try again.');
-        }
-    });
+function getModelDefinition(modelType, subModelType) {
+    if (!window.OPPORTUNITY_MODELS) return null;
+    const model = window.OPPORTUNITY_MODELS[modelType];
+    if (!model || !model.subModels) return null;
+    return model.subModels[subModelType] || null;
 }
 
 async function updateApplicationStatus(applicationId, status) {
-    if (!confirm(`Are you sure you want to ${status} this application?`)) {
-        return;
-    }
+    if (!confirm(`Are you sure you want to ${status} this application?`)) return;
     
     try {
         await dataService.updateApplication(applicationId, { status });
         
-        // Create notification for applicant
         const application = await dataService.getApplicationById(applicationId);
-        const opportunity = await dataService.getOpportunityById(application.opportunityId);
         
         await dataService.createNotification({
             userId: application.applicantId,
             type: 'application_status_changed',
             title: 'Application Status Updated',
-            message: `Your application for "${opportunity.title}" has been ${status}`
+            message: `Your application for "${currentOpportunity.title}" has been ${status}`
         });
         
-        // Reload applications
-        await loadApplications(application.opportunityId);
+        await loadApplications(currentOpportunity.id);
         
     } catch (error) {
         console.error('Error updating application status:', error);
-        alert('Failed to update application status. Please try again.');
+        alert('Failed to update application status.');
     }
 }
 
 async function deleteOpportunity(id) {
-    if (!confirm('Are you sure you want to delete this opportunity? This action cannot be undone.')) {
-        return;
-    }
+    if (!confirm('Are you sure you want to delete this opportunity?')) return;
     
     try {
         await dataService.deleteOpportunity(id);
         
-        // Create audit log
         const user = authService.getCurrentUser();
         await dataService.createAuditLog({
             userId: user.id,
             action: 'opportunity_deleted',
             entityType: 'opportunity',
-            entityId: id,
-            details: {}
+            entityId: id
         });
         
         alert('Opportunity deleted successfully');
@@ -322,7 +1308,7 @@ async function deleteOpportunity(id) {
         
     } catch (error) {
         console.error('Error deleting opportunity:', error);
-        alert('Failed to delete opportunity. Please try again.');
+        alert('Failed to delete opportunity.');
     }
 }
 

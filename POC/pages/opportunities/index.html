@@ -6,33 +6,111 @@
         </div>
     </div>
     
+    <!-- Category Summary Cards -->
+    <div class="category-summary">
+        <button class="category-card category-mine-card" onclick="document.getElementById('filter-category').value='mine'; document.getElementById('apply-filters').click();">
+            <div class="category-icon">
+                <i class="ph-duotone ph-user-circle"></i>
+            </div>
+            <div class="category-info">
+                <span class="category-count" id="count-mine">0</span>
+                <span class="category-name">My Opportunities</span>
+            </div>
+        </button>
+        <button class="category-card category-applied-card" onclick="document.getElementById('filter-category').value='applied'; document.getElementById('apply-filters').click();">
+            <div class="category-icon">
+                <i class="ph-duotone ph-paper-plane-tilt"></i>
+            </div>
+            <div class="category-info">
+                <span class="category-count" id="count-applied">0</span>
+                <span class="category-name">Applied</span>
+            </div>
+        </button>
+        <button class="category-card category-available-card" onclick="document.getElementById('filter-category').value='available'; document.getElementById('apply-filters').click();">
+            <div class="category-icon">
+                <i class="ph-duotone ph-globe"></i>
+            </div>
+            <div class="category-info">
+                <span class="category-count" id="count-available">0</span>
+                <span class="category-name">Available</span>
+            </div>
+        </button>
+        <button class="category-card category-all-card" onclick="document.getElementById('filter-category').value=''; document.getElementById('apply-filters').click();">
+            <div class="category-icon">
+                <i class="ph-duotone ph-list"></i>
+            </div>
+            <div class="category-info">
+                <span class="category-name">View All</span>
+            </div>
+        </button>
+    </div>
+    
     <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-            <select id="filter-model" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                <option value="">All Models</option>
-                <option value="project_based">Project-Based</option>
-                <option value="strategic_partnership">Strategic Partnership</option>
-                <option value="resource_pooling">Resource Pooling</option>
-                <option value="hiring">Hiring</option>
-                <option value="competition">Competition</option>
-            </select>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <select id="filter-category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="">All Categories</option>
+                    <option value="mine">My Opportunities</option>
+                    <option value="applied">Applied</option>
+                    <option value="available">Available</option>
+                </select>
+            </div>
             
-            <select id="filter-status" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                <option value="">All Status</option>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-                <option value="closed">Closed</option>
-            </select>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Model Type</label>
+                <select id="filter-model" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="">All Models</option>
+                    <optgroup label="Project-Based Collaboration">
+                        <option value="task_based">Task-Based Engagement</option>
+                        <option value="consortium">Consortium</option>
+                        <option value="project_jv">Project-Specific Joint Venture</option>
+                        <option value="spv">Special Purpose Vehicle (SPV)</option>
+                    </optgroup>
+                    <optgroup label="Strategic Partnerships">
+                        <option value="strategic_jv">Strategic Joint Venture</option>
+                        <option value="strategic_alliance">Long-Term Strategic Alliance</option>
+                        <option value="mentorship">Mentorship Program</option>
+                    </optgroup>
+                    <optgroup label="Resource Pooling & Sharing">
+                        <option value="bulk_purchasing">Bulk Purchasing</option>
+                        <option value="equipment_sharing">Equipment Sharing</option>
+                        <option value="resource_sharing">Resource Sharing & Exchange</option>
+                    </optgroup>
+                    <optgroup label="Hiring a Resource">
+                        <option value="professional_hiring">Professional Hiring</option>
+                        <option value="consultant_hiring">Consultant Hiring</option>
+                    </optgroup>
+                    <optgroup label="Call for Competition">
+                        <option value="competition_rfp">Competition/RFP</option>
+                    </optgroup>
+                </select>
+            </div>
             
-            <input 
-                type="text" 
-                id="filter-search" 
-                class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Search opportunities..."
-            >
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select id="filter-status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="">All Status</option>
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
             
-            <button id="apply-filters" class="px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all">Apply Filters</button>
-            <button id="clear-filters" class="px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all">Clear</button>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                <input 
+                    type="text" 
+                    id="filter-search" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Search by title..."
+                >
+            </div>
+        </div>
+        
+        <div class="flex gap-4">
+            <button id="apply-filters" class="px-6 py-2 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-sm">Apply Filters</button>
+            <button id="clear-filters" class="px-6 py-2 bg-gray-100 text-gray-900 font-medium rounded-md hover:bg-gray-200 transition-all">Clear Filters</button>
         </div>
     </div>
     
@@ -42,18 +120,170 @@
 </div>
 
 <style>
+/* Category Summary Cards */
+.category-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.category-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-mine-card {
+    border-color: #8b5cf6;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.category-mine-card:hover {
+    border-color: #7c3aed;
+}
+
+.category-mine-card .category-icon {
+    background: #8b5cf6;
+    color: white;
+}
+
+.category-applied-card {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.category-applied-card:hover {
+    border-color: #2563eb;
+}
+
+.category-applied-card .category-icon {
+    background: #3b82f6;
+    color: white;
+}
+
+.category-available-card {
+    border-color: #10b981;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.category-available-card:hover {
+    border-color: #059669;
+}
+
+.category-available-card .category-icon {
+    background: #10b981;
+    color: white;
+}
+
+.category-all-card {
+    border-color: #6b7280;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+.category-all-card:hover {
+    border-color: #4b5563;
+}
+
+.category-all-card .category-icon {
+    background: #6b7280;
+    color: white;
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.category-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.category-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.category-name {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Opportunity Cards */
 .opportunity-card {
     background: white;
     border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     padding: 1.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
 .opportunity-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Category-specific card styles */
+.opportunity-card.category-mine {
+    border-left: 4px solid #8b5cf6;
+    background: linear-gradient(to right, #faf5ff 0%, white 20%);
+}
+
+.opportunity-card.category-applied {
+    border-left: 4px solid #3b82f6;
+    background: linear-gradient(to right, #eff6ff 0%, white 20%);
+}
+
+.opportunity-card.category-available {
+    border-left: 4px solid #10b981;
+}
+
+/* Category Ribbon */
+.category-ribbon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0 0.75rem 0 0.5rem;
+}
+
+.category-mine .category-ribbon {
+    background: #8b5cf6;
+    color: white;
+}
+
+.category-applied .category-ribbon {
+    background: #3b82f6;
+    color: white;
 }
 
 .opportunity-header {
@@ -68,12 +298,22 @@
     font-weight: 600;
     color: #111827;
     margin-bottom: 0.5rem;
+    padding-right: 80px; /* Make room for ribbon */
 }
 
 .opportunity-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
     font-size: 0.875rem;
     color: #6b7280;
     margin-bottom: 0.5rem;
+}
+
+.badge-outline {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    color: #6b7280;
 }
 
 .opportunity-description {
@@ -86,11 +326,97 @@
     overflow: hidden;
 }
 
+/* Application Status Bar */
+.application-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.application-status-bar i {
+    font-size: 1rem;
+}
+
+.application-status-bar.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.application-status-bar.status-reviewing {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.application-status-bar.status-shortlisted {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.application-status-bar.status-accepted {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.application-status-bar.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.application-status-bar.status-withdrawn {
+    background: #f3f4f6;
+    color: #374151;
+}
+
 .opportunity-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 1rem;
     border-top: 1px solid #e5e7eb;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+}
+
+.btn-outline:hover {
+    background: #eff6ff;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .category-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .category-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-card {
+        padding: 0.875rem 1rem;
+    }
+    
+    .category-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+    
+    .category-count {
+        font-size: 1.25rem;
+    }
+    
+    .opportunity-title {
+        padding-right: 60px;
+    }
 }
 </style>
