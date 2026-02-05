@@ -9,7 +9,7 @@ class DataService {
         this.storage = window.storageService || storageService;
         this.initialized = false;
         this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
-        this.CURRENT_SEED_VERSION = '1.6.0'; // Increment this to force re-seed (connections + messages + opportunities with attributes)
+        this.CURRENT_SEED_VERSION = '1.7.0'; // Increment this to force re-seed (matching-compatible data with scope, sectors, certifications, paymentModes)
     }
     
     /**
@@ -45,7 +45,7 @@ class DataService {
             }
             
             // Load from JSON files
-            const domains = ['users', 'companies', 'opportunities', 'applications', 'matches', 'notifications', 'connections', 'messages', 'audit', 'sessions'];
+            const domains = ['users', 'companies', 'opportunities', 'applications', 'matches', 'notifications', 'connections', 'messages', 'audit', 'sessions', 'contracts'];
             
             for (const domain of domains) {
                 try {
@@ -69,6 +69,13 @@ class DataService {
                     }
                 }
             }
+            
+            // Migrate opportunities to unified workflow (intent, collaborationModel, paymentModes)
+            this.migrateOpportunitiesToUnifiedWorkflow();
+            
+            // Normalize users and companies for matching compatibility
+            this.normalizeUsersForMatching();
+            this.normalizeCompaniesForMatching();
             
             // Store seed version
             this.storage.set(this.SEED_DATA_VERSION_KEY, this.CURRENT_SEED_VERSION);
@@ -99,6 +106,164 @@ class DataService {
     }
     
     /**
+     * Backfill intent, collaborationModel, paymentModes on existing opportunities (unified workflow)
+     */
+    migrateOpportunitiesToUnifiedWorkflow() {
+        const opportunities = this.storage.get(CONFIG.STORAGE_KEYS.OPPORTUNITIES) || [];
+        const collabMap = {
+            project_based_task_based: 'project',
+            project_based_consortium: 'consortium',
+            project_based_project_jv: 'project',
+            project_based_spv: 'project',
+            strategic_partnership_strategic_jv: 'advisory',
+            strategic_partnership_strategic_alliance: 'advisory',
+            strategic_partnership_mentorship: 'advisory',
+            resource_pooling_bulk_purchasing: 'service',
+            resource_pooling_equipment_sharing: 'service',
+            resource_pooling_resource_sharing: 'service',
+            hiring_professional_hiring: 'service',
+            hiring_consultant_hiring: 'service',
+            competition_competition_rfp: 'project'
+        };
+        let changed = false;
+        opportunities.forEach(o => {
+            if (o.intent === undefined) {
+                o.intent = 'request';
+                changed = true;
+            }
+            if (o.collaborationModel === undefined) {
+                const key = `${o.modelType || ''}_${o.subModelType || ''}`;
+                o.collaborationModel = collabMap[key] || 'project';
+                changed = true;
+            }
+            if (o.paymentModes === undefined || !Array.isArray(o.paymentModes)) {
+                const mode = o.exchangeMode || 'cash';
+                o.paymentModes = [mode];
+                changed = true;
+            }
+            // Backfill top-level scope from attributes when scope is missing or empty (for matching)
+            const attrs = o.attributes || {};
+            const hasScope = o.scope && typeof o.scope === 'object' && (
+                (Array.isArray(o.scope.requiredSkills) && o.scope.requiredSkills.length > 0) ||
+                (Array.isArray(o.scope.sectors) && o.scope.sectors.length > 0) ||
+                (Array.isArray(o.scope.certifications) && o.scope.certifications.length > 0) ||
+                (Array.isArray(o.scope.offeredSkills) && o.scope.offeredSkills.length > 0)
+            );
+            if (!hasScope) {
+                const arr = (v) => (Array.isArray(v) ? v : (v ? [v] : []));
+                o.scope = {
+                    requiredSkills: arr(attrs.requiredSkills),
+                    offeredSkills: arr(attrs.offeredSkills),
+                    sectors: arr(attrs.sectors),
+                    certifications: arr(attrs.certifications),
+                    interests: arr(attrs.interests)
+                };
+                changed = true;
+            }
+        });
+        if (changed) {
+            this.storage.set(CONFIG.STORAGE_KEYS.OPPORTUNITIES, opportunities);
+            console.log('Migrated opportunities to unified workflow');
+        }
+    }
+
+    /**
+     * Normalize users for matching compatibility
+     * Ensures yearsExperience, specializations, sectors, preferredPaymentModes are present
+     */
+    normalizeUsersForMatching() {
+        const users = this.storage.get(CONFIG.STORAGE_KEYS.USERS) || [];
+        let changed = false;
+        
+        // Valid sector values for filtering interests
+        const validSectors = ['Construction', 'Infrastructure', 'Technology', 'Energy', 'Manufacturing', 'Real Estate', 'Transportation', 'Architecture', 'Engineering', 'Hospitality', 'Industrial', 'Agriculture', 'Education', 'Legal Services'];
+        
+        users.forEach(user => {
+            if (!user.profile) return;
+            const profile = user.profile;
+            
+            // Ensure yearsExperience from experience
+            if (profile.yearsExperience == null && profile.experience != null) {
+                profile.yearsExperience = profile.experience;
+                changed = true;
+            }
+            
+            // Ensure specializations from skills
+            if (!profile.specializations && profile.skills && profile.skills.length > 0) {
+                profile.specializations = profile.skills.slice(0, 3);
+                changed = true;
+            }
+            
+            // Ensure sectors from interests (filter to valid sector values)
+            if (!profile.sectors && profile.interests && profile.interests.length > 0) {
+                const derivedSectors = profile.interests.filter(i => 
+                    validSectors.some(s => i.toLowerCase().includes(s.toLowerCase()) || s.toLowerCase().includes(i.toLowerCase()))
+                );
+                if (derivedSectors.length > 0) {
+                    profile.sectors = derivedSectors;
+                    changed = true;
+                }
+            }
+            
+            // Ensure preferredPaymentModes has a default
+            if (!profile.preferredPaymentModes || !Array.isArray(profile.preferredPaymentModes)) {
+                profile.preferredPaymentModes = ['cash'];
+                changed = true;
+            }
+        });
+        
+        if (changed) {
+            this.storage.set(CONFIG.STORAGE_KEYS.USERS, users);
+            console.log('Normalized users for matching');
+        }
+    }
+
+    /**
+     * Normalize companies for matching compatibility
+     * Ensures industry (from sectors), financialCapacity, preferredPaymentModes are present
+     */
+    normalizeCompaniesForMatching() {
+        const companies = this.storage.get(CONFIG.STORAGE_KEYS.COMPANIES) || [];
+        let changed = false;
+        
+        companies.forEach(company => {
+            if (!company.profile) return;
+            const profile = company.profile;
+            
+            // Ensure industry is a fallback copy of sectors
+            if (!profile.industry && profile.sectors && profile.sectors.length > 0) {
+                profile.industry = [...profile.sectors];
+                changed = true;
+            }
+            
+            // Ensure preferredPaymentModes has a default
+            if (!profile.preferredPaymentModes || !Array.isArray(profile.preferredPaymentModes)) {
+                profile.preferredPaymentModes = ['cash'];
+                changed = true;
+            }
+            
+            // Ensure financialCapacity has a reasonable default based on company type
+            if (profile.financialCapacity == null) {
+                // Set default based on companyType
+                const companyType = profile.companyType || '';
+                if (companyType.toLowerCase().includes('large')) {
+                    profile.financialCapacity = 100000000; // 100M SAR for large enterprises
+                } else if (companyType.toLowerCase().includes('medium')) {
+                    profile.financialCapacity = 25000000; // 25M SAR for medium enterprises
+                } else {
+                    profile.financialCapacity = 5000000; // 5M SAR for small/other
+                }
+                changed = true;
+            }
+        });
+        
+        if (changed) {
+            this.storage.set(CONFIG.STORAGE_KEYS.COMPANIES, companies);
+            console.log('Normalized companies for matching');
+        }
+    }
+
+    /**
      * Get storage key for a domain
      */
     getStorageKeyForDomain(domain) {
@@ -112,7 +277,8 @@ class DataService {
             'connections': CONFIG.STORAGE_KEYS.CONNECTIONS,
             'messages': CONFIG.STORAGE_KEYS.MESSAGES,
             'audit': CONFIG.STORAGE_KEYS.AUDIT,
-            'sessions': CONFIG.STORAGE_KEYS.SESSIONS
+            'sessions': CONFIG.STORAGE_KEYS.SESSIONS,
+            'contracts': CONFIG.STORAGE_KEYS.CONTRACTS
         };
         return keyMap[domain];
     }
@@ -199,6 +365,11 @@ class DataService {
     async getCompanyById(id) {
         const companies = await this.getCompanies();
         return companies.find(c => c.id === id) || null;
+    }
+    
+    async getCompanyByEmail(email) {
+        const companies = await this.getCompanies();
+        return companies.find(c => c.email === email) || null;
     }
     
     async createCompany(companyData) {
@@ -360,7 +531,51 @@ class DataService {
         this.storage.set(CONFIG.STORAGE_KEYS.APPLICATIONS, applications);
         return applications[index];
     }
-    
+
+    // Contract Operations
+    async getContracts() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.CONTRACTS) || [];
+    }
+
+    async getContractById(id) {
+        const contracts = await this.getContracts();
+        return contracts.find(c => c.id === id) || null;
+    }
+
+    async getContractByOpportunityId(opportunityId) {
+        const contracts = await this.getContracts();
+        return contracts.find(c => c.opportunityId === opportunityId) || null;
+    }
+
+    async createContract(contractData) {
+        const contracts = await this.getContracts();
+        const newContract = {
+            id: this.generateId(),
+            ...contractData,
+            status: contractData.status || CONFIG.CONTRACT_STATUS.PENDING,
+            milestones: contractData.milestones || [],
+            signedAt: contractData.signedAt || null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        contracts.push(newContract);
+        this.storage.set(CONFIG.STORAGE_KEYS.CONTRACTS, contracts);
+        return newContract;
+    }
+
+    async updateContract(id, updates) {
+        const contracts = await this.getContracts();
+        const index = contracts.findIndex(c => c.id === id);
+        if (index === -1) return null;
+        contracts[index] = {
+            ...contracts[index],
+            ...updates,
+            updatedAt: new Date().toISOString()
+        };
+        this.storage.set(CONFIG.STORAGE_KEYS.CONTRACTS, contracts);
+        return contracts[index];
+    }
+
     // Match Operations
     async getMatches() {
         return this.storage.get(CONFIG.STORAGE_KEYS.MATCHES) || [];

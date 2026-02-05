@@ -64,8 +64,9 @@ async function loadOpportunities() {
         const html = oppsWithCreators.map(opp => {
             const data = {
                 ...opp,
+                intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
                 title: opp.title || 'Untitled',
-                modelType: opp.modelType || 'N/A',
+                modelType: opp.modelType || opp.collaborationModel || 'N/A',
                 status: opp.status || 'draft',
                 statusBadgeClass: getStatusBadgeClass(opp.status),
                 description: opp.description || 'No description',
@@ -73,7 +74,7 @@ async function loadOpportunities() {
                 creator: {
                     email: opp.creator?.email || 'Unknown'
                 },
-                showClose: opp.status === 'published'
+                showClose: opp.status === 'published' || opp.status === 'in_negotiation'
             };
             return templateRenderer.render(template, data);
         }).join('');
@@ -100,6 +101,10 @@ function getStatusBadgeClass(status) {
     const statusMap = {
         'draft': 'secondary',
         'published': 'success',
+        'in_negotiation': 'warning',
+        'contracted': 'primary',
+        'in_execution': 'primary',
+        'completed': 'success',
         'closed': 'danger',
         'cancelled': 'danger'
     };

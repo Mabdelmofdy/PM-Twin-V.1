@@ -11,7 +11,7 @@ class AuthService {
     }
     
     /**
-     * Register a new user
+     * Register a new user (individual: professional or consultant)
      */
     async register(userData) {
         // Check if user already exists
@@ -23,16 +23,26 @@ class AuthService {
         // Hash password (simple encoding for POC - NOT secure for production)
         const passwordHash = this.encodePassword(userData.password);
         
-        // Create user
+        const profile = userData.profile || {};
+        // Ensure profile has registration fields
+        if (userData.address) {
+            profile.address = userData.address;
+            profile.location = [userData.address.country, userData.address.region, userData.address.city].filter(Boolean).join(', ');
+        }
+        if (userData.individualType) profile.individualType = userData.individualType;
+        if (userData.specialty !== undefined) profile.specialty = userData.specialty;
+        if (userData.documents) profile.documents = userData.documents;
+        if (userData.emailVerified !== undefined) profile.emailVerified = userData.emailVerified;
+        if (userData.mobileVerified !== undefined) profile.mobileVerified = userData.mobileVerified;
+        
         const user = await this.dataService.createUser({
             email: userData.email,
             passwordHash,
             role: userData.role,
-            status: 'pending', // Requires admin approval
-            profile: userData.profile || {}
+            status: 'pending',
+            profile
         });
         
-        // Create audit log
         await this.dataService.createAuditLog({
             userId: user.id,
             action: 'user_registered',
@@ -42,6 +52,52 @@ class AuthService {
         });
         
         return user;
+    }
+    
+    /**
+     * Register a new company
+     */
+    async registerCompany(payload) {
+        const existingCompany = await this.dataService.getCompanyByEmail(payload.email);
+        if (existingCompany) {
+            throw new Error('A company with this email already exists');
+        }
+        
+        const passwordHash = this.encodePassword(payload.password);
+        
+        const profile = {
+            name: payload.companyName,
+            type: 'company',
+            website: payload.website || null,
+            phone: payload.mobile || null,
+            address: payload.address || null,
+            companyRole: payload.companyRole,
+            companySubType: payload.companySubType || null,
+            documents: payload.documents || [],
+            emailVerified: payload.emailVerified === true,
+            mobileVerified: payload.mobileVerified === true
+        };
+        if (payload.address) {
+            profile.location = [payload.address.country, payload.address.region, payload.address.city].filter(Boolean).join(', ');
+        }
+        
+        const company = await this.dataService.createCompany({
+            email: payload.email,
+            passwordHash,
+            role: CONFIG.ROLES.COMPANY_OWNER,
+            status: 'pending',
+            profile
+        });
+        
+        await this.dataService.createAuditLog({
+            userId: company.id,
+            action: 'company_registered',
+            entityType: 'company',
+            entityId: company.id,
+            details: { email: company.email, companyRole: payload.companyRole }
+        });
+        
+        return company;
     }
     
     /**
@@ -63,9 +119,13 @@ class AuthService {
         if (user.status === 'pending') {
             throw new Error('Account pending approval. Please wait for admin verification.');
         }
+        if (user.status === 'rejected') {
+            throw new Error('Account registration was rejected. Please contact support.');
+        }
         if (user.status === 'suspended') {
             throw new Error('Account suspended. Please contact support.');
         }
+        // clarification_requested: allow login so user can complete registration
         
         // Create session
         const token = this.generateToken();
@@ -131,7 +191,9 @@ class AuthService {
         }
         
         const user = await this.dataService.getUserOrCompanyById(session.userId);
-        if (!user || user.status !== 'active') {
+        if (!user) return false;
+        // Allow active and clarification_requested (user can complete registration)
+        if (user.status !== 'active' && user.status !== 'clarification_requested') {
             return false;
         }
         

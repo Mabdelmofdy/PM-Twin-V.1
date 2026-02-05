@@ -106,7 +106,8 @@ async function loadPendingApprovals() {
                 <div class="card-footer">
                     <button onclick="approveUser('${user.id}', ${isCompany})" class="btn btn-success btn-sm">Approve</button>
                     <button onclick="rejectUser('${user.id}', ${isCompany})" class="btn btn-danger btn-sm">Reject</button>
-                    <a href="#" data-route="/admin/users/${user.id}" class="btn btn-secondary btn-sm">View Details</a>
+                    <button onclick="requestClarification('${user.id}', ${isCompany})" class="btn btn-warning btn-sm">Request clarification</button>
+                    <a href="#" data-route="/admin/users" class="btn btn-secondary btn-sm">View All</a>
                 </div>
             </div>
         `;
@@ -196,6 +197,43 @@ async function rejectUser(userId, isCompany = false) {
     }
 }
 
+async function requestClarification(userId, isCompany = false) {
+    const reason = prompt('Reason or missing items (optional):');
+    if (reason === null) return;
+    
+    try {
+        if (isCompany) {
+            await dataService.updateCompany(userId, { status: 'clarification_requested' });
+        } else {
+            await dataService.updateUser(userId, { status: 'clarification_requested' });
+        }
+        
+        await dataService.createNotification({
+            userId,
+            type: 'account_clarification_requested',
+            title: 'Registration needs clarification',
+            message: reason ? `Your registration needs clarification: ${reason}. Please update your profile or documents and submit for review again.` : 'Your registration needs clarification. Please update your profile or documents and submit for review again from your profile page.'
+        });
+        
+        const admin = authService.getCurrentUser();
+        await dataService.createAuditLog({
+            userId: admin.id,
+            action: isCompany ? 'company_clarification_requested' : 'user_clarification_requested',
+            entityType: isCompany ? 'company' : 'user',
+            entityId: userId,
+            details: { reason: reason || '' }
+        });
+        
+        alert(`${isCompany ? 'Company' : 'User'} marked as needs clarification`);
+        await loadPendingApprovals();
+        await loadDashboardStats();
+    } catch (error) {
+        console.error('Error requesting clarification:', error);
+        alert('Failed to request clarification.');
+    }
+}
+
 // Make functions available globally
 window.approveUser = approveUser;
 window.rejectUser = rejectUser;
+window.requestClarification = requestClarification;

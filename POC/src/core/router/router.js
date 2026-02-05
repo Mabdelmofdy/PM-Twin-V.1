@@ -176,12 +176,17 @@ class Router {
         }
         
         this.currentRoute = route;
-        
+
         // Execute route handler
         if (route.handler) {
             await route.handler(route.params);
         }
-        
+
+        // Update portal sidebar active state if layout service exists
+        if (window.layoutService && typeof window.layoutService.setActiveNav === 'function') {
+            window.layoutService.setActiveNav();
+        }
+
         return true;
     }
 }

@@ -19,6 +19,9 @@
                 <button data-action="approve" data-user-id="{{id}}" class="btn btn-success btn-sm">Approve</button>
                 <button data-action="reject" data-user-id="{{id}}" class="btn btn-danger btn-sm">Reject</button>
             {{/if}}
+            {{#if showRequestClarification}}
+                <button data-action="request_clarification" data-user-id="{{id}}" class="btn btn-warning btn-sm">Request clarification</button>
+            {{/if}}
             {{#if showSuspend}}
                 <button data-action="suspend" data-user-id="{{id}}" class="btn btn-warning btn-sm">Suspend</button>
             {{/if}}

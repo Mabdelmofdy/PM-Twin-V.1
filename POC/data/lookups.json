@@ -339,6 +339,23 @@
     "Certification",
     "Other"
   ],
+  "intentLabels": [
+    { "id": "request", "label": "REQUEST" },
+    { "id": "offer", "label": "OFFER" }
+  ],
+  "collaborationModels": [
+    { "id": "project", "label": "Project" },
+    { "id": "service", "label": "Service" },
+    { "id": "advisory", "label": "Advisory" },
+    { "id": "consortium", "label": "Consortium" }
+  ],
+  "paymentModes": [
+    { "id": "cash", "label": "Cash" },
+    { "id": "barter", "label": "Barter" },
+    { "id": "equity", "label": "Equity" },
+    { "id": "profit_sharing", "label": "Profit-Sharing" },
+    { "id": "hybrid", "label": "Hybrid" }
+  ],
   "exchangeModes": [
     "Cash",
     "Equity",
@@ -365,5 +382,63 @@
     "Revenue Share",
     "Profit Share (After Costs)",
     "Gross Profit Share"
-  ]
+  ],
+  "companyRoles": [
+    { "id": "beneficiary", "label": "Beneficiary", "hasSubTypes": false, "mobileRequired": true },
+    { "id": "vendor", "label": "Vendor", "hasSubTypes": true, "mobileRequired": true },
+    { "id": "skill_service_provider", "label": "Skill Service Provider", "hasSubTypes": false, "mobileRequired": true },
+    { "id": "sub_contractor", "label": "Sub-Contractor", "hasSubTypes": true, "mobileRequired": true },
+    { "id": "consultant_company", "label": "Consultant (company)", "hasSubTypes": false, "mobileRequired": true }
+  ],
+  "companyRoleSubTypes": {
+    "vendor": [
+      { "id": "supplies", "label": "Supplies" },
+      { "id": "equipment", "label": "Equipment" },
+      { "id": "materials", "label": "Materials" }
+    ],
+    "sub_contractor": [
+      { "id": "specialty_trade", "label": "Specialty Trade" },
+      { "id": "labor", "label": "Labor" },
+      { "id": "technical", "label": "Technical" }
+    ]
+  },
+  "companyRoleDocuments": {
+    "beneficiary": [
+      { "id": "cr", "label": "Commercial Registration (CR)", "required": true },
+      { "id": "vat", "label": "VAT Certificate", "required": true },
+      { "id": "company_profile", "label": "Company Profile", "required": true }
+    ],
+    "vendor": [
+      { "id": "cr", "label": "Commercial Registration (CR)", "required": true },
+      { "id": "vat", "label": "VAT Certificate", "required": true },
+      { "id": "trade_license", "label": "Trade License", "required": true }
+    ],
+    "skill_service_provider": [
+      { "id": "cr", "label": "Commercial Registration (CR)", "required": true },
+      { "id": "vat", "label": "VAT Certificate", "required": true },
+      { "id": "certifications", "label": "Certifications", "required": true }
+    ],
+    "sub_contractor": [
+      { "id": "cr", "label": "Commercial Registration (CR)", "required": true },
+      { "id": "vat", "label": "VAT Certificate", "required": true },
+      { "id": "trade_license", "label": "Trade License", "required": true }
+    ],
+    "consultant_company": [
+      { "id": "cr", "label": "Commercial Registration (CR)", "required": true },
+      { "id": "vat", "label": "VAT Certificate", "required": true },
+      { "id": "company_profile", "label": "Company Profile", "required": true }
+    ]
+  },
+  "individualTypeDocuments": {
+    "professional": [
+      { "id": "national_id_passport", "label": "National ID / Passport", "required": true },
+      { "id": "cv_resume", "label": "CV / Resume", "required": true },
+      { "id": "certificates", "label": "Certificates (optional)", "required": false }
+    ],
+    "consultant": [
+      { "id": "professional_license", "label": "Professional License / Certification", "required": true },
+      { "id": "cv_resume", "label": "CV / Resume", "required": true },
+      { "id": "portfolio", "label": "Portfolio (optional)", "required": false }
+    ]
+  }
 }

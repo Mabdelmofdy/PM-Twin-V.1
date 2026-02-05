@@ -26,19 +26,31 @@ class OpportunityService {
     }
     
     /**
-     * Update opportunity status
+     * Whether cancellation is allowed (only in draft, published, or in_negotiation)
+     */
+    canCancelOpportunity(opportunity) {
+        const status = typeof opportunity === 'string' ? opportunity : opportunity?.status;
+        return status === 'draft' || status === 'published' || status === 'in_negotiation';
+    }
+
+    /**
+     * Update opportunity status with validation (e.g. cancel only before execution)
      */
     async updateOpportunityStatus(opportunityId, newStatus) {
+        if (newStatus === 'cancelled') {
+            const opportunity = await this.dataService.getOpportunityById(opportunityId);
+            if (!opportunity) throw new Error('Opportunity not found');
+            if (!this.canCancelOpportunity(opportunity)) {
+                throw new Error('Cancellation is not allowed once the opportunity is contracted or in execution. Termination must follow contract rules.');
+            }
+        }
         const opportunity = await this.dataService.updateOpportunity(opportunityId, {
             status: newStatus
         });
-        
-        // If published, trigger matching
         if (newStatus === 'published') {
             this.matchingService.findMatchesForOpportunity(opportunityId)
                 .catch(error => console.error('Error running matching:', error));
         }
-        
         return opportunity;
     }
     

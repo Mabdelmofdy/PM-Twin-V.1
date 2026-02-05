@@ -1,0 +1,46 @@
+<div class="page-container admin-user-detail-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <a href="#" data-route="/admin/users" class="back-link">← Back to Users</a>
+            <h1 class="page-title" id="user-detail-name">User / Company</h1>
+            <p class="page-subtitle" id="user-detail-email">-</p>
+            <div id="user-detail-badges" class="badges"></div>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <div class="detail-grid">
+        <section class="card">
+            <div class="card-header"><h2>Profile</h2></div>
+            <div class="card-body" id="user-detail-profile"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><h2>Opportunities created</h2></div>
+            <div class="card-body" id="user-opportunities"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><h2>Applications submitted</h2></div>
+            <div class="card-body" id="user-applications"></div>
+        </section>
+
+        <section class="card full-width">
+            <div class="card-header"><h2>Related audit logs</h2></div>
+            <div class="card-body" id="user-audit"></div>
+        </section>
+    </div>
+    </div>
+</div>
+
+<style>
+.admin-user-detail-page { /* Page specific styles */ }
+.badges { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); flex-wrap: wrap; }
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--spacing-lg); }
+.detail-grid .full-width { grid-column: 1 / -1; }
+.detail-item { padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); }
+.detail-item:last-child { border-bottom: none; }
+.audit-item { padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); font-size: var(--font-size-sm); }
+.audit-item:last-child { border-bottom: none; }
+.empty-section { color: var(--text-muted); }
+</style>

@@ -2,11 +2,229 @@
  * Opportunity Create Component - Wizard Flow
  */
 
-let currentModel = null;
-let currentSubModel = null;
 let currentStep = 1;
-let allModels = [];
+const TOTAL_STEPS = 6;
 let allLocations = [];
+let demoDataIndex = 0;
+
+/**
+ * Demo datasets for "Fill Demo Data" – each click rotates to the next scenario.
+ * step1: title, description, locationKey ('riyadh' | 'jeddah' | 'remote').
+ * step2: intent ('request' | 'offer').
+ * step3: skills, sectors, interests (arrays).
+ * step4: category, subModel, modelFields (object key -> value for dynamic Step 4 fields).
+ * step5: budgetMin, budgetMax, exchangeMode, currency, modeFields, agreement.
+ * step6: status.
+ */
+const DEMO_DATASETS = [
+    {
+        step1: {
+            title: 'Structural Engineering Services for Commercial Building Project',
+            description: 'We are seeking an experienced structural engineer to provide design and consultation services for a new 5-story commercial building in Riyadh. The project involves reinforced concrete design, foundation analysis, and construction supervision.',
+            locationKey: 'riyadh'
+        },
+        step2: { intent: 'request' },
+        step3: {
+            skills: ['Structural Engineering', 'Reinforced Concrete', 'Foundation Design', 'Construction Supervision'],
+            sectors: ['Construction', 'Real Estate'],
+            interests: ['Sustainability', 'BIM'],
+            certifications: ['PMP', 'PE']
+        },
+        step4: {
+            category: 'project_based',
+            subModel: 'task_based',
+            modelFields: {
+                taskTitle: 'Structural Design and Analysis for Commercial Building',
+                taskType: 'Engineering',
+                detailedScope: 'Provide complete structural engineering services including:\n- Structural analysis and design for 5-story reinforced concrete building\n- Foundation design and soil analysis\n- Construction drawings and specifications\n- Site visits and construction supervision',
+                duration: '90',
+                requiredSkills: 'Structural Engineering, Reinforced Concrete Design, Foundation Design, AutoCAD, ETABS',
+                experienceLevel: 'Senior',
+                locationRequirement: 'Hybrid',
+                startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                deliverableFormat: 'PDF drawings, CAD files, calculation reports'
+            }
+        },
+        step5: {
+            budgetMin: '50000',
+            budgetMax: '75000',
+            exchangeMode: 'cash',
+            currency: 'SAR',
+            modeFields: {
+                cashAmount: '60000',
+                cashPaymentTerms: 'milestone_based',
+                cashMilestones: '30% upon contract signing, 40% at design completion, 30% upon final delivery.',
+                exchangeTermsSummary: 'Payment in SAR. Invoicing monthly. 5% retention released 30 days after project completion.'
+            },
+            agreement: true
+        },
+        step6: { status: 'draft' }
+    },
+    {
+        step1: {
+            title: 'Strategic JV Partnership – Construction & Engineering',
+            description: 'We offer a long-term strategic joint venture in construction and engineering. Seeking a partner for equity participation, shared governance, and expansion across the GCC.',
+            locationKey: 'jeddah'
+        },
+        step2: { intent: 'offer' },
+        step3: {
+            skills: ['Strategic Partnerships', 'JV Management', 'Construction', 'Engineering'],
+            sectors: ['Construction', 'Real Estate', 'Infrastructure'],
+            interests: ['GCC Expansion', 'Equity Partnerships'],
+            certifications: ['ISO 9001', 'JV Governance']
+        },
+        step4: {
+            category: 'strategic_partnership',
+            subModel: 'strategic_jv',
+            modelFields: {
+                jvName: 'GCC Construction Partners JV',
+                strategicObjective: 'Establish a leading construction and engineering JV for GCC projects.',
+                businessScope: 'Design, build, and operate infrastructure and building projects across Saudi Arabia and GCC.',
+                targetSectors: ['Construction', 'Energy', 'Real Estate'],
+                geographicScope: ['Saudi Arabia', 'GCC'],
+                duration: '10-15 years',
+                jvStructure: 'Incorporated LLC',
+                equitySplit: '50, 50',
+                initialCapital: '5000000',
+                ongoingFunding: 'Partner Contributions',
+                partnerContributions: [
+                    { label: 'Partner A', value: 'Capital 2.5M SAR, technical lead' },
+                    { label: 'Partner B', value: 'Capital 2.5M SAR, regional operations' }
+                ],
+                managementStructure: 'Lead Partner',
+                governance: 'Board of 4 directors (2 per partner). Quarterly meetings. Major decisions require 75% approval.',
+                profitDistribution: 'Proportional to Equity',
+                exitOptions: ['Buyout', 'Sale to Third Party', 'Dissolution'],
+                nonCompete: true,
+                technologyTransfer: false,
+                partnerRequirements: [
+                    { label: 'Minimum turnover', value: '50M SAR annually' },
+                    { label: 'Experience', value: '5+ years in GCC construction' }
+                ],
+                requiredSkills: 'JV Management, Construction, Project Finance'
+            }
+        },
+        step5: {
+            budgetMin: '100000',
+            budgetMax: '500000',
+            exchangeMode: 'equity',
+            currency: null,
+            modeFields: {
+                equityPercentage: '40',
+                equityVesting: '2_years',
+                equityContribution: 'Join our JV: 40% equity for expertise and regional presence. Vesting over 2 years.',
+                exchangeTermsSummary: 'Equity subject to shareholder agreement. Board seat optional.'
+            },
+            agreement: true
+        },
+        step6: { status: 'draft' }
+    },
+    {
+        step1: {
+            title: 'Consortium – Large-Scale Infrastructure Tender',
+            description: 'Request for consortium members for a major infrastructure tender. Profit-sharing and scope division by trade. Lead member role available.',
+            locationKey: 'riyadh'
+        },
+        step2: { intent: 'request' },
+        step3: {
+            skills: ['Infrastructure', 'Consortium Management', 'Tendering', 'Civil Engineering'],
+            sectors: ['Infrastructure', 'Government', 'Construction'],
+            interests: ['PPP', 'Large Projects'],
+            certifications: ['Prequalified MoT', 'CIDB']
+        },
+        step4: {
+            category: 'project_based',
+            subModel: 'consortium',
+            modelFields: {
+                projectTitle: 'Regional Highway and Bridge Package',
+                projectType: 'Infrastructure',
+                projectValue: '150000000',
+                projectDuration: '36',
+                projectLocation: 'Riyadh Region',
+                leadMember: true,
+                requiredMembers: '4',
+                memberRoles: [
+                    { label: 'Lead', value: 'Structural and civil design' },
+                    { label: 'Member 2', value: 'MEP and utilities' },
+                    { label: 'Member 3', value: 'Earthworks and roads' },
+                    { label: 'Member 4', value: 'Bridge specialist' }
+                ],
+                scopeDivision: 'By Trade',
+                liabilityStructure: 'Joint & Several',
+                clientType: 'Government',
+                tenderDeadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                prequalificationRequired: true,
+                minimumRequirements: [
+                    { label: 'Turnover', value: 'Min 30M SAR' },
+                    { label: 'Similar projects', value: 'At least 2 in 5 years' }
+                ],
+                consortiumAgreement: true,
+                paymentDistribution: 'Per Scope',
+                requiredSkills: 'Infrastructure, Tendering, Consortium'
+            }
+        },
+        step5: {
+            budgetMin: '100000',
+            budgetMax: '200000',
+            exchangeMode: 'profit_sharing',
+            currency: null,
+            modeFields: {
+                profitSplit: '60-40',
+                profitBasis: 'profit',
+                profitDistribution: '60-40 profit split after costs, distributed quarterly.',
+                exchangeTermsSummary: 'Profit share calculated after project costs. Quarterly distributions.'
+            },
+            agreement: true
+        },
+        step6: { status: 'draft' }
+    },
+    {
+        step1: {
+            title: 'Consulting Services Offer – Barter or Hybrid',
+            description: 'We offer project management and sustainability consulting. Open to barter (office space, software licenses) or hybrid compensation.',
+            locationKey: 'remote'
+        },
+        step2: { intent: 'offer' },
+        step3: {
+            skills: ['Project Management', 'Sustainability Consulting', 'Training'],
+            sectors: ['Consulting', 'Construction', 'Technology'],
+            interests: ['Barter', 'Flexible Engagement'],
+            certifications: ['PMP', 'LEED AP']
+        },
+        step4: {
+            category: 'hiring',
+            subModel: 'consultant_hiring',
+            modelFields: {
+                consultationTitle: 'PM and Sustainability Consulting Package',
+                consultationType: 'Project Management',
+                scopeOfWork: 'Project management support and sustainability assessments for construction projects. Deliverables: reports, workshops, and recommendations.',
+                deliverables: 'Reports, Workshops, Recommendations',
+                duration: '90',
+                requiredExpertise: 'PMP, LEED, Construction',
+                requiredCertifications: 'PMP, LEED AP, or equivalent',
+                experienceLevel: 'Senior',
+                locationRequirement: 'Remote',
+                budget: { min: '25000', max: '45000' },
+                startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                requiredSkills: 'Project Management, Sustainability'
+            }
+        },
+        step5: {
+            budgetMin: '20000',
+            budgetMax: '50000',
+            exchangeMode: 'barter',
+            currency: null,
+            modeFields: {
+                barterOffer: 'We offer project management and sustainability consulting (reports, workshops).',
+                barterNeed: 'Office space or software licenses (e.g. BIM, PM tools) in exchange.',
+                barterValue: 'Equivalent to 35K SAR',
+                exchangeTermsSummary: 'Barter value approximate. Open to partial cash top-up if needed.'
+            },
+            agreement: true
+        },
+        step6: { status: 'draft' }
+    }
+];
 
 // Initialize shared data object if it doesn't exist
 if (!window.opportunityFormData) {
@@ -96,29 +314,152 @@ function flattenLocations() {
 }
 
 async function initializeForm() {
-    const formService = window.opportunityFormService;
-    
-    if (!formService) return;
-    
-    // Build flat list of all sub-models with their parent info
-    const models = formService.getModels();
-    allModels = [];
-    
-    models.forEach(model => {
-        model.subModels.forEach(subModel => {
-            allModels.push({
-                modelKey: model.key,
-                modelName: model.name,
-                subModelKey: subModel.key,
-                subModelName: subModel.name,
-                searchText: `${model.name} ${subModel.name}`.toLowerCase()
-            });
+    setupLocationSearch();
+    setupIntentLabels();
+    setupScopeTags();
+    setupCategoryAndSubModel();
+    setupExchangeModeSelection();
+    setupReviewSummary();
+}
+
+function setupIntentLabels() {
+    document.querySelectorAll('input[name="intent"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            updateScopeLabels();
         });
     });
-    
-    setupSearchableModelSelector();
-    setupLocationSearch();
-    setupExchangeModeSelection();
+}
+
+function updateScopeLabels() {
+    const intent = document.querySelector('input[name="intent"]:checked')?.value;
+    const intro = document.getElementById('scope-intro');
+    const skillsLabel = document.getElementById('scope-skills-label');
+    if (!intro || !skillsLabel) return;
+    if (intent === 'offer') {
+        intro.textContent = 'Add offered services/skills, sectors, and interests. Used for matching.';
+        skillsLabel.innerHTML = 'Offered services / skills <span class="text-red-600">*</span>';
+    } else {
+        intro.textContent = 'Add required services/skills, sectors, and interests. Used for matching.';
+        skillsLabel.innerHTML = 'Required services / skills <span class="text-red-600">*</span>';
+    }
+}
+
+function setupScopeTags() {
+    ['scope-skills', 'scope-sectors', 'scope-interests', 'scope-certifications'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        let tags = [];
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const v = (el.value || '').trim().replace(/,/g, '');
+                if (v) {
+                    tags.push(v);
+                    el.value = '';
+                    renderScopeTags(el, tags);
+                }
+            }
+        });
+        el.dataset.tagsArray = JSON.stringify(tags);
+    });
+}
+
+function renderScopeTags(containerInput, tags) {
+    const wrapper = containerInput.closest('.form-group');
+    if (!wrapper) return;
+    let tagEl = wrapper.querySelector('.scope-tags-display');
+    if (!tagEl) {
+        tagEl = document.createElement('div');
+        tagEl.className = 'scope-tags-display flex flex-wrap gap-2 mt-2';
+        containerInput.after(tagEl);
+    }
+    tagEl.innerHTML = tags.map((t, i) => `<span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 text-sm" data-tag-index="${i}">${escapeHtml(t)} <button type="button" class="ml-1 text-blue-600 hover:text-blue-800 scope-tag-remove" data-index="${i}" aria-label="Remove">&times;</button></span>`).join('');
+    tagEl.querySelectorAll('.scope-tag-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+            tags.splice(parseInt(btn.dataset.index, 10), 1);
+            renderScopeTags(containerInput, tags);
+            containerInput.dataset.tagsArray = JSON.stringify(tags);
+        });
+    });
+    containerInput.dataset.tagsArray = JSON.stringify(tags);
+}
+
+function getScopeTagsFromInput(inputId) {
+    const el = document.getElementById(inputId);
+    if (!el) return [];
+    try {
+        return JSON.parse(el.dataset.tagsArray || '[]');
+    } catch {
+        const v = (el.value || '').trim();
+        return v ? v.split(',').map(s => s.trim()).filter(Boolean) : [];
+    }
+}
+
+function getOpportunityModels() {
+    return window.OPPORTUNITY_MODELS || {};
+}
+
+function renderSubModelOptions(categoryKey, clearSubModel) {
+    const models = getOpportunityModels();
+    const modelTypeInput = document.getElementById('model-type');
+    const subModelTypeInput = document.getElementById('submodel-type');
+    const submodelGroup = document.getElementById('submodel-group');
+    const submodelOptions = document.getElementById('submodel-options');
+    const modelDetailsSection = document.getElementById('model-details-section');
+    const dynamicFields = document.getElementById('dynamic-fields');
+    if (!modelTypeInput || !subModelTypeInput || !submodelGroup || !submodelOptions) return;
+    if (clearSubModel !== false) {
+        subModelTypeInput.value = '';
+        if (modelDetailsSection) modelDetailsSection.style.display = 'none';
+        if (dynamicFields) dynamicFields.innerHTML = '';
+    }
+    submodelOptions.innerHTML = '';
+    submodelGroup.style.display = 'none';
+    const category = models[categoryKey];
+    if (!category || !category.subModels) return;
+    const subModelNames = {
+        equipment_sharing: 'Equipment Sharing (Co-Ownership Pooling)'
+    };
+    Object.keys(category.subModels).forEach(subKey => {
+        const sub = category.subModels[subKey];
+        const displayName = subModelNames[subKey] || sub.name;
+        const label = document.createElement('label');
+        label.className = 'submodel-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50';
+        label.innerHTML = `
+            <input type="radio" name="submodel" value="${escapeHtml(subKey)}" class="sr-only">
+            <span class="font-semibold text-gray-900">${escapeHtml(displayName)}</span>
+        `;
+        label.querySelector('input').addEventListener('change', () => {
+            subModelTypeInput.value = subKey;
+            if (modelDetailsSection) modelDetailsSection.style.display = 'block';
+            renderDynamicFields(categoryKey, subKey);
+        });
+        submodelOptions.appendChild(label);
+    });
+    submodelGroup.style.display = 'block';
+}
+
+function setupCategoryAndSubModel() {
+    const modelTypeInput = document.getElementById('model-type');
+    const submodelGroup = document.getElementById('submodel-group');
+    const submodelOptions = document.getElementById('submodel-options');
+    if (!modelTypeInput || !submodelGroup || !submodelOptions) return;
+
+    document.querySelectorAll('input[name="category"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            const categoryKey = radio.value;
+            modelTypeInput.value = categoryKey;
+            renderSubModelOptions(categoryKey, true);
+        });
+    });
+}
+
+function setupPaymentModes() {
+    // Step 5 now uses single-select exchange mode cards via setupExchangeModeSelection(); no-op for backward compatibility.
+}
+
+function setupReviewSummary() {
+    // Populated when entering step 6 in goToStep
 }
 
 function setupWizardNavigation() {
@@ -128,6 +469,8 @@ function setupWizardNavigation() {
     
     nextBtn.addEventListener('click', () => {
         if (validateCurrentStep()) {
+            if (currentStep === 3) persistScopeTags();
+            if (currentStep === 6) fillReviewSummary();
             goToStep(currentStep + 1);
         }
     });
@@ -139,21 +482,95 @@ function setupWizardNavigation() {
     updateWizardUI();
 }
 
+function persistScopeTags() {
+    ['scope-skills', 'scope-sectors', 'scope-interests', 'scope-certifications'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const v = (el.value || '').trim().replace(/,/g, '');
+        if (v) {
+            try {
+                const tags = JSON.parse(el.dataset.tagsArray || '[]');
+                if (!tags.includes(v)) tags.push(v);
+                el.dataset.tagsArray = JSON.stringify(tags);
+                el.value = '';
+                renderScopeTags(el, tags);
+            } catch (e) {}
+        }
+    });
+}
+
+function syncPaymentModesToPrimary() {
+    const checked = Array.from(document.querySelectorAll('.payment-mode-cb:checked')).map(c => c.value);
+    const primary = document.getElementById('exchange-mode');
+    if (primary) primary.value = checked[0] || '';
+}
+
+function fillReviewSummary() {
+    const summary = document.getElementById('review-summary');
+    if (!summary) return;
+    const models = getOpportunityModels();
+    const title = document.getElementById('title')?.value || '—';
+    const desc = document.getElementById('description')?.value || '—';
+    const intentEl = document.querySelector('input[name="intent"]:checked');
+    const intent = intentEl ? (intentEl.value === 'request' ? 'REQUEST' : 'OFFER') : '—';
+    const location = document.getElementById('location')?.value || document.getElementById('location-country')?.value || '—';
+    const modelType = document.getElementById('model-type')?.value;
+    const subModelType = document.getElementById('submodel-type')?.value;
+    let categoryLabel = '—';
+    let subModelLabel = '—';
+    if (modelType && models[modelType]) {
+        categoryLabel = models[modelType].name || modelType;
+        if (subModelType && models[modelType].subModels && models[modelType].subModels[subModelType]) {
+            subModelLabel = models[modelType].subModels[subModelType].name || subModelType;
+        }
+    }
+    const exchangeMode = document.getElementById('exchange-mode')?.value;
+    const modeNames = { cash: 'Cash', equity: 'Equity', profit_sharing: 'Profit-Sharing', barter: 'Barter', hybrid: 'Hybrid' };
+    const modeLabel = exchangeMode ? (modeNames[exchangeMode] || exchangeMode) : '—';
+    const budgetMin = document.getElementById('budgetRange_min')?.value;
+    const budgetMax = document.getElementById('budgetRange_max')?.value;
+    const budgetLabel = (budgetMin != null && budgetMax != null && budgetMin !== '' && budgetMax !== '') ? `${Number(budgetMin).toLocaleString()} – ${Number(budgetMax).toLocaleString()} SAR` : '—';
+    const skills = getScopeTagsFromInput('scope-skills');
+    let modelDetailsLine = '—';
+    if (modelType && subModelType && window.opportunityFormService) {
+        const attrs = window.opportunityFormService.getAttributes(modelType, subModelType);
+        const keyLabels = [];
+        ['taskTitle', 'projectTitle', 'jvName', 'projectName'].forEach(k => {
+            if (attrs.some(a => a.key === k)) {
+                const el = document.getElementById(k);
+                const v = el?.value?.trim();
+                if (v) keyLabels.push(v.slice(0, 40) + (v.length > 40 ? '…' : ''));
+            }
+        });
+        if (keyLabels.length) modelDetailsLine = keyLabels.join('; ');
+    }
+    summary.innerHTML = `
+        <p><strong>Title:</strong> ${escapeHtml(title)}</p>
+        <p><strong>Intent:</strong> ${escapeHtml(intent)}</p>
+        <p><strong>Location:</strong> ${escapeHtml(location)}</p>
+        <p><strong>Category:</strong> ${escapeHtml(categoryLabel)}</p>
+        <p><strong>Sub-Model:</strong> ${escapeHtml(subModelLabel)}</p>
+        <p><strong>Exchange mode:</strong> ${escapeHtml(modeLabel)}</p>
+        <p><strong>Budget range:</strong> ${escapeHtml(budgetLabel)}</p>
+        <p><strong>Skills:</strong> ${skills.length ? escapeHtml(skills.join(', ')) : '—'}</p>
+        <p><strong>Model details:</strong> ${escapeHtml(modelDetailsLine)}</p>
+        <p class="text-gray-600 mt-2">${escapeHtml(desc.slice(0, 200))}${desc.length > 200 ? '...' : ''}</p>
+    `;
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 function validateCurrentStep() {
     const errorDiv = document.getElementById('form-error');
     errorDiv.classList.add('hidden');
     
     switch (currentStep) {
-        case 1:
-            const modelType = document.getElementById('model-type').value;
-            const subModelType = document.getElementById('submodel-type').value;
-            if (!modelType || !subModelType) {
-                showError('Please select a collaboration model');
-                return false;
-            }
-            break;
-            
-        case 2:
+        case 1: {
             const title = document.getElementById('title').value.trim();
             const country = document.getElementById('location-country').value;
             const region = document.getElementById('location-region').value;
@@ -175,212 +592,175 @@ function validateCurrentStep() {
                 return false;
             }
             break;
-            
-        case 3:
-            // Validate dynamic fields in step 3
-            const step3Content = document.getElementById('step-3');
-            if (step3Content && !step3Content.classList.contains('hidden')) {
-                const requiredFields = step3Content.querySelectorAll('[required]');
-                for (let field of requiredFields) {
-                    if (field.type === 'checkbox') {
-                        if (!field.checked && !field.closest('.hidden')) {
-                            showError(`${field.labels?.[0]?.textContent || 'This field'} is required`);
-                            field.focus();
+        }
+        case 2: {
+            const intent = document.querySelector('input[name="intent"]:checked');
+            if (!intent) {
+                showError('Please select an intent (REQUEST or OFFER)');
+                return false;
+            }
+            break;
+        }
+        case 3: {
+            const skills = getScopeTagsFromInput('scope-skills');
+            const scopeInput = document.getElementById('scope-skills');
+            const pending = (scopeInput?.value || '').trim().replace(/,/g, '');
+            if (skills.length === 0 && !pending) {
+                showError('At least one service/skill is required');
+                scopeInput?.focus();
+                return false;
+            }
+            break;
+        }
+        case 4: {
+            const modelType = document.getElementById('model-type')?.value;
+            const subModelType = document.getElementById('submodel-type')?.value;
+            if (!modelType) {
+                showError('Please select a category');
+                return false;
+            }
+            if (!subModelType) {
+                showError('Please select a sub-model');
+                return false;
+            }
+            const formService = window.opportunityFormService;
+            if (formService) {
+                const paymentFieldKeys = ['paymentTerms', 'exchangeType', 'barterOffer'];
+                const attrs = formService.getAttributes(modelType, subModelType).filter(a => !paymentFieldKeys.includes(a.key));
+                const form = document.getElementById('opportunity-form');
+                for (const attr of attrs) {
+                    if (!attr.required) continue;
+                    if (attr.conditional && form) {
+                        const watchEl = form.querySelector(`[name="${attr.conditional.field}"]`);
+                        const watchVal = watchEl ? (watchEl.type === 'checkbox' ? watchEl.checked : watchEl.value) : null;
+                        const values = Array.isArray(attr.conditional.value) ? attr.conditional.value : [attr.conditional.value];
+                        if (!values.some(v => String(watchVal) === String(v))) continue;
+                    }
+                    if (attr.type === 'currency-range') {
+                        const minEl = document.getElementById(`${attr.key}_min`) || document.querySelector(`[name="${attr.key}_min"]`);
+                        const maxEl = document.getElementById(`${attr.key}_max`) || document.querySelector(`[name="${attr.key}_max"]`);
+                        const minVal = minEl?.value?.trim();
+                        const maxVal = maxEl?.value?.trim();
+                        if (!minVal || !maxVal) {
+                            showError(`Model details: ${attr.label || attr.key} is required`);
                             return false;
                         }
-                    } else if (field.type === 'number') {
-                        // Handle currency-range fields (min/max)
-                        if (field.name && field.name.includes('_min') || field.name.includes('_max')) {
-                            const baseName = field.name.replace('_min', '').replace('_max', '');
-                            const minField = step3Content.querySelector(`[name="${baseName}_min"]`);
-                            const maxField = step3Content.querySelector(`[name="${baseName}_max"]`);
-                            if (minField && maxField && (!minField.value || !maxField.value)) {
-                                showError(`${baseName.replace(/([A-Z])/g, ' $1').trim()} range is required`);
-                                if (!minField.value) minField.focus();
-                                else maxField.focus();
-                                return false;
-                            }
-                        } else if (!field.value && field.value !== '0') {
-                            showError(`${field.labels?.[0]?.textContent || field.placeholder || 'This field'} is required`);
-                            field.focus();
+                    } else {
+                        const el = document.getElementById(attr.key) || document.querySelector(`[name="${attr.key}"]`);
+                        if (!el) continue;
+                        let val;
+                        if (el.type === 'checkbox') val = el.checked;
+                        else val = (el.value || '').trim();
+                        if (el.type === 'checkbox' ? !val : val === '') {
+                            showError(`Model details: ${attr.label || attr.key} is required`);
                             return false;
                         }
-                    } else if (!field.value || (field.value.trim && field.value.trim() === '')) {
-                        showError(`${field.labels?.[0]?.textContent || field.placeholder || 'This field'} is required`);
-                        field.focus();
-                        return false;
                     }
                 }
             }
             break;
-            
-        case 4:
-            // Budget range validation
-            const budgetMin = document.getElementById('budgetRange_min')?.value;
-            const budgetMax = document.getElementById('budgetRange_max')?.value;
-            
-            if (!budgetMin || parseFloat(budgetMin) <= 0) {
-                showError('Minimum budget is required');
-                document.getElementById('budgetRange_min')?.focus();
+        }
+        case 5: {
+            const budgetMin = document.getElementById('budgetRange_min')?.value?.trim();
+            const budgetMax = document.getElementById('budgetRange_max')?.value?.trim();
+            if (!budgetMin || !budgetMax) {
+                showError('Budget range: both minimum and maximum are required');
                 return false;
             }
-            if (!budgetMax || parseFloat(budgetMax) <= 0) {
-                showError('Maximum budget is required');
-                document.getElementById('budgetRange_max')?.focus();
+            const minVal = parseFloat(budgetMin);
+            const maxVal = parseFloat(budgetMax);
+            if (isNaN(minVal) || isNaN(maxVal) || minVal > maxVal) {
+                showError('Budget range: minimum must be less than or equal to maximum');
                 return false;
             }
-            if (parseFloat(budgetMin) > parseFloat(budgetMax)) {
-                showError('Minimum budget cannot be greater than maximum budget');
-                document.getElementById('budgetRange_min')?.focus();
+            const exchangeMode = document.getElementById('exchange-mode')?.value;
+            const validModes = ['cash', 'equity', 'profit_sharing', 'barter', 'hybrid'];
+            if (!exchangeMode || !validModes.includes(exchangeMode)) {
+                showError('Please select an exchange mode');
                 return false;
             }
-            
-            // Exchange mode validation
-            const exchangeModeInput = document.getElementById('exchange-mode');
-            const exchangeMode = exchangeModeInput?.value;
-            const exchangeAgreement = document.getElementById('exchange-agreement')?.checked;
-            if (!exchangeMode) {
-                showError('Exchange mode is required');
-                return false;
-            }
-            if (!exchangeAgreement) {
-                showError('Please agree to the exchange terms');
-                return false;
-            }
-            
-            // Validate mode-specific required fields
-            if (exchangeMode === 'cash' || exchangeMode === 'hybrid') {
-                const currency = document.getElementById('currency').value;
-                if (!currency) {
-                    showError('Currency is required for cash/hybrid exchange modes');
-                    return false;
-                }
-            }
-            
             if (exchangeMode === 'cash') {
-                const cashAmount = document.getElementById('cash-amount').value;
-                const cashPaymentTerms = document.getElementById('cash-payment-terms').value;
-                if (!cashAmount) {
-                    showError('Cash amount is required');
-                    return false;
-                }
-                if (!cashPaymentTerms) {
-                    showError('Payment terms are required');
-                    return false;
-                }
-            }
-            
-            if (exchangeMode === 'equity') {
-                const equityPercentage = document.getElementById('equity-percentage').value;
-                if (!equityPercentage) {
-                    showError('Equity percentage is required');
-                    return false;
-                }
-            }
-            
-            if (exchangeMode === 'profit_sharing') {
-                const profitSplit = document.getElementById('profit-split').value;
-                if (!profitSplit) {
-                    showError('Profit split percentage is required');
-                    return false;
-                }
-            }
-            
-            if (exchangeMode === 'barter') {
-                const barterOffer = document.getElementById('barter-offer').value;
-                const barterNeed = document.getElementById('barter-need').value;
-                if (!barterOffer) {
-                    showError('Barter offer description is required');
-                    return false;
-                }
-                if (!barterNeed) {
-                    showError('Barter need description is required');
+                const cashAmount = document.getElementById('cash-amount')?.value?.trim();
+                const cashPaymentTerms = document.getElementById('cash-payment-terms')?.value?.trim();
+                if (!cashAmount) { showError('Cash amount is required'); return false; }
+                if (!cashPaymentTerms) { showError('Payment terms are required for Cash mode'); return false; }
+            } else if (exchangeMode === 'equity') {
+                const equityPct = document.getElementById('equity-percentage')?.value?.trim();
+                if (!equityPct || isNaN(parseFloat(equityPct))) { showError('Equity percentage is required'); return false; }
+            } else if (exchangeMode === 'profit_sharing') {
+                const profitSplit = document.getElementById('profit-split')?.value?.trim();
+                if (!profitSplit) { showError('Profit split is required'); return false; }
+            } else if (exchangeMode === 'barter') {
+                const barterOffer = document.getElementById('barter-offer')?.value?.trim();
+                const barterNeed = document.getElementById('barter-need')?.value?.trim();
+                if (!barterOffer) { showError('What you offer is required for Barter'); return false; }
+                if (!barterNeed) { showError('What you need is required for Barter'); return false; }
+            } else if (exchangeMode === 'hybrid') {
+                const hCash = parseFloat(document.getElementById('hybrid-cash')?.value || 0);
+                const hEquity = parseFloat(document.getElementById('hybrid-equity')?.value || 0);
+                const hBarter = parseFloat(document.getElementById('hybrid-barter')?.value || 0);
+                const total = hCash + hEquity + hBarter;
+                if (Math.abs(total - 100) > 0.01) {
+                    showError('Hybrid: Cash, Equity, and Barter percentages must total 100%');
                     return false;
                 }
             }
-            
-            if (exchangeMode === 'hybrid') {
-                const hybridCash = document.getElementById('hybrid-cash').value;
-                const hybridEquity = document.getElementById('hybrid-equity').value;
-                const hybridBarter = document.getElementById('hybrid-barter').value;
-                const total = parseFloat(hybridCash || 0) + parseFloat(hybridEquity || 0) + parseFloat(hybridBarter || 0);
-                if (total !== 100) {
-                    showError('Hybrid percentages must sum to 100%');
+            if (exchangeMode === 'cash' || exchangeMode === 'hybrid') {
+                const currency = document.getElementById('currency')?.value?.trim();
+                if (!currency) {
+                    showError('Currency is required for Cash and Hybrid modes');
                     return false;
                 }
             }
-            break;
-            
-        case 5:
-            const status = document.getElementById('status').value;
-            if (!status) {
-                showError('Please select a status (Draft or Published)');
+            const agreement = document.getElementById('exchange-agreement')?.checked;
+            if (!agreement) {
+                showError('You must agree to the exchange terms to proceed');
                 return false;
             }
             break;
+        }
+        case 6: {
+            const status = document.getElementById('status')?.value;
+            if (!status) {
+                showError('Please choose Save as Draft or Publish');
+                return false;
+            }
+            break;
+        }
     }
     
     return true;
 }
 
 function goToStep(step) {
-    if (step < 1 || step > 5) return;
+    if (step < 1 || step > TOTAL_STEPS) return;
     
-    // Hide current step
-    document.getElementById(`step-${currentStep}`).classList.add('hidden');
+    const prevStepEl = document.getElementById(`step-${currentStep}`);
+    if (prevStepEl) prevStepEl.classList.add('hidden');
     
-    // Show new step
     currentStep = step;
-    document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+    const nextStepEl = document.getElementById(`step-${currentStep}`);
+    if (nextStepEl) nextStepEl.classList.remove('hidden');
     
-    // Update wizard progress
     updateWizardUI();
     
-    // Load dynamic fields if step 3
-    if (currentStep === 3 && currentModel && currentSubModel) {
-        // Re-render fields to ensure they're properly initialized when step becomes visible
-        // Preserve values to avoid clearing filled demo data
-        // Rich text editors will be initialized by renderDynamicFields
-        renderDynamicFields(currentModel, currentSubModel, true);
-    }
-    
-    // Initialize exchange mode selection if step 4
-    if (currentStep === 4) {
-        // Exchange mode selection is already initialized, but ensure it's ready
-        const exchangeModeInput = document.getElementById('exchange-mode');
-        if (exchangeModeInput && !exchangeModeInput.value) {
-            // Reset exchange mode fields if no selection
-            document.getElementById('exchange-mode-fields').innerHTML = 
-                '<p class="text-gray-500 italic">Please select an exchange mode to see specific fields.</p>';
-        }
-    }
-    
-    // Initialize status field if step 5
-    if (currentStep === 5) {
-        // Set default status to draft if not set
+    if (currentStep === 2) updateScopeLabels();
+    if (currentStep === 6) {
+        fillReviewSummary();
         const statusField = document.getElementById('status');
-        if (statusField && !statusField.value) {
-            statusField.value = 'draft';
-        }
+        if (statusField && !statusField.value) statusField.value = 'draft';
     }
     
-    // Initialize rich text editors for fields in the current visible step
     setTimeout(() => {
         if (window.RichTextEditor && typeof Quill !== 'undefined') {
-            // Get current step container
             const currentStepContainer = document.getElementById(`step-${currentStep}`);
             if (currentStepContainer) {
-                // Find all textareas with data-rich-text in the current step
                 const textareas = currentStepContainer.querySelectorAll('textarea[data-rich-text="true"]');
                 textareas.forEach(textarea => {
                     if (!window.RichTextEditor.get(textarea.id)) {
-                        console.log(`Initializing rich text editor for ${textarea.id} in step ${currentStep}`);
                         window.RichTextEditor.init(textarea.id);
-                        // Set content if textarea has value
                         if (textarea.value) {
-                            setTimeout(() => {
-                                window.RichTextEditor.setContent(textarea.id, textarea.value);
-                            }, 100);
+                            setTimeout(() => window.RichTextEditor.setContent(textarea.id, textarea.value), 100);
                         }
                     }
                 });
@@ -408,8 +788,8 @@ function updateWizardUI() {
     
     // Update buttons
     prevBtn.classList.toggle('hidden', currentStep === 1);
-    nextBtn.classList.toggle('hidden', currentStep === 5);
-    submitBtn.classList.toggle('hidden', currentStep !== 5);
+    nextBtn.classList.toggle('hidden', currentStep === TOTAL_STEPS);
+    submitBtn.classList.toggle('hidden', currentStep !== TOTAL_STEPS);
 }
 
 function setupSearchableModelSelector() {
@@ -930,6 +1310,7 @@ function setupExchangeModeSelection() {
     const clearButton = document.getElementById('clear-exchange-selection');
     const fieldsContainer = document.getElementById('exchange-mode-fields');
     const currencyGroup = document.getElementById('currency-group');
+    if (!exchangeModeCards.length || !exchangeModeInput || !fieldsContainer) return;
     
     let selectedMode = null;
     
@@ -973,7 +1354,7 @@ function setupExchangeModeSelection() {
         
         switch(mode) {
             case 'cash':
-                currencyGroup.classList.remove('hidden');
+                if (currencyGroup) currencyGroup.classList.remove('hidden');
                 html = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div class="form-group">
@@ -1022,7 +1403,7 @@ function setupExchangeModeSelection() {
                 break;
                 
             case 'equity':
-                currencyGroup.classList.add('hidden');
+                if (currencyGroup) currencyGroup.classList.add('hidden');
                 html = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div class="form-group">
@@ -1073,7 +1454,7 @@ function setupExchangeModeSelection() {
                 break;
                 
             case 'profit_sharing':
-                currencyGroup.classList.add('hidden');
+                if (currencyGroup) currencyGroup.classList.add('hidden');
                 html = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div class="form-group">
@@ -1117,7 +1498,7 @@ function setupExchangeModeSelection() {
                 break;
                 
             case 'barter':
-                currencyGroup.classList.add('hidden');
+                if (currencyGroup) currencyGroup.classList.add('hidden');
                 html = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div class="form-group">
@@ -1131,7 +1512,7 @@ function setupExchangeModeSelection() {
                                 required
                                 data-rich-text="true"
                             ></textarea>
-                            <p class="text-sm text-gray-500 mt-1">Describe what you're offering in exchange</p>
+                            <p class="text-sm text-gray-500 mt-2 form-help">Describe what you're offering in exchange</p>
                         </div>
                         <div class="form-group">
                             <label for="barter-need" class="form-label">What You Need <span class="text-red-600">*</span></label>
@@ -1144,7 +1525,7 @@ function setupExchangeModeSelection() {
                                 required
                                 data-rich-text="true"
                             ></textarea>
-                            <p class="text-sm text-gray-500 mt-1">Describe what you need in return</p>
+                            <p class="text-sm text-gray-500 mt-2 form-help">Describe what you need in return</p>
                         </div>
                     </div>
                     <div class="form-group">
@@ -1156,13 +1537,13 @@ function setupExchangeModeSelection() {
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                             placeholder="e.g., Equivalent to 50K SAR"
                         >
-                        <p class="text-sm text-gray-500 mt-1">Optional: Estimated equivalent value</p>
+                        <p class="text-sm text-gray-500 mt-2 form-help">Optional: Estimated equivalent value</p>
                     </div>
                 `;
                 break;
                 
             case 'hybrid':
-                currencyGroup.classList.remove('hidden');
+                if (currencyGroup) currencyGroup.classList.remove('hidden');
                 html = `
                     <div class="mb-6">
                         <p class="text-sm font-medium text-gray-700 mb-4">Define the mix of exchange modes (must total 100%)</p>
@@ -1301,139 +1682,278 @@ function setupExchangeModeSelection() {
         exchangeModeCards.forEach(c => c.classList.remove('selected'));
         selectedDisplay.classList.add('hidden');
         fieldsContainer.innerHTML = '<p class="text-gray-500 italic">Please select an exchange mode to see specific fields.</p>';
-        currencyGroup.classList.add('hidden');
+        if (currencyGroup) currencyGroup.classList.add('hidden');
     });
 }
 
 function setupDemoDataFiller() {
-    const fillDemoBtn = document.getElementById('fill-demo-data');
-    const modal = document.getElementById('demo-data-modal');
-    const confirmBtn = document.getElementById('demo-modal-confirm');
-    const cancelBtn = document.getElementById('demo-modal-cancel');
-    
-    if (!fillDemoBtn || !modal) return;
-    
-    // Open modal when button is clicked
-    fillDemoBtn.addEventListener('click', () => {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
-    });
-    
-    // Confirm button
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', () => {
-            closeModal();
-            fillDemoData();
-        });
-    }
-    
-    // Cancel button
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            closeModal();
-        });
-    }
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
-    
+    const delegationKey = 'data-demo-data-filler-bound';
+    if (document.body.getAttribute(delegationKey)) return;
+    document.body.setAttribute(delegationKey, '1');
+
     function closeModal() {
-        modal.classList.add('hidden');
-        document.body.style.overflow = ''; // Restore scrolling
+        const modal = document.getElementById('demo-data-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Use event delegation so the button works when DOM is injected after script load (e.g. SPA navigation)
+    document.body.addEventListener('click', (e) => {
+        const fillDemoBtn = e.target.closest('#fill-demo-data');
+        if (fillDemoBtn) {
+            e.preventDefault();
+            const modal = document.getElementById('demo-data-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                demoDataIndex = (demoDataIndex + 1) % DEMO_DATASETS.length;
+                fillDemoData(DEMO_DATASETS[demoDataIndex]);
+            }
+            return;
+        }
+        if (e.target.id === 'demo-modal-confirm') {
+            e.preventDefault();
+            closeModal();
+            demoDataIndex = (demoDataIndex + 1) % DEMO_DATASETS.length;
+            fillDemoData(DEMO_DATASETS[demoDataIndex]);
+            return;
+        }
+        if (e.target.id === 'demo-modal-cancel') {
+            e.preventDefault();
+            closeModal();
+            return;
+        }
+    });
+
+    document.body.addEventListener('click', (e) => {
+        const modal = document.getElementById('demo-data-modal');
+        if (modal && e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('demo-data-modal');
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeModal();
+    });
+}
+
+/**
+ * Fills Step 4 dynamic (model-specific) fields. Supports all attribute types: text, select, textarea,
+ * number, boolean, currency, date, tags, array-percentages, currency-range, date-range, multi-select, array-objects.
+ */
+function fillDemoModelSpecificFields(modelType, subModelType, modelFields) {
+    const formService = window.opportunityFormService;
+    const attrs = (formService && formService.getAttributes(modelType, subModelType)) || [];
+    const attrByKey = {};
+    attrs.forEach(a => { attrByKey[a.key] = a; });
+
+    const setField = (key, val) => {
+        const el = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+        if (!el) return;
+        if (el.type === 'checkbox') {
+            el.checked = !!val;
+        } else if (el.hasAttribute && el.hasAttribute('data-rich-text') && window.RichTextEditor && typeof val === 'string') {
+            el.value = val;
+            setTimeout(() => { try { window.RichTextEditor.setContent(el.id || key, val); } catch (_) {} }, 100);
+        } else {
+            el.value = val != null ? String(val) : '';
+        }
+    };
+
+    function applyModelField(key, value) {
+        const attr = attrByKey[key];
+        const type = attr ? attr.type : null;
+
+        if (type === 'currency-range' && value && typeof value === 'object' && ('min' in value || 'max' in value)) {
+            const minEl = document.getElementById(`${key}_min`) || document.querySelector(`[name="${key}_min"]`);
+            const maxEl = document.getElementById(`${key}_max`) || document.querySelector(`[name="${key}_max"]`);
+            if (minEl) minEl.value = value.min != null ? String(value.min) : '';
+            if (maxEl) maxEl.value = value.max != null ? String(value.max) : '';
+            return;
+        }
+        if (type === 'date-range' && value && typeof value === 'object' && ('start' in value || 'end' in value)) {
+            const startEl = document.getElementById(`${key}_start`) || document.querySelector(`[name="${key}_start"]`);
+            const endEl = document.getElementById(`${key}_end`) || document.querySelector(`[name="${key}_end"]`);
+            if (startEl) startEl.value = value.start != null ? String(value.start) : '';
+            if (endEl) endEl.value = value.end != null ? String(value.end) : '';
+            return;
+        }
+        if (type === 'multi-select' && Array.isArray(value)) {
+            const selectEl = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+            if (selectEl && selectEl.multiple) {
+                Array.from(selectEl.options).forEach(opt => {
+                    opt.selected = value.includes(opt.value);
+                });
+            }
+            return;
+        }
+        if (type === 'array-objects' && Array.isArray(value) && value.length > 0) {
+            const container = document.getElementById(`${key}_container`);
+            if (!container) return;
+            const formServiceRef = window.opportunityFormService;
+            if (!formServiceRef || typeof formServiceRef.addArrayObject !== 'function') return;
+            const existingRows = container.querySelectorAll('.array-object-item');
+            const needCount = value.length;
+            for (let i = existingRows.length; i < needCount; i++) {
+                formServiceRef.addArrayObject(key);
+            }
+            value.forEach((item, i) => {
+                const labelVal = item && (item.label != null ? String(item.label) : '');
+                const valueVal = item && (item.value != null ? String(item.value) : '');
+                const labelInput = document.querySelector(`input[name="${key}[${i}][label]"]`);
+                const valueInput = document.querySelector(`input[name="${key}[${i}][value]"]`);
+                if (labelInput) labelInput.value = labelVal;
+                if (valueInput) valueInput.value = valueVal;
+            });
+            return;
+        }
+
+        setField(key, value);
+    }
+
+    if (modelFields && typeof modelFields === 'object') {
+        Object.entries(modelFields).forEach(([key, value]) => applyModelField(key, value));
+        return;
+    }
+    // Backward compatibility: default task_based demo values
+    if (modelType === 'project_based' && subModelType === 'task_based') {
+        const startDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        setField('taskTitle', 'Structural Design and Analysis for Commercial Building');
+        setField('taskType', 'Engineering');
+        setField('detailedScope', 'Provide complete structural engineering services including:\n- Structural analysis and design for 5-story reinforced concrete building\n- Foundation design and soil analysis\n- Construction drawings and specifications\n- Site visits and construction supervision');
+        setField('duration', '90');
+        setField('requiredSkills', 'Structural Engineering, Reinforced Concrete Design, Foundation Design, AutoCAD, ETABS');
+        setField('experienceLevel', 'Senior');
+        setField('locationRequirement', 'Hybrid');
+        setField('startDate', startDate);
+        setField('deliverableFormat', 'PDF drawings, CAD files, calculation reports');
     }
 }
 
-async function fillDemoData() {
+/**
+ * Fills Step 5 mode-specific fields from dataset.step5.modeFields.
+ * Field keys in modeFields match input name (e.g. cashAmount, equityPercentage).
+ */
+function fillDemoStep5ModeFields(modeFields, currency, agreement) {
+    if (!modeFields || typeof modeFields !== 'object') return;
+    const setField = (key, val) => {
+        const el = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+        if (!el) return;
+        if (el.type === 'checkbox') {
+            el.checked = !!val;
+        } else if (el.hasAttribute && el.hasAttribute('data-rich-text') && window.RichTextEditor && typeof val === 'string') {
+            el.value = val;
+            setTimeout(() => { try { window.RichTextEditor.setContent(el.id || key, val); } catch (_) {} }, 100);
+        } else {
+            el.value = val != null ? String(val) : '';
+        }
+    };
+    Object.entries(modeFields).forEach(([key, value]) => setField(key, value));
+    if (currency != null) {
+        const currencyEl = document.getElementById('currency');
+        if (currencyEl) currencyEl.value = currency;
+    }
+    const agreementEl = document.getElementById('exchange-agreement');
+    if (agreementEl) agreementEl.checked = !!agreement;
+}
+
+async function fillDemoData(dataset) {
+    const d = dataset || DEMO_DATASETS[0];
     try {
-        // Step 1: Select a model (Task-Based Engagement)
-        const demoModel = allModels.find(m => m.subModelKey === 'task_based') || allModels[0];
-        if (demoModel) {
-            const modelSearch = document.getElementById('model-search');
+        // Step 1: Basic info
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        if (titleInput && d.step1) titleInput.value = d.step1.title || '';
+        const descriptionContent = (d.step1 && d.step1.description) || '';
+        if (descriptionInput) {
+            descriptionInput.value = descriptionContent;
+            if (descriptionInput.hasAttribute('data-rich-text') && window.RichTextEditor && descriptionContent) {
+                setTimeout(() => window.RichTextEditor.setContent('description', descriptionContent), 200);
+            }
+        }
+        fillDemoLocation(d.step1 && d.step1.locationKey);
+        
+        // Step 2: Intent
+        const intent = (d.step2 && d.step2.intent) || 'request';
+        const intentRadio = document.querySelector(`input[name="intent"][value="${intent}"]`);
+        if (intentRadio) intentRadio.checked = true;
+        
+        // Step 3: Scope tags (skills, sectors, interests, certifications)
+        const step3 = d.step3 || {};
+        const skills = step3.skills || [];
+        const sectors = step3.sectors || [];
+        const interests = step3.interests || [];
+        const certifications = step3.certifications || [];
+        const scopeIds = ['scope-skills', 'scope-sectors', 'scope-interests', 'scope-certifications'];
+        const tagArrays = [skills, sectors, interests, certifications];
+        scopeIds.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const tags = tagArrays[i] || [];
+            el.dataset.tagsArray = JSON.stringify(tags);
+            renderScopeTags(el, tags);
+            el.value = '';
+        });
+        
+        // Step 4: Category + Sub-Model + Model-Specific Details
+        const step4 = d.step4 || { category: 'project_based', subModel: 'task_based' };
+        const categoryKey = step4.category || 'project_based';
+        const subModelKey = step4.subModel || 'task_based';
+        const categoryRadio = document.querySelector(`input[name="category"][value="${categoryKey}"]`);
+        if (categoryRadio) {
+            categoryRadio.checked = true;
             const modelTypeInput = document.getElementById('model-type');
-            const subModelTypeInput = document.getElementById('submodel-type');
-            
-            if (modelSearch && modelTypeInput && subModelTypeInput) {
-                modelSearch.value = demoModel.subModelName;
-                modelTypeInput.value = demoModel.modelKey;
-                subModelTypeInput.value = demoModel.subModelKey;
-                
-                // Update display
-                const modelDisplay = document.getElementById('selected-model-display');
-                if (modelDisplay) {
-                    modelDisplay.querySelector('#selected-model-name').textContent = demoModel.subModelName;
-                    modelDisplay.classList.remove('hidden');
-                }
-                
-                currentModel = demoModel.modelKey;
-                currentSubModel = demoModel.subModelKey;
-                
-                // Render dynamic fields for step 3
-                renderDynamicFields(demoModel.modelKey, demoModel.subModelKey);
+            if (modelTypeInput) modelTypeInput.value = categoryKey;
+            const submodelGroup = document.getElementById('submodel-group');
+            const submodelOptions = document.getElementById('submodel-options');
+            if (submodelGroup && submodelOptions) {
+                categoryRadio.dispatchEvent(new Event('change', { bubbles: true }));
+                setTimeout(() => {
+                    const submodelRadio = document.querySelector(`input[name="submodel"][value="${subModelKey}"]`);
+                    if (submodelRadio) {
+                        submodelRadio.checked = true;
+                        const submodelTypeInput = document.getElementById('submodel-type');
+                        if (submodelTypeInput) submodelTypeInput.value = subModelKey;
+                        const modelDetailsSection = document.getElementById('model-details-section');
+                        if (modelDetailsSection) modelDetailsSection.style.display = 'block';
+                        renderDynamicFields(categoryKey, subModelKey);
+                        setTimeout(() => {
+                            fillDemoModelSpecificFields(categoryKey, subModelKey, step4.modelFields);
+                        }, 500);
+                    }
+                }, 50);
             }
         }
         
-        // Step 2: Fill basic information
-        setTimeout(() => {
-            const titleInput = document.getElementById('title');
-            const descriptionInput = document.getElementById('description');
-            
-            if (titleInput) titleInput.value = 'Structural Engineering Services for Commercial Building Project';
-            if (descriptionInput) {
-                const descriptionContent = 'We are seeking an experienced structural engineer to provide design and consultation services for a new 5-story commercial building in Riyadh. The project involves reinforced concrete design, foundation analysis, and construction supervision.';
-                descriptionInput.value = descriptionContent;
-                // Set content in rich text editor if it exists
-                if (descriptionInput.hasAttribute('data-rich-text') && window.RichTextEditor) {
-                    setTimeout(() => {
-                        window.RichTextEditor.setContent('description', descriptionContent);
-                    }, 200);
-                }
-            }
-            
-            // Fill location (Saudi Arabia > Riyadh > Riyadh City > Al Olaya)
-            fillDemoLocation();
-            
-            // Step 3: Fill dynamic fields (fields were already rendered at line 1385)
-            // Wait a bit for the DOM to be ready
+        // Step 5: Exchange Mode & Financial Terms
+        const step5 = d.step5 || {};
+        const budgetMinEl = document.getElementById('budgetRange_min');
+        const budgetMaxEl = document.getElementById('budgetRange_max');
+        if (budgetMinEl) budgetMinEl.value = step5.budgetMin != null ? String(step5.budgetMin) : '';
+        if (budgetMaxEl) budgetMaxEl.value = step5.budgetMax != null ? String(step5.budgetMax) : '';
+        const exchangeMode = step5.exchangeMode || 'cash';
+        const modeCard = document.querySelector(`.exchange-mode-card[data-mode="${exchangeMode}"]`);
+        if (modeCard) {
+            modeCard.click();
             setTimeout(() => {
-                console.log('Filling demo dynamic fields...');
-                fillDemoDynamicFields();
-                
-                // Step 4: Fill exchange mode (without navigating)
-                setTimeout(() => {
-                    fillDemoExchangeMode();
-                    
-                    // Step 5: Set status (without navigating)
-                    setTimeout(() => {
-                        const statusField = document.getElementById('status');
-                        if (statusField) {
-                            statusField.value = 'published';
-                        }
-                    }, 200);
-                }, 500);
-            }, 500); // Wait for fields to be rendered
-        }, 100);
+                fillDemoStep5ModeFields(step5.modeFields, step5.currency, step5.agreement);
+            }, 150);
+        }
         
-        // Show success message
-        setTimeout(() => {
-            const successDiv = document.getElementById('form-success');
-            if (successDiv) {
-                successDiv.textContent = 'Demo data filled successfully! Review and submit when ready.';
-                successDiv.classList.remove('hidden');
-                setTimeout(() => successDiv.classList.add('hidden'), 5000);
-            }
-        }, 1000);
+        // Step 6: Status
+        const step6 = d.step6 || {};
+        const statusField = document.getElementById('status');
+        if (statusField) statusField.value = (step6.status != null ? step6.status : 'draft') || 'draft';
         
+        updateScopeLabels();
+        
+        const successDiv = document.getElementById('form-success');
+        if (successDiv) {
+            successDiv.textContent = 'Demo data filled. Move through steps to review and submit.';
+            successDiv.classList.remove('hidden');
+            setTimeout(() => successDiv.classList.add('hidden'), 5000);
+        }
     } catch (error) {
         console.error('Error filling demo data:', error);
         const errorDiv = document.getElementById('form-error');
@@ -1444,128 +1964,120 @@ async function fillDemoData() {
     }
 }
 
-async function fillDemoLocation() {
+/**
+ * Resolves country, region, city (and optional district) from locationKey.
+ * @param {string} [locationKey] - 'riyadh' | 'jeddah' | 'remote'; default 'riyadh'.
+ * @returns {{ country: object, region: object|null, city: object|null, district: string|null }}
+ */
+function resolveDemoLocation(locationKey) {
+    const locations = getLocationsData();
+    if (!locations || !locations.countries) return { country: null, region: null, city: null, district: null };
+    const key = (locationKey || 'riyadh').toLowerCase();
+    if (key === 'remote') {
+        const country = locations.countries.find(c => c.id === 'remote');
+        return { country: country || null, region: null, city: null, district: null };
+    }
+    const sa = locations.countries.find(c => c.id === 'sa');
+    if (!sa) return { country: null, region: null, city: null, district: null };
+    if (key === 'jeddah') {
+        const region = sa.regions && sa.regions.find(r => r.id === 'makkah');
+        const city = region && region.cities && region.cities.find(c => c.id === 'jeddah');
+        const district = city && city.districts && city.districts.length > 0 ? city.districts[0] : null;
+        return { country: sa, region: region || null, city: city || null, district };
+    }
+    // riyadh (default)
+    const region = sa.regions && sa.regions.find(r => r.id === 'riyadh');
+    const city = region && region.cities && region.cities.find(c => c.id === 'riyadh-city');
+    const district = city && city.districts && city.districts.length > 0 ? city.districts[0] : null;
+    return { country: sa, region: region || null, city: city || null, district };
+}
+
+async function fillDemoLocation(locationKey) {
     const locations = getLocationsData();
     if (!locations) return;
-    
+    const { country, region, city, district } = resolveDemoLocation(locationKey);
+    if (!country) return;
     try {
-        // Find Saudi Arabia > Riyadh > Riyadh City > Al Olaya
-        const sa = locations.countries.find(c => c.id === 'sa');
-        if (!sa) return;
-        
-        const riyadhRegion = sa.regions.find(r => r.id === 'riyadh');
-        if (!riyadhRegion) return;
-        
-        const riyadhCity = riyadhRegion.cities.find(c => c.id === 'riyadh-city');
-        if (!riyadhCity) return;
-        
-        const district = riyadhCity.districts && riyadhCity.districts.length > 0 ? riyadhCity.districts[0] : null;
-        
-        // Fill country by clicking the dropdown option
         const countrySearch = document.getElementById('location-country-search');
         const countryInput = document.getElementById('location-country');
         const countryDropdown = document.getElementById('location-country-dropdown');
-        const countryDisplay = document.getElementById('location-country-display');
-        
-        if (countrySearch && countryInput) {
-            // Show dropdown and select country
-            countrySearch.focus();
-            countrySearch.value = sa.name;
-            countrySearch.dispatchEvent(new Event('input', { bubbles: true }));
-            
-            setTimeout(() => {
-                // Find and click the country option
-                const countryOptions = countryDropdown?.querySelectorAll('.searchable-dropdown-item');
-                if (countryOptions) {
-                    for (let option of countryOptions) {
-                        if (option.textContent.trim() === sa.name || option.dataset.id === sa.id) {
-                            option.click();
-                            break;
-                        }
+        if (!countrySearch || !countryInput) return;
+        countrySearch.focus();
+        countrySearch.value = country.name;
+        countrySearch.dispatchEvent(new Event('input', { bubbles: true }));
+        setTimeout(() => {
+            const countryOptions = countryDropdown?.querySelectorAll('.searchable-dropdown-item');
+            if (countryOptions) {
+                for (let option of countryOptions) {
+                    if (option.textContent.trim() === country.name || option.dataset.id === country.id) {
+                        option.click();
+                        break;
                     }
                 }
-                
-                // Fill region after country is selected
+            }
+            if (!region || !city) return;
+            setTimeout(() => {
+                const regionSearch = document.getElementById('location-region-search');
+                const regionInput = document.getElementById('location-region');
+                const regionDropdown = document.getElementById('location-region-dropdown');
+                if (!regionSearch || !regionInput || regionSearch.disabled) return;
+                regionSearch.focus();
+                regionSearch.value = region.name;
+                regionSearch.dispatchEvent(new Event('input', { bubbles: true }));
                 setTimeout(() => {
-                    const regionSearch = document.getElementById('location-region-search');
-                    const regionInput = document.getElementById('location-region');
-                    const regionDropdown = document.getElementById('location-region-dropdown');
-                    const regionDisplay = document.getElementById('location-region-display');
-                    
-                    if (regionSearch && regionInput && !regionSearch.disabled) {
-                        regionSearch.focus();
-                        regionSearch.value = riyadhRegion.name;
-                        regionSearch.dispatchEvent(new Event('input', { bubbles: true }));
-                        
+                    const regionOptions = regionDropdown?.querySelectorAll('.searchable-dropdown-item');
+                    if (regionOptions) {
+                        for (let option of regionOptions) {
+                            if (option.textContent.trim() === region.name || option.dataset.id === region.id) {
+                                option.click();
+                                break;
+                            }
+                        }
+                    }
+                    setTimeout(() => {
+                        const citySearch = document.getElementById('location-city-search');
+                        const cityInput = document.getElementById('location-city');
+                        const cityDropdown = document.getElementById('location-city-dropdown');
+                        if (!citySearch || !cityInput || citySearch.disabled) return;
+                        citySearch.focus();
+                        citySearch.value = city.name;
+                        citySearch.dispatchEvent(new Event('input', { bubbles: true }));
                         setTimeout(() => {
-                            const regionOptions = regionDropdown?.querySelectorAll('.searchable-dropdown-item');
-                            if (regionOptions) {
-                                for (let option of regionOptions) {
-                                    if (option.textContent.trim() === riyadhRegion.name || option.dataset.id === riyadhRegion.id) {
+                            const cityOptions = cityDropdown?.querySelectorAll('.searchable-dropdown-item');
+                            if (cityOptions) {
+                                for (let option of cityOptions) {
+                                    if (option.textContent.trim() === city.name || option.dataset.id === city.id) {
                                         option.click();
                                         break;
                                     }
                                 }
                             }
-                            
-                            // Fill city after region is selected
+                            if (!district) return;
                             setTimeout(() => {
-                                const citySearch = document.getElementById('location-city-search');
-                                const cityInput = document.getElementById('location-city');
-                                const cityDropdown = document.getElementById('location-city-dropdown');
-                                const cityDisplay = document.getElementById('location-city-display');
-                                
-                                if (citySearch && cityInput && !citySearch.disabled) {
-                                    citySearch.focus();
-                                    citySearch.value = riyadhCity.name;
-                                    citySearch.dispatchEvent(new Event('input', { bubbles: true }));
-                                    
-                                    setTimeout(() => {
-                                        const cityOptions = cityDropdown?.querySelectorAll('.searchable-dropdown-item');
-                                        if (cityOptions) {
-                                            for (let option of cityOptions) {
-                                                if (option.textContent.trim() === riyadhCity.name || option.dataset.id === riyadhCity.id) {
-                                                    option.click();
-                                                    break;
-                                                }
+                                const districtSearch = document.getElementById('location-district-search');
+                                const districtInput = document.getElementById('location-district');
+                                const districtDropdown = document.getElementById('location-district-dropdown');
+                                if (!districtSearch || !districtInput || districtSearch.disabled) return;
+                                districtSearch.focus();
+                                districtSearch.value = district;
+                                districtSearch.dispatchEvent(new Event('input', { bubbles: true }));
+                                setTimeout(() => {
+                                    const districtOptions = districtDropdown?.querySelectorAll('.searchable-dropdown-item');
+                                    if (districtOptions) {
+                                        for (let option of districtOptions) {
+                                            if (option.textContent.trim() === district || option.dataset.name === district) {
+                                                option.click();
+                                                break;
                                             }
                                         }
-                                        
-                                        // Fill district if available
-                                        if (district) {
-                                            setTimeout(() => {
-                                                const districtSearch = document.getElementById('location-district-search');
-                                                const districtInput = document.getElementById('location-district');
-                                                const districtDropdown = document.getElementById('location-district-dropdown');
-                                                
-                                                if (districtSearch && districtInput && !districtSearch.disabled) {
-                                                    districtSearch.focus();
-                                                    districtSearch.value = district;
-                                                    districtSearch.dispatchEvent(new Event('input', { bubbles: true }));
-                                                    
-                                                    setTimeout(() => {
-                                                        const districtOptions = districtDropdown?.querySelectorAll('.searchable-dropdown-item');
-                                                        if (districtOptions) {
-                                                            for (let option of districtOptions) {
-                                                                if (option.textContent.trim() === district || option.dataset.name === district) {
-                                                                    option.click();
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }, 200);
-                                                }
-                                            }, 200);
-                                        }
-                                    }, 200);
-                                }
+                                    }
+                                }, 200);
                             }, 200);
                         }, 200);
-                    }
+                    }, 200);
                 }, 200);
             }, 200);
-        }
-        
+        }, 200);
     } catch (error) {
         console.error('Error filling location:', error);
     }
@@ -1734,10 +2246,13 @@ function renderDynamicFields(modelKey, subModelKey, preserveValues = false) {
     
     if (!container || !formService) return;
     
+    const allAttributes = formService.getAttributes(modelKey, subModelKey);
+    const paymentFieldKeys = ['paymentTerms', 'exchangeType', 'barterOffer'];
+    const attributes = allAttributes.filter(a => !paymentFieldKeys.includes(a.key));
+    
     // If preserving values, collect current field values before re-rendering
     const savedValues = {};
     if (preserveValues) {
-        const attributes = formService.getAttributes(modelKey, subModelKey);
         attributes.forEach(attr => {
             // Handle currency-range fields separately (they have _min and _max suffixes)
             if (attr.type === 'currency-range') {
@@ -1768,8 +2283,6 @@ function renderDynamicFields(modelKey, subModelKey, preserveValues = false) {
     if (lookups) {
         formService.setLookups(lookups);
     }
-    
-    const attributes = formService.getAttributes(modelKey, subModelKey);
     
     if (attributes.length === 0) {
         container.innerHTML = '<p class="text-gray-500 italic">No additional fields required for this model.</p>';
@@ -1803,25 +2316,19 @@ function renderDynamicFields(modelKey, subModelKey, preserveValues = false) {
     const form = document.getElementById('opportunity-form');
     formService.setupConditionalFields(form);
     
-    // Initialize rich text editors for newly rendered fields
-    // Check if step 3 is visible before initializing
-    const step3 = document.getElementById('step-3');
-    const isStep3Visible = step3 && !step3.classList.contains('hidden');
+    // Initialize rich text editors for newly rendered fields (use container's step, e.g. step-4)
+    const stepEl = container ? container.closest('.wizard-step-content') : null;
+    const isStepVisible = stepEl && !stepEl.classList.contains('hidden');
     
-    if (isStep3Visible) {
-        // Step is visible, initialize rich text editors immediately
+    if (isStepVisible && stepEl) {
         setTimeout(() => {
             if (window.RichTextEditor && typeof Quill !== 'undefined') {
-                // Find all textareas with data-rich-text in step 3
-                const textareas = step3.querySelectorAll('textarea[data-rich-text="true"]');
+                const textareas = stepEl.querySelectorAll('textarea[data-rich-text="true"]');
                 textareas.forEach(textarea => {
                     if (!window.RichTextEditor.get(textarea.id)) {
-                        console.log(`Initializing rich text editor for ${textarea.id} in renderDynamicFields`);
                         window.RichTextEditor.init(textarea.id);
                     }
                 });
-                
-                // Restore rich text editor content if preserving values
                 if (preserveValues) {
                     Object.keys(savedValues).forEach(key => {
                         const field = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
@@ -1832,13 +2339,8 @@ function renderDynamicFields(modelKey, subModelKey, preserveValues = false) {
                         }
                     });
                 }
-            } else {
-                console.error('RichTextEditor or Quill not available in renderDynamicFields');
             }
-        }, 400); // Increased timeout to ensure DOM is ready
-    } else {
-        // Step is hidden, will be initialized when it becomes visible via goToStep
-        console.log('Step 3 is hidden, rich text editors will be initialized when step becomes visible');
+        }, 400);
     }
 }
 
@@ -1876,81 +2378,110 @@ function setupFormHandlers() {
         successDiv.classList.add('hidden');
         
         try {
-            const formService = window.opportunityFormService;
-            const formData = formService.collectFormData(form);
-            
             const user = authService.getCurrentUser();
             if (!user) {
                 throw new Error('You must be logged in to create an opportunity');
             }
             
-            if (!formData.modelType || !formData.subModelType) {
-                throw new Error('Please select a model and sub-model');
-            }
+            const intent = document.querySelector('input[name="intent"]:checked')?.value || 'request';
+            const modelType = document.getElementById('model-type')?.value;
+            const subModelType = document.getElementById('submodel-type')?.value;
+            if (!modelType || !subModelType) throw new Error('Please select category and sub-model');
+            const exchangeMode = document.getElementById('exchange-mode')?.value;
+            if (!exchangeMode) throw new Error('Please select an exchange mode');
+            const paymentModesArr = [exchangeMode];
             
-            if (!formData.title) {
-                throw new Error('Title is required');
-            }
+            const title = document.getElementById('title')?.value?.trim();
+            const description = document.getElementById('description')?.value?.trim() || '';
+            const location = document.getElementById('location')?.value || '';
+            const locationCountry = document.getElementById('location-country')?.value || '';
+            const locationRegion = document.getElementById('location-region')?.value || '';
+            const locationCity = document.getElementById('location-city')?.value || '';
+            const locationDistrict = document.getElementById('location-district')?.value || '';
+            const status = document.getElementById('status')?.value || 'draft';
+            const currency = document.getElementById('currency')?.value || 'SAR';
             
-            if (!formData.locationCountry || !formData.locationRegion || !formData.locationCity) {
-                throw new Error('Country, Region, and City are required');
-            }
+            const requiredSkills = getScopeTagsFromInput('scope-skills');
+            const offeredSkills = intent === 'offer' ? getScopeTagsFromInput('scope-skills') : [];
+            const requiredSkillsForRequest = intent === 'request' ? getScopeTagsFromInput('scope-skills') : [];
+            const sectors = getScopeTagsFromInput('scope-sectors');
+            const interests = getScopeTagsFromInput('scope-interests');
+            const certifications = getScopeTagsFromInput('scope-certifications');
             
-            // Collect exchange mode data
-            const exchangeData = {
-                exchangeMode: formData.exchangeMode,
-                currency: formData.currency || 'SAR',
-                exchangeTermsSummary: formData.exchangeTermsSummary || '',
-                // Budget range from step 4
-                budgetRange: {
-                    min: parseFloat(formData.budgetRange_min) || 0,
-                    max: parseFloat(formData.budgetRange_max) || 0,
-                    currency: formData.currency || 'SAR'
-                }
+            const scope = {
+                requiredSkills: intent === 'request' ? requiredSkillsForRequest : [],
+                offeredSkills: intent === 'offer' ? offeredSkills : [],
+                sectors,
+                interests,
+                certifications
             };
             
-            // Add mode-specific fields
-            if (formData.exchangeMode === 'cash') {
-                exchangeData.cashAmount = parseFloat(formData.cashAmount);
-                exchangeData.cashPaymentTerms = formData.cashPaymentTerms;
-                exchangeData.cashMilestones = formData.cashMilestones || '';
-            } else if (formData.exchangeMode === 'equity') {
-                exchangeData.equityPercentage = parseFloat(formData.equityPercentage);
-                exchangeData.equityVesting = formData.equityVesting || '';
-                exchangeData.equityContribution = formData.equityContribution || '';
-            } else if (formData.exchangeMode === 'profit_sharing') {
-                exchangeData.profitSplit = formData.profitSplit;
-                exchangeData.profitBasis = formData.profitBasis || 'profit';
-                exchangeData.profitDistribution = formData.profitDistribution || '';
-            } else if (formData.exchangeMode === 'barter') {
-                exchangeData.barterOffer = formData.barterOffer;
-                exchangeData.barterNeed = formData.barterNeed;
-                exchangeData.barterValue = formData.barterValue || '';
-            } else if (formData.exchangeMode === 'hybrid') {
-                exchangeData.hybridCash = parseFloat(formData.hybridCash || 0);
-                exchangeData.hybridEquity = parseFloat(formData.hybridEquity || 0);
-                exchangeData.hybridBarter = parseFloat(formData.hybridBarter || 0);
-                exchangeData.hybridCashDetails = formData.hybridCashDetails || '';
-                exchangeData.hybridEquityDetails = formData.hybridEquityDetails || '';
-                exchangeData.hybridBarterDetails = formData.hybridBarterDetails || '';
+            const exchangeData = {
+                exchangeMode,
+                currency,
+                exchangeTermsSummary: (document.getElementById('exchange-terms-summary')?.value || '').trim(),
+                budgetRange: {
+                    min: parseFloat(document.getElementById('budgetRange_min')?.value) || 0,
+                    max: parseFloat(document.getElementById('budgetRange_max')?.value) || 0,
+                    currency
+                }
+            };
+            if (exchangeMode === 'cash') {
+                exchangeData.cashAmount = parseFloat(document.getElementById('cash-amount')?.value) || 0;
+                exchangeData.cashPaymentTerms = document.getElementById('cash-payment-terms')?.value || '';
+                exchangeData.cashMilestones = (document.getElementById('cash-milestones')?.value || '').trim();
+            } else if (exchangeMode === 'equity') {
+                exchangeData.equityPercentage = parseFloat(document.getElementById('equity-percentage')?.value) || 0;
+                exchangeData.equityVesting = document.getElementById('equity-vesting')?.value || '';
+                exchangeData.equityContribution = (document.getElementById('equity-contribution')?.value || '').trim();
+            } else if (exchangeMode === 'profit_sharing') {
+                exchangeData.profitSplit = document.getElementById('profit-split')?.value || '';
+                exchangeData.profitBasis = document.getElementById('profit-basis')?.value || 'profit';
+                exchangeData.profitDistribution = (document.getElementById('profit-distribution')?.value || '').trim();
+            } else if (exchangeMode === 'barter') {
+                exchangeData.barterOffer = (document.getElementById('barter-offer')?.value || '').trim();
+                exchangeData.barterNeed = (document.getElementById('barter-need')?.value || '').trim();
+                exchangeData.barterValue = (document.getElementById('barter-value')?.value || '').trim();
+            } else if (exchangeMode === 'hybrid') {
+                exchangeData.hybridCash = parseFloat(document.getElementById('hybrid-cash')?.value || 0);
+                exchangeData.hybridEquity = parseFloat(document.getElementById('hybrid-equity')?.value || 0);
+                exchangeData.hybridBarter = parseFloat(document.getElementById('hybrid-barter')?.value || 0);
+                exchangeData.hybridCashDetails = (document.getElementById('hybrid-cash-details')?.value || '').trim();
+                exchangeData.hybridEquityDetails = (document.getElementById('hybrid-equity-details')?.value || '').trim();
+                exchangeData.hybridBarterDetails = (document.getElementById('hybrid-barter-details')?.value || '').trim();
             }
+            
+            let modelData = {};
+            const formService = window.opportunityFormService;
+            if (formService && form) {
+                const allData = formService.collectFormData(form);
+                const attrKeys = new Set((formService.getAttributes(modelType, subModelType) || []).map(a => a.key));
+                attrKeys.forEach(key => {
+                    if (allData[key] !== undefined) modelData[key] = allData[key];
+                });
+            }
+            const attributesPayload = { ...scope, paymentModes: paymentModesArr, ...modelData };
             
             const oppService = window.opportunityService;
             const opportunity = await oppService.createOpportunity({
-                title: formData.title,
-                description: formData.description || '',
-                modelType: formData.modelType,
-                subModelType: formData.subModelType,
-                status: formData.status || 'draft',
-                location: formData.location || '',
-                locationCountry: formData.locationCountry,
-                locationRegion: formData.locationRegion,
-                locationCity: formData.locationCity,
-                locationDistrict: formData.locationDistrict || '',
-                exchangeMode: formData.exchangeMode,
-                exchangeData: exchangeData,
+                title,
+                description,
+                intent,
+                paymentModes: paymentModesArr,
+                scope,
+                modelType,
+                subModelType,
+                status,
+                location,
+                locationCountry,
+                locationRegion,
+                locationCity,
+                locationDistrict,
+                exchangeMode,
+                exchangeData,
                 creatorId: user.id,
-                attributes: formData
+                attributes: attributesPayload,
+                modelData
             });
             
             await dataService.createAuditLog({

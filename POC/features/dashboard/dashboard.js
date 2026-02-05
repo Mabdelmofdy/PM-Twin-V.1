@@ -83,6 +83,8 @@ async function displayRecentOpportunities(opportunities) {
     const html = opportunities.map(opp => {
         const data = {
             ...opp,
+            intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
+            intentBadgeClass: typeof getIntentBadgeClass === 'function' ? getIntentBadgeClass(opp.intent, opp.modelType) : 'badge-intent-request-default',
             statusBadgeClass: getStatusBadgeClass(opp.status),
             createdDate: new Date(opp.createdAt).toLocaleDateString(),
             description: opp.description || 'No description',
@@ -145,6 +147,14 @@ async function displayRecentApplications(applications) {
 
 function getStatusBadgeClass(status) {
     const statusMap = {
+        'draft': 'secondary',
+        'published': 'success',
+        'in_negotiation': 'warning',
+        'contracted': 'primary',
+        'in_execution': 'primary',
+        'completed': 'success',
+        'closed': 'danger',
+        'cancelled': 'danger',
         'pending': 'warning',
         'reviewing': 'primary',
         'shortlisted': 'primary',

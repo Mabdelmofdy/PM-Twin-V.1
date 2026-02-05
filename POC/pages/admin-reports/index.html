@@ -1,0 +1,46 @@
+<div class="page-container admin-reports-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Reports & Analytics</h1>
+            <p class="page-subtitle">User, opportunity, application, and matching analytics</p>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <section class="reports-stats">
+        <h2>Overview</h2>
+        <div class="stats-grid" id="reports-stats-grid">
+            <div class="stat-card"><div class="stat-value" id="stat-users">0</div><div class="stat-label">Total Users & Companies</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-opportunities">0</div><div class="stat-label">Opportunities</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-applications">0</div><div class="stat-label">Applications</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-matches">0</div><div class="stat-label">Matches</div></div>
+        </div>
+    </section>
+
+    <section class="reports-section">
+        <h2>Opportunity status distribution</h2>
+        <div id="opportunity-status-chart" class="report-block"></div>
+    </section>
+
+    <section class="reports-section">
+        <h2>Application status distribution</h2>
+        <div id="application-status-chart" class="report-block"></div>
+    </section>
+
+    <section class="reports-section">
+        <h2>Recent audit activity (last 30 days)</h2>
+        <div id="audit-summary" class="report-block"></div>
+    </section>
+    </div>
+</div>
+
+<style>
+.admin-reports-page { /* Page specific styles */ }
+.reports-stats h2, .reports-section h2 { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-2xl); }
+.report-block { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
+.report-row { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); }
+.report-row:last-child { border-bottom: none; }
+.report-label { font-weight: 500; }
+.report-value { color: var(--text-secondary); }
+</style>

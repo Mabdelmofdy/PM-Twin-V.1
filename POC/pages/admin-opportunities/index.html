@@ -1,8 +1,11 @@
-<div class="admin-opportunities-page">
+<div class="page-container admin-opportunities-page">
     <div class="page-header">
-        <h1>Opportunity Moderation</h1>
-        <p class="page-subtitle">Review and moderate platform opportunities</p>
+        <div class="page-header-content">
+            <h1 class="page-title">Opportunity Moderation</h1>
+            <p class="page-subtitle">Review and moderate platform opportunities</p>
+        </div>
     </div>
+    <div class="page-body">
     
     <div class="filters-section">
         <div class="filters">
@@ -10,7 +13,12 @@
                 <option value="">All Status</option>
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
+                <option value="in_negotiation">In Negotiation</option>
+                <option value="contracted">Contracted</option>
+                <option value="in_execution">In Execution</option>
+                <option value="completed">Completed</option>
                 <option value="closed">Closed</option>
+                <option value="cancelled">Cancelled</option>
             </select>
             
             <select id="filter-model" class="form-select">
@@ -36,26 +44,12 @@
     <div id="opportunities-list" class="opportunities-list">
         <div class="spinner"></div>
     </div>
+    </div>
 </div>
 
 <style>
 .admin-opportunities-page {
-    width: 100%;
-}
-
-.filters-section {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-}
-
-.filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md);
-    align-items: end;
+    /* Page specific styles */
 }
 
 .opportunities-list {

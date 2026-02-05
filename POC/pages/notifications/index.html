@@ -1,0 +1,54 @@
+<div class="page-container notifications-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Notifications</h1>
+            <p class="page-subtitle">Your alerts and updates</p>
+        </div>
+        <div class="page-actions">
+            <button id="mark-all-read" class="btn btn-secondary">Mark all as read</button>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <div class="notifications-filters">
+        <select id="filter-type" class="form-select">
+            <option value="">All types</option>
+            <option value="match">Match</option>
+            <option value="application_update">Application update</option>
+            <option value="application_received">Application received</option>
+            <option value="account_approved">Account approved</option>
+            <option value="account_rejected">Account rejected</option>
+            <option value="account_suspended">Account suspended</option>
+            <option value="account_activated">Account activated</option>
+            <option value="account_clarification_requested">Clarification requested</option>
+            <option value="bulk_purchase">Bulk purchase</option>
+        </select>
+        <select id="filter-read" class="form-select">
+            <option value="">All</option>
+            <option value="unread">Unread only</option>
+            <option value="read">Read only</option>
+        </select>
+        <button id="apply-filters" class="btn btn-secondary">Apply</button>
+    </div>
+
+    <div id="notifications-list" class="notifications-list">
+        <div class="spinner"></div>
+    </div>
+    </div>
+</div>
+
+<style>
+.notifications-page { max-width: 720px; }
+.notifications-filters { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); flex-wrap: wrap; align-items: center; }
+.notifications-list { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.notification-item { padding: var(--spacing-lg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); background: var(--bg-primary); }
+.notification-item.unread { background: rgba(37, 99, 235, 0.05); border-left: 3px solid var(--primary-color); }
+.notification-item a { color: var(--primary-color); text-decoration: none; }
+.notification-item a:hover { text-decoration: underline; }
+.notification-title { font-weight: 600; margin-bottom: var(--spacing-xs); }
+.notification-message { color: var(--text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--spacing-sm); }
+.notification-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-sm); }
+.notification-time { font-size: var(--font-size-xs); color: var(--text-muted); }
+.notification-actions { display: flex; gap: var(--spacing-sm); }
+.empty-notifications { text-align: center; padding: var(--spacing-2xl); color: var(--text-secondary); }
+</style>

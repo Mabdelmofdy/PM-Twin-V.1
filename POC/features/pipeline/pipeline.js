@@ -55,20 +55,17 @@ async function loadOpportunitiesPipeline() {
         const allOpportunities = await dataService.getOpportunities();
         const userOpportunities = allOpportunities.filter(o => o.creatorId === user.id);
         
-        // Group by status
         const draft = userOpportunities.filter(o => o.status === 'draft');
         const published = userOpportunities.filter(o => o.status === 'published');
-        const closed = userOpportunities.filter(o => o.status === 'closed' || o.status === 'cancelled');
-        
-        // In progress = published with applications
-        const allApplications = await dataService.getApplications();
-        const inProgress = published.filter(o => {
-            const hasApplications = allApplications.some(a => a.opportunityId === o.id);
-            return hasApplications;
-        });
+        const inProgress = userOpportunities.filter(o =>
+            o.status === 'in_negotiation' || o.status === 'contracted' || o.status === 'in_execution'
+        );
+        const closed = userOpportunities.filter(o =>
+            o.status === 'closed' || o.status === 'cancelled' || o.status === 'completed'
+        );
         
         await renderKanbanColumn('kanban-draft', draft);
-        await renderKanbanColumn('kanban-published', published.filter(o => !inProgress.includes(o)));
+        await renderKanbanColumn('kanban-published', published);
         await renderKanbanColumn('kanban-in-progress', inProgress);
         await renderKanbanColumn('kanban-closed', closed);
         

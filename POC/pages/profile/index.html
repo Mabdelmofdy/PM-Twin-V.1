@@ -1,6 +1,33 @@
-<div class="profile-page">
+<div class="page-container profile-page">
     <div class="page-header">
-        <h1>My Profile</h1>
+        <div class="page-header-content">
+            <h1 class="page-title">My Profile</h1>
+            <p class="page-subtitle">View and edit your account and profile information</p>
+        </div>
+    </div>
+    <div class="page-body">
+    
+    <!-- Profile completeness (company/professional only) -->
+    <div id="profile-completeness-card" class="card mb-4" style="display: none;">
+        <div class="card-body">
+            <div class="flex items-center justify-between gap-4 flex-wrap">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-semibold text-gray-900 mb-1">Profile completeness</h3>
+                    <p id="profile-completeness-text" class="text-sm text-gray-600">Complete your profile to improve match recommendations.</p>
+                    <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden max-w-xs">
+                        <div id="profile-completeness-bar" class="h-full bg-primary rounded-full transition-all" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <span id="profile-completeness-percent" class="text-2xl font-bold text-primary">0%</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="profile-clarification-banner" class="card border-warning mb-4" style="display: none;">
+        <div class="card-body">
+            <p class="mb-2"><strong>Your registration needs clarification.</strong> Please update your profile or documents below, then click "Submit for review again" to resubmit for admin review.</p>
+            <button type="button" id="profile-submit-review-again" class="btn btn-primary">Submit for review again</button>
+        </div>
     </div>
     
     <div class="profile-content">
@@ -26,26 +53,68 @@
             </div>
             
             <div class="card" id="company-profile-card" style="display: none;">
-                <div class="card-header">
+                <div class="card-header flex items-center justify-between">
                     <h2>Company Profile</h2>
+                    <button type="button" id="company-profile-edit-btn" class="btn btn-secondary btn-sm">Edit</button>
+                    <button type="button" id="company-profile-cancel-btn" class="btn btn-ghost btn-sm" style="display: none;">Cancel</button>
                 </div>
                 <div class="card-body">
-                    <form id="company-profile-form">
-                        <div class="form-group">
-                            <label for="company-name" class="form-label">Company Name</label>
-                            <input type="text" id="company-name" name="name" class="form-input">
+                    <div id="company-profile-view" class="profile-view">
+                        <h4 class="font-medium text-gray-700 mb-2">Basic info</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="profile-view-item"><span class="text-gray-600">Company Name</span><span id="view-company-name">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Headline</span><span id="view-company-headline">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Company Role</span><span id="view-company-role">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Sub-type</span><span id="view-company-subtype">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">CR / Registration Number</span><span id="view-cr-number">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Website</span><span id="view-company-website">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Phone</span><span id="view-company-phone">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Address / Location</span><span id="view-company-location">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Description</span><span id="view-company-description">—</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="cr-number" class="form-label">CR Number</label>
-                            <input type="text" id="cr-number" name="crNumber" class="form-input">
+                        <h4 class="font-medium text-gray-700 mb-2">Capabilities</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="profile-view-item"><span class="text-gray-600">Sectors</span><span id="view-company-sectors">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Classifications</span><span id="view-company-classifications">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Employee Count</span><span id="view-company-employeeCount">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Year Established</span><span id="view-company-yearEstablished">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Certifications</span><span id="view-company-certifications">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Services</span><span id="view-company-services">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Interests</span><span id="view-company-interests">—</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="company-classifications" class="form-label">Classifications</label>
-                            <input type="text" id="company-classifications" name="classifications" class="form-input" placeholder="Comma-separated">
+                        <h4 class="font-medium text-gray-700 mb-2">Financial & preferences</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="profile-view-item"><span class="text-gray-600">Financial Capacity (SAR)</span><span id="view-financial-capacity">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Preferred Payment Modes</span><span id="view-company-paymentModes">—</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="financial-capacity" class="form-label">Financial Capacity (SAR)</label>
-                            <input type="number" id="financial-capacity" name="financialCapacity" class="form-input">
+                    </div>
+                    <form id="company-profile-form" style="display: none;">
+                        <h4 class="font-medium text-gray-700 mb-2">Basic info</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="company-name" class="form-label">Company Name</label><input type="text" id="company-name" name="name" class="form-input"></div>
+                            <div class="form-group"><label for="company-headline" class="form-label">Headline</label><input type="text" id="company-headline" name="headline" class="form-input" placeholder="Short tagline"></div>
+                            <div class="form-group"><label for="company-role" class="form-label">Company Role</label><select id="company-role" name="companyRole" class="form-input"><option value="">Select role</option></select></div>
+                            <div class="form-group" id="company-subtype-wrap"><label for="company-subtype" class="form-label">Sub-type</label><select id="company-subtype" name="companySubType" class="form-input"><option value="">Select sub-type</option></select></div>
+                            <div class="form-group"><label for="cr-number" class="form-label">CR / Registration Number</label><input type="text" id="cr-number" name="crNumber" class="form-input"></div>
+                            <div class="form-group"><label for="company-website" class="form-label">Website</label><input type="url" id="company-website" name="website" class="form-input" placeholder="https://"></div>
+                            <div class="form-group"><label for="company-phone" class="form-label">Phone</label><input type="text" id="company-phone" name="phone" class="form-input"></div>
+                            <div class="form-group"><label for="company-location" class="form-label">Address / Location</label><input type="text" id="company-location" name="location" class="form-input"></div>
+                            <div class="form-group sm:col-span-2"><label for="company-description" class="form-label">Description</label><textarea id="company-description" name="description" class="form-input" rows="3"></textarea></div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2">Capabilities</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="company-sectors" class="form-label">Sectors</label><input type="text" id="company-sectors" name="sectors" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group"><label for="company-classifications" class="form-label">Classifications</label><input type="text" id="company-classifications" name="classifications" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group"><label for="company-employeeCount" class="form-label">Employee Count</label><input type="text" id="company-employeeCount" name="employeeCount" class="form-input" placeholder="e.g. 100-500"></div>
+                            <div class="form-group"><label for="company-yearEstablished" class="form-label">Year Established</label><input type="number" id="company-yearEstablished" name="yearEstablished" class="form-input" placeholder="e.g. 1990"></div>
+                            <div class="form-group"><label for="company-certifications" class="form-label">Certifications</label><input type="text" id="company-certifications" name="certifications" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group"><label for="company-services" class="form-label">Services</label><input type="text" id="company-services" name="services" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group sm:col-span-2"><label for="company-interests" class="form-label">Interests</label><input type="text" id="company-interests" name="interests" class="form-input" placeholder="Comma-separated"></div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2">Financial & preferences</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="financial-capacity" class="form-label">Financial Capacity (SAR)</label><input type="number" id="financial-capacity" name="financialCapacity" class="form-input"></div>
+                            <div class="form-group"><label for="company-paymentModes" class="form-label">Preferred Payment Modes</label><select id="company-paymentModes" name="preferredPaymentModes" class="form-input" multiple></select><small class="form-help">Hold Ctrl/Cmd to select multiple</small></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -53,31 +122,85 @@
             </div>
             
             <div class="card" id="professional-profile-card" style="display: none;">
-                <div class="card-header">
+                <div class="card-header flex items-center justify-between">
                     <h2>Professional Profile</h2>
+                    <button type="button" id="professional-profile-edit-btn" class="btn btn-secondary btn-sm">Edit</button>
+                    <button type="button" id="professional-profile-cancel-btn" class="btn btn-ghost btn-sm" style="display: none;">Cancel</button>
                 </div>
                 <div class="card-body">
-                    <form id="professional-profile-form">
-                        <div class="form-group">
-                            <label for="full-name" class="form-label">Full Name</label>
-                            <input type="text" id="full-name" name="name" class="form-input">
+                    <div id="professional-profile-view" class="profile-view">
+                        <h4 class="font-medium text-gray-700 mb-2">Basic info</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="profile-view-item"><span class="text-gray-600">Full Name</span><span id="view-full-name">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Headline</span><span id="view-prof-headline">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Title</span><span id="view-prof-title">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Phone</span><span id="view-prof-phone">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Location</span><span id="view-prof-location">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Bio</span><span id="view-prof-bio">—</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="specializations" class="form-label">Specializations</label>
-                            <input type="text" id="specializations" name="specializations" class="form-input" placeholder="Comma-separated">
+                        <h4 class="font-medium text-gray-700 mb-2">Experience & skills</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="profile-view-item"><span class="text-gray-600">Specializations</span><span id="view-specializations">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Skills</span><span id="view-skills">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Sectors / Industry</span><span id="view-prof-sectors">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Education</span><span id="view-prof-education">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Certifications</span><span id="view-certifications">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Years of Experience</span><span id="view-years-experience">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Services</span><span id="view-prof-services">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Interests</span><span id="view-prof-interests">—</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="certifications" class="form-label">Certifications</label>
-                            <input type="text" id="certifications" name="certifications" class="form-input" placeholder="Comma-separated">
+                        <h4 class="font-medium text-gray-700 mb-2">Preferences</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="profile-view-item"><span class="text-gray-600">Availability</span><span id="view-prof-availability">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Preferred Work Mode</span><span id="view-prof-workMode">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Preferred Payment Modes</span><span id="view-prof-paymentModes">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Hourly Rate</span><span id="view-prof-hourlyRate">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Languages</span><span id="view-prof-languages">—</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="years-experience" class="form-label">Years of Experience</label>
-                            <input type="number" id="years-experience" name="yearsExperience" class="form-input">
+                    </div>
+                    <form id="professional-profile-form" style="display: none;">
+                        <h4 class="font-medium text-gray-700 mb-2">Basic info</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="full-name" class="form-label">Full Name</label><input type="text" id="full-name" name="name" class="form-input"></div>
+                            <div class="form-group"><label for="prof-headline" class="form-label">Headline</label><input type="text" id="prof-headline" name="headline" class="form-input" placeholder="Short professional tagline"></div>
+                            <div class="form-group"><label for="prof-title" class="form-label">Title</label><input type="text" id="prof-title" name="title" class="form-input" placeholder="Job title"></div>
+                            <div class="form-group"><label for="prof-phone" class="form-label">Phone</label><input type="text" id="prof-phone" name="phone" class="form-input"></div>
+                            <div class="form-group"><label for="prof-location" class="form-label">Location</label><input type="text" id="prof-location" name="location" class="form-input"></div>
+                            <div class="form-group sm:col-span-2"><label for="prof-bio" class="form-label">Bio</label><textarea id="prof-bio" name="bio" class="form-input" rows="3"></textarea></div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2">Experience & skills</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="specializations" class="form-label">Specializations</label><input type="text" id="specializations" name="specializations" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group"><label for="skills" class="form-label">Skills</label><input type="text" id="skills" name="skills" class="form-input" placeholder="Comma-separated (e.g., BIM, AutoCAD)"></div>
+                            <div class="form-group"><label for="prof-sectors" class="form-label">Sectors / Industry</label><input type="text" id="prof-sectors" name="sectors" class="form-input" placeholder="Comma-separated (e.g. Construction, Energy)"></div>
+                            <div class="form-group"><label for="prof-education" class="form-label">Education</label><input type="text" id="prof-education" name="education" class="form-input"></div>
+                            <div class="form-group"><label for="certifications" class="form-label">Certifications</label><input type="text" id="certifications" name="certifications" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group"><label for="years-experience" class="form-label">Years of Experience</label><input type="number" id="years-experience" name="yearsExperience" class="form-input" min="0"></div>
+                            <div class="form-group"><label for="prof-services" class="form-label">Services</label><input type="text" id="prof-services" name="services" class="form-input" placeholder="Comma-separated"></div>
+                            <div class="form-group sm:col-span-2"><label for="prof-interests" class="form-label">Interests</label><input type="text" id="prof-interests" name="interests" class="form-input" placeholder="Comma-separated"></div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2">Preferences</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="prof-availability" class="form-label">Availability</label><input type="text" id="prof-availability" name="availability" class="form-input" placeholder="e.g. Available, Limited"></div>
+                            <div class="form-group"><label for="prof-workMode" class="form-label">Preferred Work Mode</label><select id="prof-workMode" name="preferredWorkMode" class="form-input"><option value="">Select</option></select></div>
+                            <div class="form-group"><label for="prof-paymentModes" class="form-label">Preferred Payment Modes</label><select id="prof-paymentModes" name="preferredPaymentModes" class="form-input" multiple></select><small class="form-help">Hold Ctrl/Cmd to select multiple</small></div>
+                            <div class="form-group"><label for="prof-hourlyRate" class="form-label">Hourly Rate</label><input type="number" id="prof-hourlyRate" name="hourlyRate" class="form-input" min="0" step="1"></div>
+                            <div class="form-group"><label for="prof-currency" class="form-label">Currency</label><input type="text" id="prof-currency" name="currency" class="form-input" placeholder="e.g. SAR" value="SAR"></div>
+                            <div class="form-group"><label for="prof-languages" class="form-label">Languages</label><input type="text" id="prof-languages" name="languages" class="form-input" placeholder="Comma-separated (e.g. Arabic, English)"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
                 </div>
             </div>
+            
+            <div class="card" id="profile-other-card" style="display: none;">
+                <div class="card-header"><h2>Profile</h2></div>
+                <div class="card-body">
+                    <p class="text-gray-600">Profile editing is available for company and professional accounts. You are signed in as an administrator.</p>
+                </div>
+            </div>
+            
+            <div id="profile-success-message" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800"></div>
         </div>
         
         <div class="profile-sidebar">
@@ -102,11 +225,12 @@
             </div>
         </div>
     </div>
+    </div>
 </div>
 
 <style>
 .profile-page {
-    width: 100%;
+    /* Page specific styles */
 }
 
 .profile-content {
@@ -149,6 +273,16 @@
     font-size: var(--font-size-xl);
     font-weight: 700;
     color: var(--primary-color);
+}
+
+.profile-view-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.profile-view-item span:last-child {
+    font-weight: 500;
+    color: var(--text-primary, #111);
 }
 
 @media (max-width: 968px) {

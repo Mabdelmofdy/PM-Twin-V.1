@@ -61,16 +61,72 @@ class MatchingService {
     
     /**
      * Calculate match score between opportunity and candidate
+     * Uses scope (skills, sectors, interests, certifications) and payment compatibility when present
      */
     async calculateMatchScore(opportunity, candidate) {
         let totalScore = 0;
         let maxScore = 0;
+        const scope = opportunity.scope || opportunity.attributes || {};
+        const candidateProfile = candidate.profile || {};
+        
+        // Scope-based matching (unified workflow: requiredSkills/offeredSkills, sectors, interests, certifications)
+        const skills = scope.requiredSkills || scope.offeredSkills || [];
+        const skillsArr = Array.isArray(skills) ? skills : (skills ? [skills] : []);
+        if (skillsArr.length > 0) {
+            const candidateSkills = [].concat(
+                candidateProfile.specializations || [],
+                candidateProfile.skills || [],
+                (candidateProfile.classifications || []).map(c => typeof c === 'string' ? c : c.label)
+            ).filter(Boolean);
+            const matchCount = skillsArr.filter(s =>
+                candidateSkills.some(cs => String(cs).toLowerCase().includes(String(s).toLowerCase()))
+            ).length;
+            totalScore += (matchCount / skillsArr.length) * 50;
+            maxScore += 50;
+        }
+        
+        const sectors = scope.sectors || [];
+        const sectorsArr = Array.isArray(sectors) ? sectors : (sectors ? [sectors] : []);
+        if (sectorsArr.length > 0) {
+            const candidateSectors = candidateProfile.sectors || candidateProfile.industry || [];
+            const candArr = Array.isArray(candidateSectors) ? candidateSectors : (candidateSectors ? [candidateSectors] : []);
+            const sectorMatch = sectorsArr.some(s =>
+                candArr.some(c => String(c).toLowerCase().includes(String(s).toLowerCase()))
+            );
+            totalScore += sectorMatch ? 15 : 0;
+            maxScore += 15;
+        }
+        
+        const certifications = scope.certifications || [];
+        const certArr = Array.isArray(certifications) ? certifications : (certifications ? [certifications] : []);
+        if (certArr.length > 0) {
+            const candidateCerts = candidateProfile.certifications || [];
+            const candCerts = Array.isArray(candidateCerts) ? candidateCerts : (candidateCerts ? [candidateCerts] : []);
+            const certMatch = certArr.filter(c =>
+                candCerts.some(cd => String(cd).toLowerCase().includes(String(c).toLowerCase()))
+            ).length;
+            totalScore += (certMatch / certArr.length) * 15;
+            maxScore += 15;
+        }
+        
+        // Payment compatibility: opportunity.paymentModes vs candidate preferredPaymentModes (use same id convention, e.g. lookup ids: cash, barter, equity)
+        const paymentModes = opportunity.paymentModes || (opportunity.exchangeMode ? [opportunity.exchangeMode] : []);
+        if (paymentModes.length > 0) {
+            const candidatePreferred = candidateProfile.preferredPaymentModes || candidateProfile.exchangeTypes || [];
+            const preferredArr = Array.isArray(candidatePreferred) ? candidatePreferred : (candidatePreferred ? [candidatePreferred] : []);
+            const compatible = paymentModes.some(pm =>
+                preferredArr.some(pp => String(pp).toLowerCase() === String(pm).toLowerCase())
+            );
+            totalScore += compatible ? 10 : (preferredArr.length === 0 ? 5 : 0);
+            maxScore += 10;
+        }
         
         const modelType = opportunity.modelType;
         const subModelType = opportunity.subModelType;
         const attributes = opportunity.attributes || {};
         
-        // Model-specific matching logic
+        if (modelType) {
+        // Model-specific matching logic (when modelType present)
         switch (modelType) {
             case CONFIG.MODELS.PROJECT_BASED:
                 totalScore += await this.matchProjectBased(opportunity, candidate, subModelType);
@@ -97,9 +153,9 @@ class MatchingService {
                 maxScore += 100;
                 break;
         }
+        }
         
-        // Add past performance score (0-20 points)
-        const performanceScore = await this.getPastPerformanceScore(candidate, modelType);
+        const performanceScore = await this.getPastPerformanceScore(candidate, modelType || 'project_based');
         totalScore += performanceScore;
         maxScore += 20;
         
@@ -166,14 +222,18 @@ class MatchingService {
                 // Scope match (30 points)
                 if (attributes.memberRoles || attributes.partnerRoles) {
                     const roles = attributes.memberRoles || attributes.partnerRoles || [];
-                    const candidateCapabilities = candidateProfile.classifications || candidateProfile.specializations || [];
+                    const rawCaps = candidateProfile.classifications || candidateProfile.specializations || [];
+                    const candidateCapabilities = rawCaps.map(c => (typeof c === 'string' ? c : (c?.label || c?.role || ''))).filter(Boolean);
                     
                     if (Array.isArray(roles) && roles.length > 0) {
-                        const matchingRoles = roles.filter(role => 
-                            candidateCapabilities.some(cap => 
-                                cap.toLowerCase().includes(role.label?.toLowerCase() || role.toLowerCase())
-                            )
-                        );
+                        const roleStr = (r) => (typeof r === 'string' ? r : (r?.role || r?.label || ''));
+                        const matchingRoles = roles.filter(role => {
+                            const r = roleStr(role);
+                            if (!r) return false;
+                            return candidateCapabilities.some(cap =>
+                                cap.toLowerCase().includes(r.toLowerCase())
+                            );
+                        });
                         score += (matchingRoles.length / roles.length) * 30;
                     } else {
                         score += 30;
@@ -327,17 +387,17 @@ class MatchingService {
             }
         }
         
-        // Skill match (30 points)
+        // Skill match (30 points): use both specializations and skills for matching
         if (attributes.requiredSkills) {
             const required = Array.isArray(attributes.requiredSkills)
                 ? attributes.requiredSkills
                 : [attributes.requiredSkills];
-            const candidateSkills = Array.isArray(candidateProfile.specializations)
-                ? candidateProfile.specializations
-                : [];
+            const specializations = Array.isArray(candidateProfile.specializations) ? candidateProfile.specializations : [];
+            const skills = Array.isArray(candidateProfile.skills) ? candidateProfile.skills : [];
+            const candidateSkills = [...specializations, ...skills];
             
             const matching = required.filter(req => 
-                candidateSkills.some(skill => skill.toLowerCase().includes(req.toLowerCase()))
+                candidateSkills.some(skill => String(skill).toLowerCase().includes(String(req).toLowerCase()))
             );
             score += (matching.length / required.length) * 30;
         }
@@ -424,7 +484,9 @@ class MatchingService {
     async findOpportunitiesForCandidate(candidateId) {
         const allOpportunities = await this.dataService.getOpportunities();
         const publishedOpportunities = allOpportunities.filter(o => o.status === 'published');
-        const candidate = await this.dataService.getUserById(candidateId);
+        // Try to find candidate as user first, then as company
+        const candidate = await this.dataService.getUserById(candidateId) 
+            || await this.dataService.getCompanyById(candidateId);
         
         if (!candidate) {
             throw new Error('Candidate not found');

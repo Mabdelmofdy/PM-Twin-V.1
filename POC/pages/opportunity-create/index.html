@@ -1,91 +1,58 @@
-<div class="opportunity-create-page">
+<div class="page-container opportunity-create-page">
     <div class="page-header">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1>Create Opportunity</h1>
-                <p class="page-subtitle">Post a new collaboration opportunity</p>
-            </div>
-            <button type="button" id="fill-demo-data" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-all text-sm border border-gray-300">
+        <div class="page-header-content">
+            <h1 class="page-title">Create Opportunity</h1>
+            <p class="page-subtitle">Post a new collaboration opportunity</p>
+        </div>
+        <div class="page-actions">
+            <button type="button" id="fill-demo-data" class="btn btn-secondary">
                 <i class="ph-duotone ph-magic-wand" style="font-size: 18px;" aria-hidden="true"></i>
                 Fill Demo Data
             </button>
         </div>
     </div>
+    <div class="page-body">
     
-    <!-- Wizard Progress -->
+    <!-- Wizard Progress (6 steps - unified label-driven) -->
     <div class="wizard-progress mb-8">
         <div class="flex items-center justify-between">
             <div class="wizard-step" data-step="1">
                 <div class="wizard-step-number">1</div>
-                <div class="wizard-step-label">Model</div>
+                <div class="wizard-step-label">Basic Info</div>
             </div>
             <div class="wizard-step-line"></div>
             <div class="wizard-step" data-step="2">
                 <div class="wizard-step-number">2</div>
-                <div class="wizard-step-label">Details</div>
+                <div class="wizard-step-label">Intent</div>
             </div>
             <div class="wizard-step-line"></div>
             <div class="wizard-step" data-step="3">
                 <div class="wizard-step-number">3</div>
-                <div class="wizard-step-label">Specifics</div>
+                <div class="wizard-step-label">Scope</div>
             </div>
             <div class="wizard-step-line"></div>
             <div class="wizard-step" data-step="4">
                 <div class="wizard-step-number">4</div>
-                <div class="wizard-step-label">Payment</div>
+                <div class="wizard-step-label">Collaboration</div>
             </div>
             <div class="wizard-step-line"></div>
             <div class="wizard-step" data-step="5">
                 <div class="wizard-step-number">5</div>
+                <div class="wizard-step-label">Payment</div>
+            </div>
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step" data-step="6">
+                <div class="wizard-step-number">6</div>
                 <div class="wizard-step-label">Publish</div>
             </div>
         </div>
     </div>
     
     <form id="opportunity-form" class="opportunity-form">
-        <!-- Step 1: Model Selection -->
+        <!-- Step 1: Basic Information -->
         <div class="wizard-step-content" id="step-1" data-step="1">
             <div class="form-section">
-                <h2>Step 1: Select Collaboration Model</h2>
-                <div class="form-group">
-                    <label for="model-search" class="form-label">Search Collaboration Type <span class="text-red-600">*</span></label>
-                    <div class="model-search-container">
-                        <input 
-                            type="text" 
-                            id="model-search" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="Search by model name (e.g., Consortium, Task-Based, Hiring...)"
-                            autocomplete="off"
-                        >
-                        <input type="hidden" id="model-type" name="modelType" required>
-                        <input type="hidden" id="submodel-type" name="subModelType" required>
-                        
-                        <div id="model-dropdown" class="model-dropdown hidden">
-                            <div class="model-dropdown-content"></div>
-                        </div>
-                        
-                        <div id="selected-model-display" class="selected-model-display hidden">
-                            <div class="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-md mt-2">
-                                <div>
-                                    <div class="text-sm text-gray-600 mb-1">Selected Model:</div>
-                                    <div class="font-semibold text-gray-900" id="selected-model-name"></div>
-                                    <div class="text-sm text-gray-600" id="selected-model-category"></div>
-                                </div>
-                                <button type="button" id="clear-model-selection" class="text-red-600 hover:text-red-800 font-medium">
-                                    Change
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-2">Start typing to search through all 13 collaboration models</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Step 2: Basic Information & Location -->
-        <div class="wizard-step-content hidden" id="step-2" data-step="2">
-            <div class="form-section">
-                <h2>Step 2: Basic Information & Location</h2>
+                <h2>Step 1: Basic Information</h2>
                 
                 <div class="form-group">
                     <label for="title" class="form-label">Title <span class="text-red-600">*</span></label>
@@ -220,91 +187,159 @@
             </div>
         </div>
         
-        <!-- Step 3: Model-Specific Details -->
-        <div class="wizard-step-content hidden" id="step-3" data-step="3">
+        <!-- Step 2: Intent Label -->
+        <div class="wizard-step-content hidden" id="step-2" data-step="2">
             <div class="form-section">
-                <h2>Step 3: Model-Specific Details</h2>
-                <div id="dynamic-fields">
-                    <p class="text-gray-500 italic">Please complete previous steps to see specific fields.</p>
+                <h2>Step 2: Intent Label</h2>
+                <p class="text-gray-600 mb-6">Choose whether you are seeking work/service or offering work/service. This label is visible everywhere and cannot be changed later.</p>
+                <div class="form-group">
+                    <label class="form-label">Intent <span class="text-red-600">*</span></label>
+                    <div class="flex gap-6">
+                        <label class="intent-option flex-1 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="intent" value="request" class="sr-only" required>
+                            <span class="block font-semibold text-lg text-gray-900">REQUEST</span>
+                            <span class="block text-sm text-gray-600 mt-1">Seeking work / service</span>
+                        </label>
+                        <label class="intent-option flex-1 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="intent" value="offer" class="sr-only">
+                            <span class="block font-semibold text-lg text-gray-900">OFFER</span>
+                            <span class="block text-sm text-gray-600 mt-1">Offering work / service</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Step 4: Exchange Mode & Payment Details -->
+        <!-- Step 3: Scope & Capabilities -->
+        <div class="wizard-step-content hidden" id="step-3" data-step="3">
+            <div class="form-section">
+                <h2>Step 3: Scope & Capabilities</h2>
+                <p class="text-gray-600 mb-6" id="scope-intro">Add required or offered services/skills, sectors, and interests. Used for matching.</p>
+                <div class="form-group">
+                    <label for="scope-skills" class="form-label" id="scope-skills-label">Required services / skills <span class="text-red-600">*</span></label>
+                    <input type="text" id="scope-skills" name="scopeSkills" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g. Structural Engineering, Project Management (comma-separated or press Enter)" data-tags="true">
+                    <p class="text-sm text-gray-500 mt-1">Add skills or services; press Enter or comma to add a tag.</p>
+                </div>
+                <div class="form-group">
+                    <label for="scope-sectors" class="form-label">Sectors</label>
+                    <input type="text" id="scope-sectors" name="scopeSectors" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g. Construction, Energy (comma-separated)" data-tags="true">
+                </div>
+                <div class="form-group">
+                    <label for="scope-interests" class="form-label">Interests / tags</label>
+                    <input type="text" id="scope-interests" name="scopeInterests" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g. Sustainability, BIM (comma-separated)" data-tags="true">
+                </div>
+                <div class="form-group">
+                    <label for="scope-certifications" class="form-label">Certifications (optional)</label>
+                    <input type="text" id="scope-certifications" name="scopeCertifications" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g. PMP, LEED AP (comma-separated)" data-tags="true">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 4: Category + Sub-Model -->
         <div class="wizard-step-content hidden" id="step-4" data-step="4">
             <div class="form-section">
-                <h2>Step 4: Exchange Mode & Payment Details</h2>
-                <p class="text-gray-600 mb-6">PMTwin enables multiple value exchange modes beyond cash. Select the exchange mode that best fits your opportunity.</p>
+                <h2>Step 4: Category + Sub-Model</h2>
+                <p class="text-gray-600 mb-6">Select a category, then choose the sub-model that best fits this opportunity. This defines proposal structure, contract type, and execution style.</p>
+                <input type="hidden" id="model-type" name="modelType">
+                <input type="hidden" id="submodel-type" name="subModelType">
+                <div class="form-group mb-6">
+                    <label class="form-label">Category <span class="text-red-600">*</span></label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="category-options">
+                        <label class="category-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="category" value="project_based" class="sr-only">
+                            <span class="font-semibold text-gray-900">Project-Based Collaboration</span>
+                        </label>
+                        <label class="category-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="category" value="strategic_partnership" class="sr-only">
+                            <span class="font-semibold text-gray-900">Strategic Partnerships</span>
+                        </label>
+                        <label class="category-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="category" value="resource_pooling" class="sr-only">
+                            <span class="font-semibold text-gray-900">Resource Pooling &amp; Sharing</span>
+                        </label>
+                        <label class="category-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="category" value="hiring" class="sr-only">
+                            <span class="font-semibold text-gray-900">Hiring a Resource</span>
+                        </label>
+                        <label class="category-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
+                            <input type="radio" name="category" value="competition" class="sr-only">
+                            <span class="font-semibold text-gray-900">Call for Competition</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" id="submodel-group" style="display: none;">
+                    <label class="form-label">Sub-Model <span class="text-red-600">*</span></label>
+                    <div id="submodel-options" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Populated by JS when category is selected -->
+                    </div>
+                </div>
+                <div id="model-details-section" class="form-section mt-8 border-t border-gray-200 pt-6" style="display: none;">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Model-Specific Details</h3>
+                    <p class="text-gray-600 mb-4">Complete the fields below for the selected collaboration type.</p>
+                    <div id="dynamic-fields" class="space-y-6">
+                        <!-- Populated by JS when sub-model is selected -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 5: Exchange Mode & Financial Terms -->
+        <div class="wizard-step-content hidden" id="step-5" data-step="5">
+            <div class="form-section">
+                <h2>Step 5: Exchange Mode &amp; Financial Terms</h2>
+                <p class="text-gray-600 mb-6">This step defines how value is exchanged between parties.</p>
                 
-                <!-- Budget Range Section -->
+                <!-- 4.1 Budget Range (required) -->
                 <div class="form-group mb-6" id="budget-range-section">
-                    <label class="form-label">Budget Range <span class="text-red-600">*</span></label>
-                    <p class="text-sm text-gray-500 mb-3">Specify the expected budget range for this opportunity</p>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Budget Range <span class="text-red-600">*</span></label>
+                    <p class="text-sm text-gray-500 mb-3">Specify the expected budget range for this opportunity (used for matching; not a final contract value).</p>
                     <div class="budget-range-inputs">
                         <div class="budget-input-group">
                             <label for="budgetRange_min" class="text-sm text-gray-600">Minimum</label>
                             <div class="input-with-prefix">
                                 <span class="input-prefix">SAR</span>
-                                <input 
-                                    type="number" 
-                                    id="budgetRange_min" 
-                                    name="budgetRange_min" 
-                                    class="budget-input"
-                                    placeholder="50,000"
-                                    min="0"
-                                    required
-                                >
+                                <input type="number" id="budgetRange_min" name="budgetRange_min" class="budget-input" placeholder="50,000" min="0" step="0.01" required>
                             </div>
                         </div>
-                        <div class="budget-separator">
-                            <span>to</span>
-                        </div>
+                        <div class="budget-separator"><span>to</span></div>
                         <div class="budget-input-group">
                             <label for="budgetRange_max" class="text-sm text-gray-600">Maximum</label>
                             <div class="input-with-prefix">
                                 <span class="input-prefix">SAR</span>
-                                <input 
-                                    type="number" 
-                                    id="budgetRange_max" 
-                                    name="budgetRange_max" 
-                                    class="budget-input"
-                                    placeholder="100,000"
-                                    min="0"
-                                    required
-                                >
+                                <input type="number" id="budgetRange_max" name="budgetRange_max" class="budget-input" placeholder="100,000" min="0" step="0.01" required>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Exchange Mode Selection -->
+                <!-- 4.2 Exchange Mode (required) - single select cards -->
                 <div class="form-group mb-6">
-                    <label for="exchange-mode" class="form-label">Exchange Mode <span class="text-red-600">*</span></label>
+                    <label for="exchange-mode" class="block text-sm font-medium text-gray-700 mb-4">Exchange Mode <span class="text-red-600">*</span></label>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div class="exchange-mode-card" data-mode="cash">
                             <div class="exchange-mode-icon"><i class="ph-duotone ph-currency-dollar" style="font-size: 32px;" aria-hidden="true"></i></div>
                             <div class="exchange-mode-title">Cash</div>
-                            <div class="exchange-mode-description">Standard payments with defined terms and milestones</div>
+                            <div class="exchange-mode-description">Standard payments with milestones</div>
                         </div>
                         <div class="exchange-mode-card" data-mode="equity">
                             <div class="exchange-mode-icon"><i class="ph-duotone ph-chart-bar" style="font-size: 32px;" aria-hidden="true"></i></div>
                             <div class="exchange-mode-title">Equity</div>
-                            <div class="exchange-mode-description">Ownership stake for contribution; includes vesting</div>
+                            <div class="exchange-mode-description">Ownership stake with possible vesting</div>
                         </div>
                         <div class="exchange-mode-card" data-mode="profit_sharing">
                             <div class="exchange-mode-icon"><i class="ph-duotone ph-percent" style="font-size: 32px;" aria-hidden="true"></i></div>
                             <div class="exchange-mode-title">Profit-Sharing</div>
-                            <div class="exchange-mode-description">Share revenue or profit without ownership transfer</div>
+                            <div class="exchange-mode-description">Revenue or profit sharing, no ownership</div>
                         </div>
                         <div class="exchange-mode-card" data-mode="barter">
                             <div class="exchange-mode-icon"><i class="ph-duotone ph-arrows-clockwise" style="font-size: 32px;" aria-hidden="true"></i></div>
                             <div class="exchange-mode-title">Barter</div>
-                            <div class="exchange-mode-description">Direct exchange of resources or services; no cash</div>
+                            <div class="exchange-mode-description">Direct exchange of resources/services</div>
                         </div>
                         <div class="exchange-mode-card" data-mode="hybrid">
                             <div class="exchange-mode-icon"><i class="ph-duotone ph-link" style="font-size: 32px;" aria-hidden="true"></i></div>
                             <div class="exchange-mode-title">Hybrid</div>
-                            <div class="exchange-mode-description">Mix cash, equity, barter for flexible deals</div>
+                            <div class="exchange-mode-description">Combination of cash, equity, and/or barter</div>
                         </div>
                     </div>
                     <input type="hidden" id="exchange-mode" name="exchangeMode" required>
@@ -314,21 +349,19 @@
                                 <div class="text-sm text-gray-600 mb-1">Selected Exchange Mode:</div>
                                 <div class="font-semibold text-gray-900" id="selected-exchange-name"></div>
                             </div>
-                            <button type="button" id="clear-exchange-selection" class="text-red-600 hover:text-red-800 font-medium">
-                                Change
-                            </button>
+                            <button type="button" id="clear-exchange-selection" class="text-red-600 hover:text-red-800 font-medium">Change</button>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Dynamic Exchange Mode Fields -->
-                <div id="exchange-mode-fields" class="exchange-mode-fields">
+                <!-- 4.3 Mode-Specific Details (dynamic) -->
+                <div id="exchange-mode-fields" class="exchange-mode-fields mb-6">
                     <p class="text-gray-500 italic">Please select an exchange mode to see specific fields.</p>
                 </div>
                 
-                <!-- Currency (for Cash and Hybrid modes) -->
-                <div id="currency-group" class="form-group hidden">
-                    <label for="currency" class="form-label">Currency <span class="text-red-600">*</span></label>
+                <!-- 4.4 Currency (conditional - Cash & Hybrid) -->
+                <div id="currency-group" class="form-group hidden mb-6">
+                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency <span class="text-red-600">*</span></label>
                     <select id="currency" name="currency" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         <option value="SAR">SAR (Saudi Riyal)</option>
                         <option value="USD">USD (US Dollar)</option>
@@ -338,62 +371,46 @@
                     </select>
                 </div>
                 
-                <!-- Additional Terms -->
-                <div class="form-group">
-                    <label for="exchange-terms-summary" class="form-label">Additional Terms & Notes</label>
-                    <textarea 
-                        id="exchange-terms-summary" 
-                        name="exchangeTermsSummary" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
-                        rows="3"
-                        placeholder="Describe any additional terms, conditions, or special arrangements..."
-                        data-rich-text="true"
-                    ></textarea>
+                <!-- 4.5 Additional Terms (optional) -->
+                <div class="form-group mb-6">
+                    <label for="exchange-terms-summary" class="block text-sm font-medium text-gray-700 mb-2">Additional Terms &amp; Notes</label>
+                    <textarea id="exchange-terms-summary" name="exchangeTermsSummary" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="3" placeholder="Clarifications, special conditions..." data-rich-text="true"></textarea>
                 </div>
                 
-                <!-- Agreement -->
+                <!-- 4.6 Agreement (required) -->
                 <div class="form-group">
-                    <label class="form-label">
+                    <label class="flex items-center">
                         <input type="checkbox" id="exchange-agreement" name="exchangeAgreement" class="mr-2" required>
-                        I agree to the exchange terms and understand that details will be finalized during the collaboration agreement phase.
+                        <span class="text-sm text-gray-700">I agree to the exchange terms and understand that details will be finalized during the collaboration agreement phase.</span>
                     </label>
                 </div>
             </div>
         </div>
         
-        <!-- Step 5: Publish Status -->
-        <div class="wizard-step-content hidden" id="step-5" data-step="5">
+        <!-- Step 6: Review & Publish -->
+        <div class="wizard-step-content hidden" id="step-6" data-step="6">
             <div class="form-section">
-                <h2>Step 5: Publish Status</h2>
-                <p class="text-gray-600 mb-6">Choose whether to save as draft or publish your opportunity immediately.</p>
-                
+                <h2>Step 6: Review & Publish</h2>
+                <p class="text-gray-600 mb-6">Review your opportunity and choose to save as draft or publish.</p>
+                <div id="review-summary" class="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-2 text-sm"></div>
                 <div class="form-group">
-                    <label for="status" class="form-label">Status <span class="text-red-600">*</span></label>
+                    <label for="status" class="form-label">Action <span class="text-red-600">*</span></label>
                     <select 
                         id="status" 
                         name="status" 
                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         required
                     >
-                        <option value="draft">Draft - Save for later editing</option>
-                        <option value="published">Published - Make visible to other users</option>
+                        <option value="draft">Save as Draft</option>
+                        <option value="published">Publish</option>
                     </select>
                     <p class="text-sm text-gray-500 mt-2">
-                        <strong>Draft:</strong> Your opportunity will be saved but not visible to others. You can edit and publish it later.<br>
-                        <strong>Published:</strong> Your opportunity will be immediately visible to all users on the platform.
+                        <strong>Draft:</strong> Saved but not visible to others. You can edit and publish later.<br>
+                        <strong>Published:</strong> Visible to all users; matching runs automatically; proposals allowed.
                     </p>
                 </div>
-                
                 <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
-                    <div class="flex items-start">
-                        <i class="ph-duotone ph-info" style="font-size: 20px; color: #2563eb; margin-right: 12px; margin-top: 2px;" aria-hidden="true"></i>
-                        <div>
-                            <p class="text-sm text-gray-700 font-medium mb-1">Ready to publish?</p>
-                            <p class="text-sm text-gray-600">
-                                Review all your information before publishing. Once published, your opportunity will be visible to all users and you can still edit it later if needed.
-                            </p>
-                        </div>
-                    </div>
+                    <p class="text-sm text-gray-700">Once published, your opportunity will follow the unified lifecycle: Published → In Negotiation (when proposals arrive) → Contracted → In Execution → Completed → Closed.</p>
                 </div>
             </div>
         </div>
@@ -457,28 +474,13 @@
             </div>
         </div>
     </form>
+    </div>
 </div>
 
 <style>
 .opportunity-create-page {
-    width: 100%;
     max-width: 900px;
     margin: 0 auto;
-}
-
-.page-header {
-    margin-bottom: 2rem;
-}
-
-.page-header h1 {
-    font-size: 1.875rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-    color: #6b7280;
-    font-size: 1.125rem;
 }
 
 .wizard-progress {

@@ -96,6 +96,7 @@ loadScript('src/core/config/config.js').then(async () => {
     await loadScript('src/utils/template-loader.js');
     await loadScript('src/utils/template-renderer.js');
     await loadScript('src/utils/modal.js');
+    await loadScript('src/utils/badge-helpers.js');
     
     // Load business logic
     await loadScript('src/business-logic/models/opportunity-models.js');
@@ -242,6 +243,19 @@ function initializeRoutes() {
         await loadPage('register');
     });
     
+    // Public: Collaboration Wizard, Knowledge Base, Collaboration Models (no auth)
+    router.register(CONFIG.ROUTES.COLLABORATION_WIZARD, async () => {
+        await loadPage('collaboration-wizard');
+    });
+    
+    router.register(CONFIG.ROUTES.KNOWLEDGE_BASE, async () => {
+        await loadPage('knowledge-base');
+    });
+    
+    router.register(CONFIG.ROUTES.COLLABORATION_MODELS, async () => {
+        await loadPage('collaboration-models');
+    });
+    
     // Dashboard route (protected)
     router.register(CONFIG.ROUTES.DASHBOARD, authGuard.protect(async () => {
         await loadPage('dashboard');
@@ -268,6 +282,15 @@ function initializeRoutes() {
     // Profile route (protected)
     router.register(CONFIG.ROUTES.PROFILE, authGuard.protect(async () => {
         await loadPage('profile');
+    }));
+    
+    // Settings route (protected)
+    router.register(CONFIG.ROUTES.SETTINGS, authGuard.protect(async () => {
+        await loadPage('settings');
+    }));
+    
+    router.register(CONFIG.ROUTES.NOTIFICATIONS, authGuard.protect(async () => {
+        await loadPage('notifications');
     }));
     
     // Pipeline route (protected)
@@ -332,6 +355,22 @@ function initializeRoutes() {
         }
         await loadPage('admin-settings');
     }, [CONFIG.ROLES.ADMIN]));
+    
+    router.register(CONFIG.ROUTES.ADMIN_REPORTS, authGuard.protect(async () => {
+        if (!authService.isAdmin()) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-reports');
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
+    
+    router.register('/admin/users/:id', authGuard.protect(async (params) => {
+        if (!authService.isAdmin()) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-user-detail', params);
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
 }
 
 /**

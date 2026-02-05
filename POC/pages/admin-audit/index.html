@@ -1,8 +1,11 @@
-<div class="admin-audit-page">
+<div class="page-container admin-audit-page">
     <div class="page-header">
-        <h1>Audit Trail</h1>
-        <p class="page-subtitle">System activity and audit logs</p>
+        <div class="page-header-content">
+            <h1 class="page-title">Audit Trail</h1>
+            <p class="page-subtitle">System activity and audit logs</p>
+        </div>
     </div>
+    <div class="page-body">
     
     <div class="filters-section">
         <div class="filters">
@@ -30,26 +33,12 @@
     <div id="audit-logs" class="audit-logs">
         <div class="spinner"></div>
     </div>
+    </div>
 </div>
 
 <style>
 .admin-audit-page {
-    width: 100%;
-}
-
-.filters-section {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-}
-
-.filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md);
-    align-items: end;
+    /* Page specific styles */
 }
 
 .audit-logs {

@@ -150,6 +150,78 @@ class ModalService {
     }
 
     /**
+     * Show a modal with custom HTML content
+     * @param {string} contentHTML - HTML string for the modal body (e.g. table, div)
+     * @param {string} title - Modal title
+     * @param {Object} options - Optional: confirmText (default 'Close'), showCancel (default false)
+     * @returns {Promise<boolean>} - Resolves to true when closed
+     */
+    async showCustom(contentHTML, title = 'Information', options = {}) {
+        return new Promise((resolve) => {
+            const { confirmText = 'Close', showCancel = false } = options;
+            const closeIcon = IconHelper ? IconHelper.render('x', { size: 24, weight: 'duotone' }) : '&times;';
+
+            const modal = document.createElement('div');
+            modal.className = 'modal-dialog';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">${title}</h3>
+                        <button class="modal-close" aria-label="Close">${closeIcon}</button>
+                    </div>
+                    <div class="modal-body modal-body-custom">
+                        ${contentHTML}
+                    </div>
+                    <div class="modal-footer">
+                        ${showCancel ? '<button class="btn btn-secondary modal-btn-cancel">Cancel</button>' : ''}
+                        <button class="btn btn-primary modal-btn-confirm">${confirmText}</button>
+                    </div>
+                </div>
+            `;
+
+            this.modalContainer.innerHTML = '';
+            this.modalContainer.appendChild(modal);
+            this.modalContainer.style.display = 'flex';
+
+            const confirmBtn = modal.querySelector('.modal-btn-confirm');
+            confirmBtn.addEventListener('click', () => {
+                this.close();
+                resolve(true);
+            });
+
+            if (showCancel) {
+                const cancelBtn = modal.querySelector('.modal-btn-cancel');
+                cancelBtn.addEventListener('click', () => {
+                    this.close();
+                    resolve(false);
+                });
+            }
+
+            const closeBtn = modal.querySelector('.modal-close');
+            closeBtn.addEventListener('click', () => {
+                this.close();
+                resolve(false);
+            });
+
+            this.modalContainer.addEventListener('click', (e) => {
+                if (e.target === this.modalContainer) {
+                    this.close();
+                    resolve(false);
+                }
+            });
+
+            const handleEscape = (e) => {
+                if (e.key === 'Escape') {
+                    this.close();
+                    document.removeEventListener('keydown', handleEscape);
+                    resolve(false);
+                }
+            };
+            document.addEventListener('keydown', handleEscape);
+        });
+    }
+
+    /**
      * Close the modal
      */
     close() {

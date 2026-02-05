@@ -1,6 +1,6 @@
 {
   "domain": "companies",
-  "version": "1.0",
+  "version": "1.1",
   "data": [
     {
       "id": "user-company-001",
@@ -22,9 +22,12 @@
         "location": "Riyadh, Saudi Arabia",
         "description": "Leading industrial company specializing in construction equipment and agricultural machinery",
         "sectors": ["Construction", "Industrial", "Agriculture"],
+        "industry": ["Construction", "Industrial", "Agriculture"],
         "employeeCount": "1000+",
         "yearEstablished": 1957,
         "certifications": ["ISO 9001", "ISO 14001", "OHSAS 18001"],
+        "financialCapacity": 75000000,
+        "preferredPaymentModes": ["cash", "barter"],
         "services": ["Equipment Supply", "Maintenance Services", "Technical Consulting", "Spare Parts Distribution"],
         "interests": ["Infrastructure Projects", "Agricultural Development", "Industrial Automation"],
         "avatar": null
@@ -52,9 +55,12 @@
         "location": "Jeddah, Saudi Arabia",
         "description": "One of the largest construction and civil engineering companies in the Middle East",
         "sectors": ["Construction", "Infrastructure", "Real Estate"],
+        "industry": ["Construction", "Infrastructure", "Real Estate"],
         "employeeCount": "5000+",
         "yearEstablished": 1931,
         "certifications": ["ISO 9001", "ISO 14001", "ISO 45001"],
+        "financialCapacity": 500000000,
+        "preferredPaymentModes": ["cash", "equity", "profit_sharing"],
         "services": ["General Contracting", "Design-Build", "EPC Projects", "Facility Management"],
         "interests": ["Mega Projects", "Smart Cities", "Sustainable Construction"],
         "avatar": null
@@ -82,9 +88,12 @@
         "location": "Riyadh, Saudi Arabia",
         "description": "General contracting company specializing in commercial and residential buildings",
         "sectors": ["Construction", "Building", "Commercial"],
+        "industry": ["Construction", "Building", "Commercial"],
         "employeeCount": "500-1000",
         "yearEstablished": 1985,
         "certifications": ["ISO 9001", "SASO"],
+        "financialCapacity": 50000000,
+        "preferredPaymentModes": ["cash", "barter"],
         "services": ["Commercial Construction", "Residential Projects", "Renovation", "Project Management"],
         "interests": ["Commercial Real Estate", "Residential Development", "Interior Fit-out"],
         "avatar": null
@@ -112,9 +121,12 @@
         "location": "Jeddah, Saudi Arabia",
         "description": "Diversified construction and engineering company with operations across GCC",
         "sectors": ["Construction", "Engineering", "Infrastructure"],
+        "industry": ["Construction", "Engineering", "Infrastructure"],
         "employeeCount": "2000+",
         "yearEstablished": 1979,
         "certifications": ["ISO 9001", "ISO 14001", "LEED Certified"],
+        "financialCapacity": 150000000,
+        "preferredPaymentModes": ["cash", "equity"],
         "services": ["EPC Contracting", "Infrastructure Development", "Industrial Construction", "MEP Services"],
         "interests": ["Energy Infrastructure", "Industrial Projects", "Transportation"],
         "avatar": null

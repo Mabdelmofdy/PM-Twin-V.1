@@ -129,6 +129,24 @@ async function loadOpportunities() {
         // Update category counts in UI
         updateCategoryCounts(counts);
         
+        // Calculate match scores for each opportunity against the current user
+        if (user) {
+            // Fetch full user data for profile-based matching
+            const fullUser = await dataService.getUserById(user.id) || await dataService.getCompanyById(user.id) || user;
+            
+            for (const opp of opportunities) {
+                if (opp.creatorId === user.id) {
+                    // Owner's own opportunities: match score not applicable
+                    opp.matchScore = null;
+                    opp.matchScorePercent = null;
+                } else {
+                    const score = await matchingService.calculateMatchScore(opp, fullUser);
+                    opp.matchScore = score;
+                    opp.matchScorePercent = Math.round(score * 100);
+                }
+            }
+        }
+        
         if (opportunities.length === 0) {
             const opportunityIcon = IconHelper ? IconHelper.render('briefcase', { size: 40, weight: 'duotone', color: 'currentColor' }) : '';
             const plusIcon = IconHelper ? IconHelper.render('plus', { size: 20, weight: 'duotone', color: 'currentColor', className: 'mr-2' }) : '';
@@ -154,12 +172,14 @@ async function loadOpportunities() {
         
         // Render opportunities
         const html = opportunities.map(opp => {
-            const canApply = user && !opp.isOwner && opp.status === 'published' && !opp.hasApplied;
+            const canApply = user && !opp.isOwner && (opp.status === 'published' || opp.status === 'in_negotiation') && !opp.hasApplied;
             
             const data = {
                 ...opp,
+                intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
+                intentBadgeClass: typeof getIntentBadgeClass === 'function' ? getIntentBadgeClass(opp.intent, opp.modelType) : 'badge-intent-request-default',
                 title: opp.title || 'Untitled Opportunity',
-                modelType: formatModelType(opp.modelType) || 'N/A',
+                modelType: formatModelType(opp.modelType) || (opp.collaborationModel || 'N/A'),
                 subModelType: formatSubModelType(opp.subModelType) || '',
                 status: opp.status || 'draft',
                 statusBadgeClass: getStatusBadgeClass(opp.status),
@@ -172,7 +192,9 @@ async function loadOpportunities() {
                 categoryIcon: getCategoryIcon(opp.category),
                 showCategoryBadge: opp.category !== 'available',
                 applicationStatusLabel: opp.hasApplied ? formatApplicationStatus(opp.applicationStatus) : '',
-                applicationStatusClass: opp.hasApplied ? getApplicationStatusClass(opp.applicationStatus) : ''
+                applicationStatusClass: opp.hasApplied ? getApplicationStatusClass(opp.applicationStatus) : '',
+                // Match score data
+                matchScorePercent: opp.matchScorePercent
             };
             return templateRenderer.render(template, data);
         }).join('');
@@ -209,6 +231,10 @@ function getStatusBadgeClass(status) {
     const statusMap = {
         'draft': 'secondary',
         'published': 'success',
+        'in_negotiation': 'warning',
+        'contracted': 'primary',
+        'in_execution': 'primary',
+        'completed': 'success',
         'closed': 'danger',
         'cancelled': 'danger'
     };

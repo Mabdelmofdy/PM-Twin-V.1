@@ -9,11 +9,17 @@
         <div>
             <h3 class="opportunity-title">{{title}}</h3>
             <div class="opportunity-meta">
+                {{#if intentLabel}}
+                <span class="badge {{intentBadgeClass}}">{{intentLabel}}</span>
+                {{/if}}
                 <span class="badge badge-primary">{{modelType}}</span>
                 {{#if subModelType}}
                 <span class="badge badge-outline">{{subModelType}}</span>
                 {{/if}}
                 <span class="badge badge-{{statusBadgeClass}}">{{status}}</span>
+                {{#if matchScorePercent}}
+                <span class="badge badge-match">{{matchScorePercent}}% Match</span>
+                {{/if}}
             </div>
         </div>
     </div>

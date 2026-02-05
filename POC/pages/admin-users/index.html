@@ -1,8 +1,11 @@
-<div class="admin-users-page">
+<div class="page-container admin-users-page">
     <div class="page-header">
-        <h1>User & Company Management</h1>
-        <p class="page-subtitle">Manage platform users, companies, and approvals</p>
+        <div class="page-header-content">
+            <h1 class="page-title">User & Company Management</h1>
+            <p class="page-subtitle">Manage platform users, companies, and approvals</p>
+        </div>
     </div>
+    <div class="page-body">
     
     <div class="filters-section">
         <div class="filters">
@@ -12,6 +15,7 @@
                 <option value="active">Active</option>
                 <option value="suspended">Suspended</option>
                 <option value="rejected">Rejected</option>
+                <option value="clarification_requested">Clarification Requested</option>
             </select>
             
             <select id="filter-role" class="form-select">
@@ -43,26 +47,12 @@
     <div id="users-list" class="users-list">
         <div class="spinner"></div>
     </div>
+    </div>
 </div>
 
 <style>
 .admin-users-page {
-    width: 100%;
-}
-
-.filters-section {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-}
-
-.filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md);
-    align-items: end;
+    /* Page specific styles */
 }
 
 .users-list {

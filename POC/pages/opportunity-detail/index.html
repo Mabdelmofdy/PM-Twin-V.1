@@ -1,6 +1,6 @@
-<div class="opportunity-detail-page">
+<div class="page-container opportunity-detail-page">
     <div id="loading" class="spinner"></div>
-    <div id="content" style="display: none;">
+    <div id="content" class="page-body" style="display: none;">
         
         <!-- Wizard Steps Indicator -->
         <div id="wizard-steps" class="wizard-steps" style="display: none;">
@@ -18,10 +18,14 @@
             </div>
             <div class="wizard-step" data-step="4" id="step-indicator-4">
                 <div class="step-number">4</div>
+                <div class="step-label">Payment mode</div>
+            </div>
+            <div class="wizard-step" data-step="5" id="step-indicator-5">
+                <div class="step-number">5</div>
                 <div class="step-label">Bidding</div>
             </div>
-            <div class="wizard-step" data-step="5">
-                <div class="step-number">5</div>
+            <div class="wizard-step" data-step="6" id="step-indicator-6">
+                <div class="step-number" id="step-6-number">6</div>
                 <div class="step-label">Review</div>
             </div>
         </div>
@@ -32,6 +36,7 @@
                 <div>
                     <h1 id="opportunity-title"></h1>
                     <div class="opportunity-meta">
+                        <span id="opportunity-intent" class="badge badge-info" style="display: none;"></span>
                         <span id="opportunity-model" class="badge badge-primary"></span>
                         <span id="opportunity-status" class="badge"></span>
                     </div>
@@ -79,6 +84,16 @@
                     <h2><i class="ph-duotone ph-list-checks"></i> Opportunity Details</h2>
                     <div class="detail-content detail-grid" id="model-details">
                         <!-- Details will be populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Contract & Execution Section (when contracted or in_execution) -->
+                <div class="detail-section" id="contract-section" style="display: none;">
+                    <h2><i class="ph-duotone ph-file-text"></i> Contract & Execution</h2>
+                    <div class="detail-content" id="contract-details">
+                        <div id="contract-summary"></div>
+                        <div id="contract-milestones" class="mt-4"></div>
+                        <div id="contract-actions" class="mt-4 flex gap-2 flex-wrap"></div>
                     </div>
                 </div>
 
@@ -158,8 +173,31 @@
             </div>
         </div>
 
-        <!-- Step 4: Task Bidding -->
+        <!-- Step 4: Payment / Exchange mode -->
         <div id="step-4" class="wizard-step-content" style="display: none;">
+            <div class="step-header">
+                <h2>Payment / Exchange mode</h2>
+                <p>Confirm your preference for the opportunity's payment terms</p>
+            </div>
+            <div class="step-body">
+                <div class="form-group">
+                    <p class="text-gray-700 mb-3" id="payment-opportunity-mode-text">This opportunity uses: <strong id="payment-opportunity-mode-label">—</strong></p>
+                    <label for="application-payment-preference" class="form-label">Your preference <span class="text-red-600">*</span></label>
+                    <select id="application-payment-preference" name="paymentPreference" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <option value="">Select your preference</option>
+                        <option value="accept">Accept as stated</option>
+                        <option value="discuss">Prefer to discuss</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="application-payment-comments" class="form-label">Comments on payment terms (optional)</label>
+                    <textarea id="application-payment-comments" name="paymentComments" class="form-textarea" rows="3" placeholder="Any comments or questions about payment terms..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Task Bidding -->
+        <div id="step-5" class="wizard-step-content" style="display: none;">
             <div class="step-header">
                 <h2>Your Bid</h2>
                 <p>Provide your pricing and approach for this task</p>
@@ -169,8 +207,8 @@
             </div>
         </div>
 
-        <!-- Step 5: Review & Submit -->
-        <div id="step-5" class="wizard-step-content" style="display: none;">
+        <!-- Step 6: Review & Submit -->
+        <div id="step-6" class="wizard-step-content" style="display: none;">
             <div class="step-header">
                 <h2>Review Your Application</h2>
                 <p>Please review your responses before submitting</p>
@@ -183,6 +221,10 @@
                 <div class="review-section" id="review-responses-section" style="display: none;">
                     <h3><i class="ph-duotone ph-list-checks"></i> Your Responses</h3>
                     <div class="review-content" id="review-responses"></div>
+                </div>
+                <div class="review-section" id="review-payment-section">
+                    <h3><i class="ph-duotone ph-currency-circle-dollar"></i> Payment preference</h3>
+                    <div class="review-content" id="review-payment"></div>
                 </div>
                 <div class="review-section" id="review-bid-section" style="display: none;">
                     <h3><i class="ph-duotone ph-currency-circle-dollar"></i> Your Bid</h3>
@@ -221,7 +263,6 @@
 
 <style>
 .opportunity-detail-page {
-    width: 100%;
     max-width: 1000px;
     margin: 0 auto;
 }

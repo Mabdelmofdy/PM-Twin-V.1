@@ -1020,18 +1020,18 @@ function editSetupExchangeModeSelection() {
                         <div class="form-group">
                             <label for="barter-offer" class="block text-sm font-medium text-gray-700 mb-2">What You Offer <span class="text-red-600">*</span></label>
                             <textarea id="barter-offer" name="barterOffer" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="3" placeholder="e.g., Office space, equipment, services..." required data-rich-text="true"></textarea>
-                            <p class="text-sm text-gray-500 mt-1">Describe what you're offering in exchange</p>
+                            <p class="text-sm text-gray-500 mt-2 form-help">Describe what you're offering in exchange</p>
                         </div>
                         <div class="form-group">
                             <label for="barter-need" class="block text-sm font-medium text-gray-700 mb-2">What You Need <span class="text-red-600">*</span></label>
                             <textarea id="barter-need" name="barterNeed" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="3" placeholder="e.g., Structural engineering services..." required data-rich-text="true"></textarea>
-                            <p class="text-sm text-gray-500 mt-1">Describe what you need in return</p>
+                            <p class="text-sm text-gray-500 mt-2 form-help">Describe what you need in return</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="barter-value" class="block text-sm font-medium text-gray-700 mb-2">Estimated Value (Optional)</label>
                         <input type="text" id="barter-value" name="barterValue" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., Equivalent to 50K SAR">
-                        <p class="text-sm text-gray-500 mt-1">Optional: Estimated equivalent value</p>
+                        <p class="text-sm text-gray-500 mt-2 form-help">Optional: Estimated equivalent value</p>
                     </div>
                 `;
                 break;
@@ -1239,6 +1239,20 @@ function editSetupFormHandlers() {
             // Update location string
             editUpdateLocationString();
             
+            // paymentModes for matching: use current exchange mode
+            const paymentModes = formData.exchangeMode ? [formData.exchangeMode] : (editingOpportunity.paymentModes || (editingOpportunity.exchangeMode ? [editingOpportunity.exchangeMode] : ['cash']));
+            
+            // scope for matching: from form (attributes) or existing opportunity
+            const attrs = formData || {};
+            const arr = (v) => (Array.isArray(v) ? v : (v ? [v] : []));
+            const scope = {
+                requiredSkills: arr(attrs.requiredSkills).length ? arr(attrs.requiredSkills) : (editingOpportunity.scope && editingOpportunity.scope.requiredSkills) || arr((editingOpportunity.attributes || {}).requiredSkills),
+                offeredSkills: arr(attrs.offeredSkills).length ? arr(attrs.offeredSkills) : (editingOpportunity.scope && editingOpportunity.scope.offeredSkills) || arr((editingOpportunity.attributes || {}).offeredSkills),
+                sectors: arr(attrs.sectors).length ? arr(attrs.sectors) : (editingOpportunity.scope && editingOpportunity.scope.sectors) || arr((editingOpportunity.attributes || {}).sectors),
+                certifications: arr(attrs.certifications).length ? arr(attrs.certifications) : (editingOpportunity.scope && editingOpportunity.scope.certifications) || arr((editingOpportunity.attributes || {}).certifications),
+                interests: arr(attrs.interests).length ? arr(attrs.interests) : (editingOpportunity.scope && editingOpportunity.scope.interests) || arr((editingOpportunity.attributes || {}).interests)
+            };
+            
             // Update opportunity
             const updates = {
                 title: formData.title,
@@ -1251,6 +1265,8 @@ function editSetupFormHandlers() {
                 locationDistrict: formData.locationDistrict || '',
                 exchangeMode: formData.exchangeMode,
                 exchangeData: exchangeData,
+                paymentModes,
+                scope,
                 attributes: formData,
                 modelData: formData
             };

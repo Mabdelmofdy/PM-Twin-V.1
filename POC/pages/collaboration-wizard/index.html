@@ -1,0 +1,53 @@
+<div class="page-container collaboration-wizard-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">AI Collaboration Wizard</h1>
+            <p class="page-subtitle">Answer a few questions to discover the best collaboration model for your needs</p>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <div class="wizard-container">
+        <div class="wizard-progress" id="wizard-progress">
+            <div class="progress-bar" id="wizard-progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="wizard-steps" id="wizard-steps"></div>
+        <div class="wizard-actions">
+            <button type="button" id="wizard-prev" class="btn btn-secondary" style="display: none;">Previous</button>
+            <button type="button" id="wizard-next" class="btn btn-primary">Next</button>
+            <button type="button" id="wizard-submit" class="btn btn-primary" style="display: none;">See my results</button>
+        </div>
+    </div>
+
+    <div class="wizard-result card" id="wizard-result" style="display: none;">
+        <h2>Recommended collaboration models</h2>
+        <div id="wizard-result-models"></div>
+        <p class="result-cta-text">Create an account to post or apply for opportunities.</p>
+        <div class="result-actions">
+            <a href="#" data-route="/register" class="btn btn-primary">Register</a>
+            <a href="#" data-route="/opportunities/create" class="btn btn-secondary" id="wizard-create-opp">Create opportunity</a>
+            <a href="#" data-route="/opportunities" class="btn btn-secondary">Browse opportunities</a>
+        </div>
+    </div>
+    </div>
+</div>
+
+<style>
+.collaboration-wizard-page { max-width: 640px; margin: 0 auto; }
+.wizard-progress { height: 6px; background: var(--border-color); border-radius: 3px; margin-bottom: var(--spacing-xl); overflow: hidden; }
+.progress-bar { height: 100%; background: var(--primary-color); transition: width 0.3s; }
+.wizard-steps { min-height: 200px; margin-bottom: var(--spacing-xl); }
+.wizard-step { display: none; }
+.wizard-step.active { display: block; }
+.wizard-step h3 { margin-bottom: var(--spacing-md); }
+.wizard-options { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.wizard-option { padding: var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; }
+.wizard-option:hover { border-color: var(--primary-color); background: var(--bg-tertiary); }
+.wizard-option.selected { border-color: var(--primary-color); background: rgba(37, 99, 235, 0.08); }
+.wizard-actions { display: flex; gap: var(--spacing-md); justify-content: flex-end; }
+.wizard-result h2 { margin-bottom: var(--spacing-lg); }
+.wizard-result-models-list { list-style: none; padding: 0; margin: 0 0 var(--spacing-lg); }
+.wizard-result-models-list li { padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); }
+.result-cta-text { margin-bottom: var(--spacing-md); color: var(--text-secondary); }
+.result-actions { display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
+</style>

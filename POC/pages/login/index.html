@@ -1,4 +1,4 @@
-<div class="min-h-[calc(100vh-16rem)] flex items-center justify-center p-8">
+<div class="page-container login-page min-h-[calc(100vh-16rem)] flex items-center justify-center p-8">
     <div class="w-full max-w-md">
         <div class="bg-white rounded-lg p-8 shadow-lg">
             <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Login to PMTwin</h1>
@@ -32,6 +32,12 @@
                 <div id="login-error" class="alert alert-error" style="display: none;"></div>
                 
                 <button type="submit" class="w-full mt-4 px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md">Login</button>
+                
+                <div class="mt-4 text-center">
+                    <button type="button" id="btn-view-demo-credentials" class="text-primary text-sm font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 rounded">
+                        View demo user credentials
+                    </button>
+                </div>
                 
                 <p class="text-center mt-6 text-gray-600">
                     Don't have an account? <a href="#" data-route="/register" class="text-primary no-underline font-medium hover:underline">Register here</a>

@@ -43,7 +43,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'prequalificationRequired', label: 'Prequalification Required', type: 'boolean', required: true },
                     { key: 'minimumRequirements', label: 'Minimum Requirements', type: 'array-objects', required: true },
                     { key: 'consortiumAgreement', label: 'Formal Consortium Agreement', type: 'boolean', required: true },
-                    { key: 'paymentDistribution', label: 'Payment Distribution', type: 'select', required: true, options: ['Per Scope', 'Proportional', 'Fixed Percentage'] }
+                    { key: 'paymentDistribution', label: 'Payment Distribution', type: 'select', required: true, options: ['Per Scope', 'Proportional', 'Fixed Percentage'] },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             },
             project_jv: {
@@ -64,7 +65,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'exitStrategy', label: 'Exit Strategy', type: 'select', required: true, options: ['Dissolution', 'Asset Sale', 'Buyout Option', 'Conversion to Strategic JV'] },
                     { key: 'governance', label: 'Governance Structure', type: 'textarea', required: false, maxLength: 1000, conditional: { field: 'jvStructure', value: ['Incorporated LLC', 'Incorporated Corporation'] } },
                     { key: 'disputeResolution', label: 'Dispute Resolution', type: 'select', required: true, options: ['Arbitration', 'Mediation', 'Court', 'Other'] },
-                    { key: 'partnerRequirements', label: 'Partner Requirements', type: 'array-objects', required: true }
+                    { key: 'partnerRequirements', label: 'Partner Requirements', type: 'array-objects', required: true },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             },
             spv: {
@@ -87,7 +89,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'governanceStructure', label: 'Governance Structure', type: 'textarea', required: true, maxLength: 1000 },
                     { key: 'regulatoryApprovals', label: 'Regulatory Approvals', type: 'tags', required: true },
                     { key: 'exitStrategy', label: 'Exit Strategy', type: 'select', required: true, options: ['Asset Transfer', 'Liquidation', 'Sale', 'Conversion to Permanent Entity'] },
-                    { key: 'professionalServicesNeeded', label: 'Professional Services Needed', type: 'multi-select', required: true, options: ['Legal', 'Financial', 'Technical', 'Environmental', 'Other'] }
+                    { key: 'professionalServicesNeeded', label: 'Professional Services Needed', type: 'multi-select', required: true, options: ['Legal', 'Financial', 'Technical', 'Environmental', 'Other'] },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             }
         }
@@ -117,7 +120,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'exitOptions', label: 'Exit Options', type: 'multi-select', required: true, options: ['Buyout', 'IPO', 'Sale to Third Party', 'Dissolution'] },
                     { key: 'nonCompete', label: 'Non-Compete Clauses', type: 'boolean', required: true },
                     { key: 'technologyTransfer', label: 'Technology Transfer Involved', type: 'boolean', required: false },
-                    { key: 'partnerRequirements', label: 'Partner Requirements', type: 'array-objects', required: true }
+                    { key: 'partnerRequirements', label: 'Partner Requirements', type: 'array-objects', required: true },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             },
             strategic_alliance: {
@@ -134,7 +138,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'performanceMetrics', label: 'Performance Metrics', type: 'array-objects', required: true },
                     { key: 'governance', label: 'Governance', type: 'textarea', required: true, maxLength: 500 },
                     { key: 'terminationConditions', label: 'Termination Conditions', type: 'textarea', required: true, maxLength: 500 },
-                    { key: 'partnerRequirements', label: 'Partner Requirements', type: 'array-objects', required: true }
+                    { key: 'partnerRequirements', label: 'Partner Requirements', type: 'array-objects', required: true },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             },
             mentorship: {
@@ -151,7 +156,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'barterOffer', label: 'Barter Offer', type: 'textarea', required: false, maxLength: 500, conditional: { field: 'compensation', value: 'Barter' } },
                     { key: 'mentorRequirements', label: 'Mentor Requirements', type: 'array-objects', required: false },
                     { key: 'menteeBackground', label: 'Mentee Background', type: 'textarea', required: false, maxLength: 500 },
-                    { key: 'successMetrics', label: 'Success Metrics', type: 'tags', required: false }
+                    { key: 'successMetrics', label: 'Success Metrics', type: 'tags', required: false },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             }
         }
@@ -178,7 +184,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'minimumOrder', label: 'Minimum Order Quantity', type: 'number', required: false },
                     { key: 'leadOrganizer', label: 'Are you the organizer?', type: 'boolean', required: true },
                     { key: 'supplier', label: 'Preferred Supplier', type: 'text', required: false },
-                    { key: 'distributionMethod', label: 'Distribution Method', type: 'select', required: true, options: ['Centralized Pickup', 'Individual Delivery', 'Organizer Distributes'] }
+                    { key: 'distributionMethod', label: 'Distribution Method', type: 'select', required: true, options: ['Centralized Pickup', 'Individual Delivery', 'Organizer Distributes'] },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             },
             equipment_sharing: {
@@ -198,7 +205,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'maintenanceResponsibility', label: 'Maintenance Responsibility', type: 'select', required: true, options: ['Shared', 'Designated Owner', 'Third-Party Service'] },
                     { key: 'insurance', label: 'Asset Insured', type: 'boolean', required: true },
                     { key: 'exitStrategy', label: 'Exit Strategy', type: 'select', required: true, options: ['Sell Share to Other Owners', 'Sell to Third Party', 'Liquidate Asset'] },
-                    { key: 'disputeResolution', label: 'Dispute Resolution', type: 'select', required: true, options: ['Arbitration', 'Mediation', 'Court'] }
+                    { key: 'disputeResolution', label: 'Dispute Resolution', type: 'select', required: true, options: ['Arbitration', 'Mediation', 'Court'] },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             },
             resource_sharing: {
@@ -218,7 +226,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'barterPreferences', label: 'Barter Preferences', type: 'multi-select', required: false, options: ['Materials', 'Equipment', 'Labor', 'Services', 'Knowledge', 'Certification', 'Other'], conditional: { field: 'transactionType', value: ['Barter'] } },
                     { key: 'delivery', label: 'Delivery', type: 'select', required: true, options: ['Buyer Pickup', 'Seller Delivery', 'Negotiable'] },
                     { key: 'paymentTerms', label: 'Payment Terms', type: 'select', required: false, options: ['Upfront', 'On Delivery', 'Installments'], conditional: { field: 'transactionType', value: ['Sell', 'Rent'] } },
-                    { key: 'urgency', label: 'Urgency', type: 'select', required: true, options: ['Immediate', 'Within 1 Week', 'Within 1 Month', 'Flexible'] }
+                    { key: 'urgency', label: 'Urgency', type: 'select', required: true, options: ['Immediate', 'Within 1 Week', 'Within 1 Month', 'Flexible'] },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             }
         }
@@ -266,7 +275,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'paymentTerms', label: 'Payment Terms', type: 'select', required: true, options: ['Upfront', 'Milestone-Based', 'Upon Completion'] },
                     { key: 'startDate', label: 'Start Date', type: 'date', required: true },
                     { key: 'exchangeType', label: 'Exchange Type', type: 'select', required: true, options: ['Cash', 'Barter', 'Mixed'] },
-                    { key: 'barterOffer', label: 'Barter Offer', type: 'textarea', required: false, maxLength: 500, conditional: { field: 'exchangeType', value: ['Barter', 'Mixed'] } }
+                    { key: 'barterOffer', label: 'Barter Offer', type: 'textarea', required: false, maxLength: 500, conditional: { field: 'exchangeType', value: ['Barter', 'Mixed'] } },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             }
         }
@@ -294,7 +304,8 @@ const OPPORTUNITY_MODELS = {
                     { key: 'announcementDate', label: 'Announcement Date', type: 'date', required: true },
                     { key: 'competitionRules', label: 'Competition Rules', type: 'textarea', required: true, maxLength: 2000 },
                     { key: 'intellectualProperty', label: 'Intellectual Property', type: 'select', required: true, options: ['Submitter Retains', 'Client Owns', 'Shared', 'Winner Transfers'] },
-                    { key: 'submissionFee', label: 'Submission Fee', type: 'currency', required: false }
+                    { key: 'submissionFee', label: 'Submission Fee', type: 'currency', required: false },
+                    { key: 'requiredSkills', label: 'Required Skills', type: 'tags', required: false }
                 ]
             }
         }

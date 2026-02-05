@@ -61,7 +61,7 @@ async function loadOpportunity(id) {
         // Get current user
         const user = authService.getCurrentUser();
         const isOwner = user && opportunity.creatorId === user.id;
-        const canApply = user && !isOwner && opportunity.status === 'published';
+        const canApply = user && !isOwner && (opportunity.status === 'published' || opportunity.status === 'in_negotiation');
         
         // Check if user has already applied
         if (canApply) {
@@ -114,19 +114,28 @@ function determineWizardSteps(opportunity) {
     // Check if task bidding is needed
     hasTaskBidding = opportunity.subModelType === 'task_based' && modelSpecificData;
     
-    // Update step indicators visibility
+    // Update step indicators visibility: step 4 (Payment) always visible; step 5 (Bidding) only when task-based
     const step3Indicator = document.getElementById('step-indicator-3');
-    const step4Indicator = document.getElementById('step-indicator-4');
+    const step5Indicator = document.getElementById('step-indicator-5');
+    const step6NumberEl = document.getElementById('step-6-number');
     
     if (step3Indicator) step3Indicator.style.display = hasDetailedResponses ? 'flex' : 'none';
-    if (step4Indicator) step4Indicator.style.display = hasTaskBidding ? 'flex' : 'none';
+    if (step5Indicator) step5Indicator.style.display = hasTaskBidding ? 'flex' : 'none';
+    // When step 5 (Bidding) is hidden, show Review as step 5 so the progress bar has no gap
+    if (step6NumberEl) step6NumberEl.textContent = hasTaskBidding ? '6' : '5';
 }
 
 async function renderComprehensiveView(opportunity, creator, isOwner, canApply) {
-    // Title and meta
     document.getElementById('opportunity-title').textContent = opportunity.title || 'Untitled Opportunity';
-    document.getElementById('opportunity-model').textContent = formatModelType(opportunity.modelType) || 'N/A';
-    document.getElementById('opportunity-status').textContent = opportunity.status || 'draft';
+    const intentEl = document.getElementById('opportunity-intent');
+    if (intentEl) {
+        const intent = opportunity.intent || 'request';
+        intentEl.textContent = intent === 'offer' ? 'OFFER' : 'REQUEST';
+        intentEl.style.display = 'inline-block';
+        intentEl.className = 'badge ' + (typeof getIntentBadgeClass === 'function' ? getIntentBadgeClass(intent, opportunity.modelType) : (intent === 'offer' ? 'badge-info' : 'badge-primary'));
+    }
+    document.getElementById('opportunity-model').textContent = formatModelType(opportunity.modelType) || (opportunity.collaborationModel || 'N/A');
+    document.getElementById('opportunity-status').textContent = formatOpportunityStatus(opportunity.status);
     document.getElementById('opportunity-status').className = `badge badge-${getStatusBadgeClass(opportunity.status)}`;
     
     // Quick info bar
@@ -155,17 +164,24 @@ async function renderComprehensiveView(opportunity, creator, isOwner, canApply) 
         renderExchangeDetails(opportunity.exchangeData);
     }
     
-    // Actions for owner
     const actionsDiv = document.getElementById('opportunity-actions');
     if (isOwner) {
-        actionsDiv.innerHTML = `
-            <a href="#" data-route="/opportunities/${opportunity.id}/edit" class="btn btn-secondary">
-                <i class="ph-duotone ph-pencil"></i> Edit
-            </a>
-            <button onclick="deleteOpportunity('${opportunity.id}')" class="btn btn-danger">
-                <i class="ph-duotone ph-trash"></i> Delete
-            </button>
-        `;
+        const oppService = window.opportunityService;
+        const canCancel = oppService && oppService.canCancelOpportunity(opportunity);
+        const canEdit = opportunity.status === 'draft';
+        let btns = '';
+        if (canEdit) {
+            btns += `<a href="#" data-route="/opportunities/${opportunity.id}/edit" class="btn btn-secondary"><i class="ph-duotone ph-pencil"></i> Edit</a>`;
+        }
+        if (canCancel) {
+            btns += `<button type="button" id="btn-cancel-opportunity" class="btn btn-danger" data-opp-id="${opportunity.id}"><i class="ph-duotone ph-x-circle"></i> Cancel</button>`;
+        }
+        btns += `<button onclick="deleteOpportunity('${opportunity.id}')" class="btn btn-danger"><i class="ph-duotone ph-trash"></i> Delete</button>`;
+        actionsDiv.innerHTML = btns;
+        const cancelBtn = document.getElementById('btn-cancel-opportunity');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => cancelOpportunity(cancelBtn.dataset.oppId));
+        }
     } else {
         actionsDiv.innerHTML = '';
     }
@@ -198,10 +214,115 @@ async function renderComprehensiveView(opportunity, creator, isOwner, canApply) 
         }
     }
     
-    // Show applications section for owner
     if (isOwner) {
         document.getElementById('applications-section').style.display = 'block';
     }
+    
+    if (opportunity.status === 'contracted' || opportunity.status === 'in_execution' || opportunity.status === 'completed') {
+        await loadAndRenderContract(opportunity);
+    }
+}
+
+async function loadAndRenderContract(opportunity) {
+    const section = document.getElementById('contract-section');
+    const summaryEl = document.getElementById('contract-summary');
+    const milestonesEl = document.getElementById('contract-milestones');
+    const actionsEl = document.getElementById('contract-actions');
+    if (!section || !summaryEl) return;
+    
+    const contract = await dataService.getContractByOpportunityId(opportunity.id);
+    if (!contract) {
+        section.style.display = 'block';
+        summaryEl.innerHTML = '<p class="text-gray-500">No contract record found.</p>';
+        return;
+    }
+    
+    section.style.display = 'block';
+    const creator = await dataService.getUserOrCompanyById(contract.creatorId);
+    const contractor = await dataService.getUserOrCompanyById(contract.contractorId);
+    const creatorName = creator?.profile?.name || creator?.email || contract.creatorId;
+    const contractorName = contractor?.profile?.name || contractor?.email || contract.contractorId;
+    
+    summaryEl.innerHTML = `
+        <p><strong>Parties:</strong> ${escapeHtml(creatorName)} (creator) &ndash; ${escapeHtml(contractorName)} (contractor)</p>
+        <p><strong>Scope:</strong> ${escapeHtml(contract.scope || opportunity.title)}</p>
+        <p><strong>Payment:</strong> ${escapeHtml(contract.paymentMode || opportunity.exchangeMode || '—')}</p>
+        <p><strong>Duration:</strong> ${escapeHtml(contract.duration || '—')}</p>
+    `;
+    
+    const milestones = contract.milestones || [];
+    milestonesEl.innerHTML = milestones.length ? `
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Milestones</h3>
+        <ul id="milestones-list" class="space-y-2">
+            ${milestones.map((m, i) => `
+                <li class="flex items-center justify-between p-2 border rounded ${m.status === 'completed' ? 'bg-green-50' : ''}" data-milestone-index="${i}">
+                    <span>${escapeHtml(m.title)} ${m.dueDate ? '(' + m.dueDate + ')' : ''}</span>
+                    <span class="badge badge-${m.status === 'completed' ? 'success' : 'secondary'}">${m.status === 'completed' ? 'Done' : 'Pending'}</span>
+                    ${m.status !== 'completed' && opportunity.status === 'in_execution' ? `<button type="button" class="btn btn-sm btn-primary mark-milestone-done" data-contract-id="${contract.id}" data-index="${i}">Mark complete</button>` : ''}
+                </li>
+            `).join('')}
+        </ul>
+        ${opportunity.status === 'in_execution' ? `<button type="button" id="add-milestone-btn" class="btn btn-secondary btn-sm mt-2" data-contract-id="${contract.id}">Add milestone</button>` : ''}
+    ` : (opportunity.status === 'in_execution' ? `<p class="text-gray-500">No milestones yet.</p><button type="button" id="add-milestone-btn" class="btn btn-secondary btn-sm" data-contract-id="${contract.id}">Add milestone</button>` : '<p class="text-gray-500">No milestones.</p>');
+    
+    milestonesEl.querySelectorAll('.mark-milestone-done').forEach(btn => {
+        btn.addEventListener('click', () => markMilestoneComplete(btn.dataset.contractId, parseInt(btn.dataset.index, 10)));
+    });
+    const addBtn = document.getElementById('add-milestone-btn');
+    if (addBtn) addBtn.addEventListener('click', () => addMilestone(addBtn.dataset.contractId));
+    
+    const user = authService.getCurrentUser();
+    const isOwner = user && opportunity.creatorId === user.id;
+    let actionsHtml = '';
+    if (opportunity.status === 'contracted' && isOwner) {
+        actionsHtml += `<button type="button" id="start-execution-btn" class="btn btn-primary" data-opp-id="${opportunity.id}" data-contract-id="${contract.id}">Start execution</button>`;
+    }
+    const allDone = milestones.length > 0 && milestones.every(m => m.status === 'completed');
+    if (opportunity.status === 'in_execution' && allDone && isOwner) {
+        actionsHtml += `<button type="button" id="confirm-completion-btn" class="btn btn-success" data-opp-id="${opportunity.id}">Confirm completion</button>`;
+    }
+    if (opportunity.status === 'completed' && isOwner) {
+        actionsHtml += `<button type="button" id="close-opportunity-btn" class="btn btn-secondary" data-opp-id="${opportunity.id}">Close opportunity</button>`;
+    }
+    actionsEl.innerHTML = actionsHtml;
+    
+    document.getElementById('start-execution-btn')?.addEventListener('click', async () => {
+        const oppId = document.getElementById('start-execution-btn').dataset.oppId;
+        const cId = document.getElementById('start-execution-btn').dataset.contractId;
+        await dataService.updateOpportunity(oppId, { status: 'in_execution' });
+        await dataService.updateContract(cId, { status: 'active' });
+        await loadOpportunity(oppId);
+    });
+    document.getElementById('confirm-completion-btn')?.addEventListener('click', async () => {
+        const oppId = document.getElementById('confirm-completion-btn').dataset.oppId;
+        await dataService.updateOpportunity(oppId, { status: 'completed' });
+        await loadOpportunity(oppId);
+    });
+    document.getElementById('close-opportunity-btn')?.addEventListener('click', async () => {
+        const oppId = document.getElementById('close-opportunity-btn').dataset.oppId;
+        await dataService.updateOpportunity(oppId, { status: 'closed' });
+        await loadOpportunity(oppId);
+    });
+}
+
+async function markMilestoneComplete(contractId, index) {
+    const contract = await dataService.getContractById(contractId);
+    if (!contract || !contract.milestones || !contract.milestones[index]) return;
+    const milestones = [...contract.milestones];
+    milestones[index] = { ...milestones[index], status: 'completed', completedAt: new Date().toISOString() };
+    await dataService.updateContract(contractId, { milestones });
+    await loadAndRenderContract(currentOpportunity);
+}
+
+async function addMilestone(contractId) {
+    const title = prompt('Milestone title:');
+    if (!title) return;
+    const dueDate = prompt('Due date (YYYY-MM-DD, optional):') || '';
+    const contract = await dataService.getContractById(contractId);
+    const milestones = [...(contract.milestones || [])];
+    milestones.push({ id: 'm' + Date.now(), title, dueDate, status: 'pending' });
+    await dataService.updateContract(contractId, { milestones });
+    await loadAndRenderContract(currentOpportunity);
 }
 
 function renderExchangeDetails(exchangeData) {
@@ -320,10 +441,18 @@ async function renderModelDetails(opportunity) {
 function formatModelDetailValue(value, key) {
     if (value === null || value === undefined || value === '') return 'N/A';
     
+    // If value is a string that looks like JSON array (e.g. stored as string), parse it
+    if (typeof value === 'string' && value.trim().startsWith('[')) {
+        try {
+            value = JSON.parse(value);
+        } catch (e) { /* leave as string */ }
+    }
+    
     if (Array.isArray(value)) {
         if (value.length === 0) return 'None';
         if (typeof value[0] === 'object' && value[0] !== null) {
             return value.map(item => {
+                if (item.label != null && item.value != null) return `${item.label}: ${item.value}`;
                 if (item.role && item.scope) return `${item.role}: ${item.scope}`;
                 if (item.requirement) return item.requirement;
                 if (item.criteria) return item.criteria;
@@ -413,8 +542,8 @@ function getNextStep() {
     // Skip step 3 if no detailed responses
     if (next === 3 && !hasDetailedResponses) next = 4;
     
-    // Skip step 4 if no task bidding
-    if (next === 4 && !hasTaskBidding) next = 5;
+    // Skip step 5 if no task bidding
+    if (next === 5 && !hasTaskBidding) next = 6;
     
     return next;
 }
@@ -422,8 +551,8 @@ function getNextStep() {
 function getPreviousStep() {
     let prev = currentWizardStep - 1;
     
-    // Skip step 4 if no task bidding
-    if (prev === 4 && !hasTaskBidding) prev = 3;
+    // Skip step 5 if no task bidding
+    if (prev === 5 && !hasTaskBidding) prev = 4;
     
     // Skip step 3 if no detailed responses
     if (prev === 3 && !hasDetailedResponses) prev = 2;
@@ -435,8 +564,8 @@ function getPreviousStep() {
 }
 
 function goToWizardStep(step) {
-    // Hide all steps
-    for (let i = 1; i <= 5; i++) {
+    // Hide all steps (1..6)
+    for (let i = 1; i <= 6; i++) {
         const stepContent = document.getElementById(`step-${i}`);
         if (stepContent) stepContent.style.display = 'none';
         
@@ -457,11 +586,24 @@ function goToWizardStep(step) {
     
     currentWizardStep = step;
     
+    // Populate step 4 (Payment mode) when entering: opportunity exchange mode text and prefill if editing
+    if (step === 4 && currentOpportunity) {
+        const mode = currentOpportunity.exchangeMode || currentOpportunity.exchangeData?.exchangeMode;
+        const labelEl = document.getElementById('payment-opportunity-mode-label');
+        if (labelEl) labelEl.textContent = mode ? formatExchangeMode(mode) : 'Not specified';
+        if (isEditMode && currentApplication && currentApplication.responses) {
+            const prefEl = document.getElementById('application-payment-preference');
+            const commentsEl = document.getElementById('application-payment-comments');
+            if (prefEl && currentApplication.responses.paymentPreference) prefEl.value = currentApplication.responses.paymentPreference;
+            if (commentsEl && currentApplication.responses.paymentComments != null) commentsEl.value = currentApplication.responses.paymentComments;
+        }
+    }
+    
     // Update navigation buttons
     updateWizardNav();
     
     // If on review step, populate review
-    if (step === 5) {
+    if (step === 6) {
         populateReview();
     }
     
@@ -491,7 +633,7 @@ function updateWizardNav() {
     btnPrev.style.display = currentWizardStep > 2 ? 'inline-flex' : 'none';
     
     // Next/Submit buttons
-    const isLastStep = currentWizardStep === 5;
+    const isLastStep = currentWizardStep === 6;
     btnNext.style.display = isLastStep ? 'none' : 'inline-flex';
     btnSubmit.style.display = isLastStep ? 'inline-flex' : 'none';
     
@@ -516,7 +658,16 @@ function validateCurrentStep() {
             // Optional validation for required fields
             break;
             
-        case 4: // Task bidding
+        case 4: // Payment mode
+            const paymentPref = document.getElementById('application-payment-preference');
+            if (paymentPref && !paymentPref.value) {
+                alert('Please select your payment preference');
+                paymentPref.focus();
+                return false;
+            }
+            break;
+            
+        case 5: // Task bidding
             const bidAmount = document.getElementById('task-bid-amount');
             const bidComments = document.getElementById('task-bid-comments');
             if (bidAmount && !bidAmount.value) {
@@ -561,6 +712,20 @@ function populateReview() {
         responsesSection.style.display = 'none';
     }
     
+    // Payment preference
+    const paymentPrefEl = document.getElementById('application-payment-preference');
+    const paymentCommentsEl = document.getElementById('application-payment-comments');
+    const reviewPaymentEl = document.getElementById('review-payment');
+    if (reviewPaymentEl) {
+        const pref = paymentPrefEl ? paymentPrefEl.value : '';
+        const prefLabel = pref === 'accept' ? 'Accept as stated' : pref === 'discuss' ? 'Prefer to discuss' : '—';
+        const comments = paymentCommentsEl ? paymentCommentsEl.value.trim() : '';
+        reviewPaymentEl.innerHTML = `
+            <div style="margin-bottom: 0.5rem;"><strong>Preference:</strong> ${escapeHtml(prefLabel)}</div>
+            ${comments ? `<div><strong>Comments:</strong><br>${escapeHtml(comments)}</div>` : ''}
+        `;
+    }
+    
     // Task bidding
     const bidSection = document.getElementById('review-bid-section');
     const bidContainer = document.getElementById('review-bid');
@@ -592,6 +757,9 @@ async function submitApplication() {
     const proposal = document.getElementById('application-proposal').value.trim();
     const detailedResponses = collectDetailedResponses();
     const taskBids = collectTaskBids();
+    const paymentPreference = document.getElementById('application-payment-preference')?.value || '';
+    const paymentComments = (document.getElementById('application-payment-comments')?.value || '').trim();
+    const paymentResponses = { paymentPreference, paymentComments };
     
     try {
         if (isEditMode && currentApplication) {
@@ -601,7 +769,8 @@ async function submitApplication() {
                 responses: {
                     ...currentApplication.responses,
                     ...detailedResponses,
-                    ...taskBids
+                    ...taskBids,
+                    ...paymentResponses
                 }
             };
             
@@ -624,13 +793,20 @@ async function submitApplication() {
                 proposal,
                 responses: {
                     ...detailedResponses,
-                    ...taskBids
+                    ...taskBids,
+                    ...paymentResponses
                 }
             };
             
             await dataService.createApplication(applicationData);
             
-            // Notify opportunity creator
+            // First proposal: move opportunity to In Negotiation
+            const allApps = await dataService.getApplications();
+            const appsForOpp = allApps.filter(a => a.opportunityId === currentOpportunity.id);
+            if (appsForOpp.length === 1 && currentOpportunity.status === 'published') {
+                await dataService.updateOpportunity(currentOpportunity.id, { status: 'in_negotiation' });
+            }
+            
             await dataService.createNotification({
                 userId: currentOpportunity.creatorId,
                 type: 'application_received',
@@ -641,7 +817,6 @@ async function submitApplication() {
             alert('Application submitted successfully!');
         }
         
-        // Reload page
         location.reload();
         
     } catch (error) {
@@ -679,7 +854,19 @@ function fillDemoData() {
         });
     }
     
-    // Fill task bidding (Step 4)
+    // Fill payment mode (Step 4)
+    const paymentPrefEl = document.getElementById('application-payment-preference');
+    const paymentCommentsEl = document.getElementById('application-payment-comments');
+    if (paymentPrefEl) {
+        paymentPrefEl.value = demoData.paymentPreference || 'accept';
+        paymentPrefEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (paymentCommentsEl && demoData.paymentComments != null) {
+        paymentCommentsEl.value = demoData.paymentComments;
+        paymentCommentsEl.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    
+    // Fill task bidding (Step 5)
     if (demoData.bid) {
         const bidAmount = document.getElementById('task-bid-amount');
         const bidDuration = document.getElementById('task-bid-duration');
@@ -943,7 +1130,13 @@ I am confident this approach will deliver results that exceed expectations.`
         };
     }
     
-    return { proposal, responses, bid };
+    return {
+        proposal,
+        responses,
+        bid,
+        paymentPreference: 'accept',
+        paymentComments: 'The payment terms are acceptable. Open to discussing milestones if needed.'
+    };
 }
 
 function getDemoResponseTemplates() {
@@ -1121,6 +1314,13 @@ function populateApplicationForm(application) {
     if (proposalField && application.proposal) {
         proposalField.value = application.proposal;
     }
+    
+    // Populate payment preference (step 4)
+    const responses = application.responses || {};
+    const prefEl = document.getElementById('application-payment-preference');
+    const commentsEl = document.getElementById('application-payment-comments');
+    if (prefEl && responses.paymentPreference) prefEl.value = responses.paymentPreference;
+    if (commentsEl && responses.paymentComments != null) commentsEl.value = responses.paymentComments;
 }
 
 function collectDetailedResponses() {
@@ -1237,10 +1437,28 @@ function formatExchangeMode(mode) {
     return modes[mode] || mode;
 }
 
+function formatOpportunityStatus(status) {
+    const labels = {
+        draft: 'Draft',
+        published: 'Published',
+        in_negotiation: 'In Negotiation',
+        contracted: 'Contracted',
+        in_execution: 'In Execution',
+        completed: 'Completed',
+        closed: 'Closed',
+        cancelled: 'Cancelled'
+    };
+    return labels[status] || status || 'Draft';
+}
+
 function getStatusBadgeClass(status) {
     const statusMap = {
         'draft': 'secondary',
         'published': 'success',
+        'in_negotiation': 'warning',
+        'contracted': 'primary',
+        'in_execution': 'primary',
+        'completed': 'success',
         'closed': 'danger',
         'cancelled': 'danger'
     };
@@ -1271,8 +1489,24 @@ async function updateApplicationStatus(applicationId, status) {
     
     try {
         await dataService.updateApplication(applicationId, { status });
-        
         const application = await dataService.getApplicationById(applicationId);
+        
+        if (status === 'accepted') {
+            const opp = await dataService.getOpportunityById(currentOpportunity.id);
+            const creatorId = opp.creatorId;
+            const contractorId = application.applicantId;
+            await dataService.createContract({
+                opportunityId: currentOpportunity.id,
+                applicationId: application.id,
+                creatorId,
+                contractorId,
+                scope: opp.title || '',
+                paymentMode: opp.exchangeMode || opp.paymentModes?.[0] || 'cash',
+                duration: '',
+                status: window.CONFIG?.CONTRACT_STATUS?.PENDING || 'pending'
+            });
+            await dataService.updateOpportunity(currentOpportunity.id, { status: 'contracted' });
+        }
         
         await dataService.createNotification({
             userId: application.applicantId,
@@ -1282,10 +1516,23 @@ async function updateApplicationStatus(applicationId, status) {
         });
         
         await loadApplications(currentOpportunity.id);
-        
     } catch (error) {
         console.error('Error updating application status:', error);
         alert('Failed to update application status.');
+    }
+}
+
+async function cancelOpportunity(id) {
+    if (!confirm('Are you sure you want to cancel this opportunity? It will be marked as cancelled and no longer active.')) return;
+    try {
+        const oppService = window.opportunityService;
+        if (!oppService) throw new Error('Opportunity service not available');
+        await oppService.updateOpportunityStatus(id, 'cancelled');
+        alert('Opportunity cancelled.');
+        await loadOpportunity(id);
+    } catch (error) {
+        console.error('Error cancelling opportunity:', error);
+        alert(error.message || 'Failed to cancel opportunity.');
     }
 }
 
@@ -1312,6 +1559,6 @@ async function deleteOpportunity(id) {
     }
 }
 
-// Make functions available globally
 window.updateApplicationStatus = updateApplicationStatus;
 window.deleteOpportunity = deleteOpportunity;
+window.cancelOpportunity = cancelOpportunity;

@@ -67,7 +67,8 @@ async function loadUsers() {
                 'pending': 'warning',
                 'active': 'success',
                 'suspended': 'danger',
-                'rejected': 'danger'
+                'rejected': 'danger',
+                'clarification_requested': 'warning'
             }[user.status] || 'secondary';
             
             const data = {
@@ -75,6 +76,7 @@ async function loadUsers() {
                 statusBadgeClass,
                 createdDate: new Date(user.createdAt).toLocaleDateString(),
                 showApproveReject: user.status === 'pending',
+                showRequestClarification: user.status === 'pending',
                 showSuspend: user.status === 'active',
                 showActivate: user.status === 'suspended',
                 isCompany: isCompany,
@@ -132,6 +134,9 @@ async function handleUserAction(action, userId) {
         case 'reject':
             await rejectUser(userId, isCompany);
             break;
+        case 'request_clarification':
+            await requestClarification(userId, isCompany);
+            break;
         case 'suspend':
             await suspendUser(userId, isCompany);
             break;
@@ -139,9 +144,45 @@ async function handleUserAction(action, userId) {
             await activateUser(userId, isCompany);
             break;
         case 'view':
-            // Navigate to person profile
-            router.navigate(`/people/${userId}`);
+            // Navigate to admin user detail
+            router.navigate(`/admin/users/${userId}`);
             break;
+    }
+}
+
+async function requestClarification(userId, isCompany = false) {
+    const reason = prompt('Reason or missing items (optional):');
+    if (reason === null) return; // user cancelled
+    
+    try {
+        if (isCompany) {
+            await dataService.updateCompany(userId, { status: 'clarification_requested' });
+        } else {
+            await dataService.updateUser(userId, { status: 'clarification_requested' });
+        }
+        
+        await dataService.createNotification({
+            userId,
+            type: 'account_clarification_requested',
+            title: 'Registration needs clarification',
+            message: reason ? `Your registration needs clarification: ${reason}. Please update your profile or documents and submit for review again.` : 'Your registration needs clarification. Please update your profile or documents and submit for review again from your profile page.'
+        });
+        
+        const admin = authService.getCurrentUser();
+        await dataService.createAuditLog({
+            userId: admin.id,
+            action: isCompany ? 'company_clarification_requested' : 'user_clarification_requested',
+            entityType: isCompany ? 'company' : 'user',
+            entityId: userId,
+            details: { reason: reason || '' }
+        });
+        
+        alert(`${isCompany ? 'Company' : 'User'} marked as needs clarification`);
+        await loadUsers();
+        
+    } catch (error) {
+        console.error('Error requesting clarification:', error);
+        alert(`Failed to request clarification`);
     }
 }
 

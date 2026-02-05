@@ -25,6 +25,7 @@ const CONFIG = {
         NOTIFICATIONS: 'pmtwin_notifications',
         CONNECTIONS: 'pmtwin_connections',
         MESSAGES: 'pmtwin_messages',
+        CONTRACTS: 'pmtwin_contracts',
         SYSTEM_SETTINGS: 'pmtwin_system_settings'
     },
     
@@ -74,12 +75,47 @@ const CONFIG = {
         COMPETITION_RFP: 'competition_rfp'
     },
     
-    // Opportunity Status
+    // Opportunity Status (unified lifecycle)
     OPPORTUNITY_STATUS: {
         DRAFT: 'draft',
         PUBLISHED: 'published',
+        IN_NEGOTIATION: 'in_negotiation',
+        CONTRACTED: 'contracted',
+        IN_EXECUTION: 'in_execution',
+        COMPLETED: 'completed',
         CLOSED: 'closed',
         CANCELLED: 'cancelled'
+    },
+
+    // Opportunity Intent (label-driven)
+    OPPORTUNITY_INTENT: {
+        REQUEST: 'request',
+        OFFER: 'offer'
+    },
+
+    // Collaboration Model (wizard step 4)
+    COLLABORATION_MODEL: {
+        PROJECT: 'project',
+        SERVICE: 'service',
+        ADVISORY: 'advisory',
+        CONSORTIUM: 'consortium'
+    },
+
+    // Payment Modes (multi-select)
+    PAYMENT_MODES: {
+        CASH: 'cash',
+        BARTER: 'barter',
+        EQUITY: 'equity',
+        PROFIT_SHARING: 'profit_sharing',
+        HYBRID: 'hybrid'
+    },
+
+    // Contract status
+    CONTRACT_STATUS: {
+        PENDING: 'pending',
+        ACTIVE: 'active',
+        COMPLETED: 'completed',
+        TERMINATED: 'terminated'
     },
     
     // Application Status
@@ -97,6 +133,15 @@ const CONFIG = {
         PENDING: 'pending',
         ACCEPTED: 'accepted',
         REJECTED: 'rejected'
+    },
+
+    // User/Company account status (registration and admin)
+    USER_STATUS: {
+        PENDING: 'pending',
+        ACTIVE: 'active',
+        SUSPENDED: 'suspended',
+        REJECTED: 'rejected',
+        CLARIFICATION_REQUESTED: 'clarification_requested'
     },
 
     // Matching
@@ -119,11 +164,17 @@ const CONFIG = {
         MESSAGES: '/messages',
         MESSAGE_THREAD: '/messages/:id',
         PROFILE: '/profile',
+        SETTINGS: '/settings',
         ADMIN: '/admin',
         ADMIN_USERS: '/admin/users',
         ADMIN_OPPORTUNITIES: '/admin/opportunities',
         ADMIN_AUDIT: '/admin/audit',
-        ADMIN_SETTINGS: '/admin/settings'
+        ADMIN_SETTINGS: '/admin/settings',
+        ADMIN_REPORTS: '/admin/reports',
+        NOTIFICATIONS: '/notifications',
+        COLLABORATION_WIZARD: '/collaboration-wizard',
+        KNOWLEDGE_BASE: '/knowledge-base',
+        COLLABORATION_MODELS: '/collaboration-models'
     },
     
     // API Endpoints (for future backend integration)

@@ -1,6 +1,6 @@
 {
   "domain": "opportunities",
-  "version": "1.1",
+  "version": "1.2",
   "data": [
     {
       "id": "opp-001",
@@ -16,6 +16,12 @@
       "locationCity": "neom",
       "locationDistrict": "The Line",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Marine Construction", "Infrastructure Development", "Utilities Engineering", "Road Construction", "Project Management", "Mega Project Experience"],
+        "sectors": ["Infrastructure", "Construction", "Utilities"],
+        "certifications": ["ISO 9001", "ISO 14001", "ISO 45001", "PMP"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -51,7 +57,8 @@
           {"requirement": "Proven track record in similar marine/utilities/road projects"}
         ],
         "consortiumAgreement": true,
-        "paymentDistribution": "Per Scope"
+        "paymentDistribution": "Per Scope",
+        "requiredSkills": ["Marine Construction", "Infrastructure Development", "Utilities Engineering", "Road Construction", "Project Management", "Mega Project Experience"]
       },
       "createdAt": "2026-01-10T08:00:00.000Z",
       "updatedAt": "2026-01-10T08:00:00.000Z"
@@ -70,6 +77,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "King Fahd District",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Structural Analysis", "SAP2000", "ETABS", "Underground Structures", "Seismic Design", "Reinforced Concrete Design", "Steel Design"],
+        "sectors": ["Infrastructure", "Transportation", "Construction"],
+        "certifications": ["PE", "PMP"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -114,6 +127,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "Al Olaya",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Procurement", "Steel Fabrication", "Supply Chain Management", "Quality Control", "Materials Management"],
+        "sectors": ["Construction", "Manufacturing", "Industrial"],
+        "certifications": ["ISO 9001"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -137,7 +156,8 @@
         "minimumOrder": 200,
         "leadOrganizer": true,
         "supplier": "SABIC / Rajhi Steel",
-        "distributionMethod": "Centralized Pickup"
+        "distributionMethod": "Centralized Pickup",
+        "requiredSkills": ["Procurement", "Steel Fabrication", "Supply Chain Management", "Quality Control", "Materials Management"]
       },
       "createdAt": "2026-01-14T10:00:00.000Z",
       "updatedAt": "2026-01-14T10:00:00.000Z"
@@ -156,6 +176,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "King Fahd District",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Architectural Design", "Sustainable Design", "LEED Certification", "High-Rise Design", "3D Visualization", "BIM", "Energy Modeling"],
+        "sectors": ["Real Estate", "Construction", "Architecture"],
+        "certifications": ["LEED AP", "LEED AP BD+C"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -192,7 +218,8 @@
         "announcementDate": "2026-06-15",
         "competitionRules": "All submissions become property of the organizer. Winner will be awarded the full design contract. Top 3 finalists receive cash prizes. Submissions must be original work. No collaboration between participants allowed.",
         "intellectualProperty": "Winner Transfers",
-        "submissionFee": 5000
+        "submissionFee": 5000,
+        "requiredSkills": ["Architectural Design", "Sustainable Design", "LEED Certification", "High-Rise Design", "3D Visualization", "BIM", "Energy Modeling"]
       },
       "createdAt": "2026-01-15T11:00:00.000Z",
       "updatedAt": "2026-01-15T11:00:00.000Z"
@@ -211,6 +238,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "Al Olaya",
       "exchangeMode": "hybrid",
+      "paymentModes": ["cash", "equity"],
+      "scope": {
+        "requiredSkills": ["IoT Development", "Smart Building Systems", "AI/Machine Learning", "Software Development", "Cloud Computing", "Data Analytics", "Systems Integration"],
+        "sectors": ["Technology", "Construction", "Real Estate"],
+        "certifications": ["ISO 27001", "ISO 9001"]
+      },
       "exchangeData": {
         "exchangeMode": "hybrid",
         "currency": "SAR",
@@ -249,7 +282,8 @@
           {"requirement": "R&D investment exceeding 10% of annual revenue"},
           {"requirement": "International presence and proven track record"},
           {"requirement": "Strong IP portfolio in IoT and smart building technologies"}
-        ]
+        ],
+        "requiredSkills": ["IoT Development", "Smart Building Systems", "AI/Machine Learning", "Software Development", "Cloud Computing", "Data Analytics", "Systems Integration"]
       },
       "createdAt": "2026-01-16T08:00:00.000Z",
       "updatedAt": "2026-01-16T08:00:00.000Z"
@@ -268,6 +302,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Heavy Equipment Operation", "Tower Crane Operation", "Equipment Maintenance", "Construction Site Management"],
+        "sectors": ["Construction", "Industrial"],
+        "certifications": ["OSHA", "ISO 45001"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -296,7 +336,8 @@
         "maintenanceResponsibility": "Third-Party Service",
         "insurance": true,
         "exitStrategy": "Sell Share to Other Owners",
-        "disputeResolution": "Arbitration"
+        "disputeResolution": "Arbitration",
+        "requiredSkills": ["Heavy Equipment Operation", "Tower Crane Operation", "Equipment Maintenance", "Construction Site Management"]
       },
       "createdAt": "2026-01-17T09:00:00.000Z",
       "updatedAt": "2026-01-17T09:00:00.000Z"
@@ -315,6 +356,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "Al Olaya",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["LEED Certification", "Energy Modeling", "Sustainable Design", "Green Building", "Building Performance Analysis", "Documentation"],
+        "sectors": ["Construction", "Real Estate", "Energy"],
+        "certifications": ["LEED AP BD+C", "LEED AP", "WELL AP"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -337,7 +384,8 @@
         "paymentTerms": "Milestone-Based",
         "startDate": "2026-02-15",
         "exchangeType": "Cash",
-        "barterOffer": ""
+        "barterOffer": "",
+        "requiredSkills": ["LEED Certification", "Energy Modeling", "Sustainable Design", "Green Building", "Building Performance Analysis", "Documentation"]
       },
       "createdAt": "2026-01-18T10:00:00.000Z",
       "updatedAt": "2026-01-18T10:00:00.000Z"
@@ -356,6 +404,12 @@
       "locationCity": "",
       "locationDistrict": "",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Bridge Design", "Cable Structures", "Seismic Analysis", "Structural Review", "Finite Element Analysis"],
+        "sectors": ["Infrastructure", "Transportation", "Engineering"],
+        "certifications": ["PE", "PMP"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -396,6 +450,12 @@
       "locationCity": "riyadh-city",
       "locationDistrict": "Al Olaya",
       "exchangeMode": "cash",
+      "paymentModes": ["cash"],
+      "scope": {
+        "requiredSkills": ["Engineering Leadership", "Mentoring", "Technical Training", "Communication", "Project Management", "Professional Development"],
+        "sectors": ["Construction", "Engineering", "Education"],
+        "certifications": ["PE", "PMP"]
+      },
       "exchangeData": {
         "exchangeMode": "cash",
         "currency": "SAR",
@@ -421,7 +481,8 @@
           {"requirement": "Strong communication and teaching skills"}
         ],
         "menteeBackground": "Recent engineering graduates (0-2 years experience) from Saudi universities. Focus on civil, mechanical, and electrical engineering disciplines.",
-        "successMetrics": ["Mentee promotion/advancement", "Skill acquisition", "Professional network growth", "Certification achievement", "Job satisfaction"]
+        "successMetrics": ["Mentee promotion/advancement", "Skill acquisition", "Professional network growth", "Certification achievement", "Job satisfaction"],
+        "requiredSkills": ["Engineering Leadership", "Mentoring", "Technical Training", "Communication", "Project Management", "Professional Development"]
       },
       "createdAt": "2026-01-20T08:00:00.000Z",
       "updatedAt": "2026-01-20T08:00:00.000Z"
@@ -440,6 +501,12 @@
       "locationCity": "jeddah",
       "locationDistrict": "Al Balad",
       "exchangeMode": "barter",
+      "paymentModes": ["barter"],
+      "scope": {
+        "requiredSkills": ["Materials Management", "Inventory Control", "Logistics", "Construction Materials", "Procurement"],
+        "sectors": ["Construction", "Manufacturing", "Industrial"],
+        "certifications": []
+      },
       "exchangeData": {
         "exchangeMode": "barter",
         "currency": "SAR",
@@ -463,7 +530,8 @@
         "delivery": "Buyer Pickup",
         "urgency": "Within 1 Month",
         "price": 0,
-        "paymentTerms": ""
+        "paymentTerms": "",
+        "requiredSkills": ["Materials Management", "Inventory Control", "Logistics", "Construction Materials", "Procurement"]
       },
       "createdAt": "2026-01-21T09:00:00.000Z",
       "updatedAt": "2026-01-21T09:00:00.000Z"

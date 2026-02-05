@@ -44,40 +44,43 @@
     <!-- Custom styles for legacy components -->
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        #app {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #f9fafb;
-        }
-        #main-content {
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
+        body { margin: 0; padding: 0; }
+        #app { min-height: 100vh; display: flex; flex-direction: column; background-color: #f9fafb; }
+        #main-content { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; }
+        .app-portal-layout { display: none; }
+        .app-portal-layout.portal-visible { display: flex; flex: 1; min-height: 0; }
+        .app-public-layout { display: flex; flex-direction: column; flex: 1; }
+        .app-public-layout.public-visible { display: flex; }
+        .app-public-layout:not(.public-visible) { display: none; }
     </style>
 </head>
 <body class="m-0 p-0 min-h-screen bg-gray-50">
     <div id="app" class="min-h-screen flex flex-col bg-gray-50">
-        <!-- Navigation will be injected by layout service -->
-        <nav id="main-nav"></nav>
-        
-        <!-- Main content area -->
-        <main id="main-content" class="flex-1 max-w-container w-full mx-auto px-6 py-8">
-            <!-- Content will be loaded dynamically -->
-        </main>
-        
-        <!-- Footer -->
+        <!-- Public layout: top nav + full-width main (shown when not authenticated) -->
+        <div id="app-public-layout" class="app-public-layout public-visible">
+            <nav id="main-nav"></nav>
+            <main id="main-content" class="flex-1 max-w-container w-full mx-auto px-6 py-8"></main>
+        </div>
+
+        <!-- Portal layout: sidebar + main card (shown when authenticated) -->
+        <div id="app-portal-layout" class="app-portal-layout">
+            <aside id="app-sidebar"></aside>
+            <div id="app-main" class="portal-main">
+                <div id="main-content-card" class="portal-card">
+                    <div id="main-content-slot" class="portal-content-slot">
+                        <!-- #main-content is moved here by layout when authenticated -->
+                    </div>
+                    <div id="portal-summary" class="portal-summary">
+                        <span id="portal-summary-text" class="portal-summary-text"></span>
+                        <span id="portal-pagination" class="portal-pagination"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer id="main-footer"></footer>
     </div>
 
-    <!-- Core scripts -->
     <script type="module" src="src/core/init/app-init.js"></script>
 </body>
 </html>
