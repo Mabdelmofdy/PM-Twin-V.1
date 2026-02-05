@@ -174,7 +174,8 @@ const CONFIG = {
         NOTIFICATIONS: '/notifications',
         COLLABORATION_WIZARD: '/collaboration-wizard',
         KNOWLEDGE_BASE: '/knowledge-base',
-        COLLABORATION_MODELS: '/collaboration-models'
+        COLLABORATION_MODELS: '/collaboration-models',
+        FIND: '/find'
     },
     
     // API Endpoints (for future backend integration)

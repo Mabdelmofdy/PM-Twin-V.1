@@ -1,0 +1,552 @@
+<div class="page-container find-page">
+    <section class="find-hero">
+        <div class="find-hero-content">
+            <h1>Find Partners & Opportunities</h1>
+            <p class="find-subtitle">Search for professionals, companies, and collaboration opportunities</p>
+            
+            <!-- Search Form -->
+            <div class="find-search-form">
+                <div class="search-input-wrapper">
+                    <i class="ph-duotone ph-magnifying-glass"></i>
+                    <input type="text" id="find-search-input" class="form-input" 
+                           placeholder="Search by name, skills, industry, or keywords...">
+                </div>
+                <button id="find-search-btn" class="btn btn-primary">
+                    <i class="ph-duotone ph-magnifying-glass"></i> Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="find-content">
+        <div class="container">
+            <!-- Tabs -->
+            <div class="find-tabs">
+                <button class="find-tab active" data-tab="people">
+                    <i class="ph-duotone ph-users"></i>
+                    <span>People</span>
+                    <span class="tab-count" id="people-count">0</span>
+                </button>
+                <button class="find-tab" data-tab="companies">
+                    <i class="ph-duotone ph-buildings"></i>
+                    <span>Companies</span>
+                    <span class="tab-count" id="companies-count">0</span>
+                </button>
+                <button class="find-tab" data-tab="opportunities">
+                    <i class="ph-duotone ph-handshake"></i>
+                    <span>Opportunities</span>
+                    <span class="tab-count" id="opportunities-count">0</span>
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="find-filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Location</label>
+                        <select id="filter-location" class="form-select">
+                            <option value="">All Locations</option>
+                            <option value="Riyadh">Riyadh</option>
+                            <option value="Jeddah">Jeddah</option>
+                            <option value="Dammam">Dammam</option>
+                            <option value="Makkah">Makkah</option>
+                            <option value="Madinah">Madinah</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" id="sector-filter-group">
+                        <label>Sector</label>
+                        <select id="filter-sector" class="form-select">
+                            <option value="">All Sectors</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="MEP">MEP</option>
+                            <option value="Engineering">Engineering</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" id="opportunity-type-filter" style="display: none;">
+                        <label>Type</label>
+                        <select id="filter-opp-type" class="form-select">
+                            <option value="">All Types</option>
+                            <option value="request">Needs (Requests)</option>
+                            <option value="offer">Offers</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" id="model-filter" style="display: none;">
+                        <label>Model</label>
+                        <select id="filter-model" class="form-select">
+                            <option value="">All Models</option>
+                            <option value="project_based">Project Based</option>
+                            <option value="strategic_partnership">Strategic Partnership</option>
+                            <option value="resource_pooling">Resource Pooling</option>
+                            <option value="hiring">Hiring</option>
+                            <option value="competition">Competition</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Banner for Non-Authenticated Users -->
+            <div id="login-banner" class="login-banner" style="display: none;">
+                <div class="login-banner-content">
+                    <i class="ph-duotone ph-lock-simple"></i>
+                    <div class="login-banner-text">
+                        <h3>Login to View Full Details</h3>
+                        <p>Create an account or login to see complete profiles, contact information, and apply to opportunities.</p>
+                    </div>
+                    <div class="login-banner-actions">
+                        <a href="#" data-route="/login" class="btn btn-primary">Login</a>
+                        <a href="#" data-route="/register" class="btn btn-secondary">Register</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="find-results">
+                <!-- People Tab Content -->
+                <div id="tab-people" class="tab-content active">
+                    <div id="people-results" class="results-grid">
+                        <div class="spinner"></div>
+                    </div>
+                    <div id="people-empty" class="empty-state" style="display: none;">
+                        <i class="ph-duotone ph-users"></i>
+                        <h3>No people found</h3>
+                        <p>Try adjusting your search criteria</p>
+                    </div>
+                </div>
+
+                <!-- Companies Tab Content -->
+                <div id="tab-companies" class="tab-content">
+                    <div id="companies-results" class="results-grid">
+                        <div class="spinner"></div>
+                    </div>
+                    <div id="companies-empty" class="empty-state" style="display: none;">
+                        <i class="ph-duotone ph-buildings"></i>
+                        <h3>No companies found</h3>
+                        <p>Try adjusting your search criteria</p>
+                    </div>
+                </div>
+
+                <!-- Opportunities Tab Content -->
+                <div id="tab-opportunities" class="tab-content">
+                    <div id="opportunities-results" class="results-grid">
+                        <div class="spinner"></div>
+                    </div>
+                    <div id="opportunities-empty" class="empty-state" style="display: none;">
+                        <i class="ph-duotone ph-handshake"></i>
+                        <h3>No opportunities found</h3>
+                        <p>Try adjusting your search criteria</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.find-page {
+    /* Page specific styles */
+}
+
+.find-hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    text-align: center;
+}
+
+.find-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.find-hero h1 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.find-subtitle {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+    margin-bottom: var(--spacing-xl);
+}
+
+.find-search-form {
+    display: flex;
+    gap: var(--spacing-md);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.search-input-wrapper i {
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+}
+
+.search-input-wrapper .form-input {
+    padding-left: calc(var(--spacing-md) * 2 + 20px);
+    height: 48px;
+    font-size: var(--font-size-base);
+}
+
+.find-search-form .btn {
+    height: 48px;
+    padding: 0 var(--spacing-xl);
+}
+
+.find-content {
+    padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.find-content .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+/* Tabs */
+.find-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: var(--spacing-md);
+}
+
+.find-tab {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.find-tab:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.find-tab.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.find-tab i {
+    font-size: var(--font-size-lg);
+}
+
+.tab-count {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.find-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Filters */
+.find-filters {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-row {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+.filter-group label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Login Banner */
+.login-banner {
+    background: linear-gradient(135deg, var(--warning-light) 0%, var(--bg-tertiary) 100%);
+    border: 1px solid var(--warning-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.login-banner-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.login-banner-content > i {
+    font-size: 48px;
+    color: var(--warning-color);
+}
+
+.login-banner-text {
+    flex: 1;
+}
+
+.login-banner-text h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+}
+
+.login-banner-text p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.login-banner-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* Preview Card Styles */
+.preview-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all 0.2s;
+}
+
+.preview-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-light);
+}
+
+.preview-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.preview-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background: var(--primary-light);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.preview-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preview-headline {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.preview-location {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.preview-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.preview-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+.preview-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.preview-footer .btn {
+    flex: 1;
+}
+
+/* Full Card (Authenticated) */
+.full-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all 0.2s;
+}
+
+.full-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-light);
+}
+
+.full-card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+}
+
+.skill-tag {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    font-size: 64px;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Blurred Content Overlay */
+.blurred-content {
+    position: relative;
+}
+
+.blurred-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 0%, var(--bg-primary) 100%);
+    pointer-events: none;
+}
+
+.login-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    text-align: center;
+    border-top: 1px dashed var(--border-color);
+}
+
+.login-overlay a {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .find-search-form {
+        flex-direction: column;
+    }
+    
+    .find-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .find-tab {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+    }
+    
+    .login-banner-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

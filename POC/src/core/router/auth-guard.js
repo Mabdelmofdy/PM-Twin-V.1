@@ -16,7 +16,8 @@ class AuthGuard {
         const publicRoutes = [
             CONFIG.ROUTES.HOME,
             CONFIG.ROUTES.LOGIN,
-            CONFIG.ROUTES.REGISTER
+            CONFIG.ROUTES.REGISTER,
+            CONFIG.ROUTES.FIND
         ];
         return !publicRoutes.includes(route);
     }

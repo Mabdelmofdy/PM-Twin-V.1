@@ -91,6 +91,7 @@ class LayoutService {
         let navHTML = '<nav class="bg-white border-b border-gray-200 h-16 sticky top-0 z-50 shadow-sm"><div class="max-w-container mx-auto px-6 h-full flex items-center justify-between">';
         navHTML += `<div class="nav-brand"><a href="#" data-route="${CONFIG.ROUTES.HOME}" class="text-xl font-bold text-primary no-underline hover:text-primary-dark transition-colors">${CONFIG.APP_NAME}</a></div>`;
         navHTML += '<ul class="flex list-none gap-6 items-center m-0 p-0">';
+        navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.FIND}" class="text-gray-900 no-underline font-medium hover:text-primary transition-colors">Find</a></li>`;
         navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.KNOWLEDGE_BASE}" class="text-gray-900 no-underline font-medium hover:text-primary transition-colors">Knowledge Base</a></li>`;
         navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.LOGIN}" class="text-gray-900 no-underline font-medium hover:text-primary transition-colors">Login</a></li>`;
         navHTML += `<li><a href="#" data-route="${CONFIG.ROUTES.REGISTER}" class="text-gray-900 no-underline font-medium hover:text-primary transition-colors">Register</a></li>`;

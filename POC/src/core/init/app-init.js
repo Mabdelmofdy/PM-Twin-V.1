@@ -256,6 +256,11 @@ function initializeRoutes() {
         await loadPage('collaboration-models');
     });
     
+    // Public: Find page (search for people, companies, opportunities)
+    router.register(CONFIG.ROUTES.FIND, async () => {
+        await loadPage('find');
+    });
+    
     // Dashboard route (protected)
     router.register(CONFIG.ROUTES.DASHBOARD, authGuard.protect(async () => {
         await loadPage('dashboard');
