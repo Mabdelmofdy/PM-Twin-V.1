@@ -1,0 +1,67 @@
+<div class="page-container admin-vetting-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">User Vetting</h1>
+            <p class="page-subtitle">Review and approve pending registrations and clarification requests</p>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <div class="filters-section">
+        <div class="filters">
+            <select id="filter-status" class="form-select">
+                <option value="">All (Pending + Clarification)</option>
+                <option value="pending">Pending</option>
+                <option value="clarification_requested">Clarification Requested</option>
+            </select>
+
+            <input
+                type="text"
+                id="filter-search"
+                class="form-input"
+                placeholder="Search by email or name..."
+            >
+
+            <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+        </div>
+    </div>
+
+    <div id="vetting-list" class="vetting-list">
+        <div class="spinner"></div>
+    </div>
+    </div>
+</div>
+
+<style>
+.admin-vetting-page { /* Page specific styles */ }
+
+.vetting-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.vetting-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.vetting-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--spacing-md);
+}
+
+.vetting-card-body p { margin: var(--spacing-xs) 0; }
+.vetting-card-footer {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+</style>

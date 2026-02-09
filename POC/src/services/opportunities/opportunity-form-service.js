@@ -32,12 +32,37 @@ class OpportunityFormService {
     }
     
     /**
-     * Get all models
+     * Get collaboration model overrides from system settings (enabled, label, order)
+     */
+    getCollaborationModelOverrides() {
+        try {
+            const storage = window.storageService || (typeof storageService !== 'undefined' ? storageService : null);
+            const key = window.CONFIG?.STORAGE_KEYS?.SYSTEM_SETTINGS;
+            if (!storage || !key) return {};
+            const settings = storage.get(key) || {};
+            return settings.collaborationModels || {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    /**
+     * Get all models, filtered by admin-enabled and sorted by order; uses custom labels when set
      */
     getModels() {
-        return Object.keys(this.models).map(key => ({
+        const overrides = this.getCollaborationModelOverrides();
+        const keys = Object.keys(this.models).filter(key => {
+            const o = overrides[key];
+            return o === undefined || o.enabled !== false;
+        });
+        keys.sort((a, b) => {
+            const orderA = overrides[a]?.order ?? 999;
+            const orderB = overrides[b]?.order ?? 999;
+            return orderA - orderB;
+        });
+        return keys.map(key => ({
             key,
-            name: this.models[key].name,
+            name: (overrides[key] && overrides[key].label) || this.models[key].name,
             subModels: Object.keys(this.models[key].subModels).map(subKey => ({
                 key: subKey,
                 name: this.models[key].subModels[subKey].name

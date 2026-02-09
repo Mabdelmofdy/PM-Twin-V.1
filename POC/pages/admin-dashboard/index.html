@@ -2,115 +2,221 @@
     <div class="page-header">
         <div class="page-header-content">
             <h1 class="page-title">Admin Dashboard</h1>
-            <p class="page-subtitle">Platform governance and analytics</p>
+            <p class="page-subtitle">Manage platform settings, users, and monitor system activity.</p>
         </div>
     </div>
     <div class="page-body">
-    
-    <div class="admin-stats">
-        <div class="stat-card">
-            <div class="stat-value" id="stat-total-users">0</div>
-            <div class="stat-label">Total Users</div>
+
+    <!-- Key Performance Indicators -->
+    <section class="dashboard-section kpi-section">
+        <h2 class="section-title visually-hidden">Key metrics</h2>
+        <div class="kpi-grid" id="kpi-grid">
+            <div class="stat-card"><div class="stat-value" id="stat-total-users">0</div><div class="stat-label">Total Users</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-pending-vetting">0</div><div class="stat-label">Pending Vetting</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-total-projects">0</div><div class="stat-label">Total Projects</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-active-projects">0</div><div class="stat-label">Active Projects</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-total-proposals">0</div><div class="stat-label">Total Proposals</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-collab-opportunities">0</div><div class="stat-label">Collaboration Opportunities</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-pending-collab">0</div><div class="stat-label">Pending Collaborations</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-active-collab">0</div><div class="stat-label">Active Collaborations</div></div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="stat-pending-users">0</div>
-            <div class="stat-label">Pending Approval</div>
+    </section>
+
+    <!-- System Health Indicators -->
+    <section class="dashboard-section health-section">
+        <h2 class="section-title">System Health Indicators</h2>
+        <div class="health-cards" id="health-cards">
+            <div class="health-card"><div class="health-value" id="health-user-pct">0%</div><div class="health-detail" id="health-user-detail">0 active / 0 total users</div><div class="health-bar"><div class="health-bar-fill" id="health-user-bar"></div></div></div>
+            <div class="health-card"><div class="health-value" id="health-sessions">0</div><div class="health-detail">Currently active user sessions</div></div>
+            <div class="health-card"><div class="health-value" id="health-project-pct">0%</div><div class="health-detail" id="health-project-detail">0 active / 0 total projects</div><div class="health-bar"><div class="health-bar-fill" id="health-project-bar"></div></div></div>
+            <div class="health-card"><div class="health-value" id="health-collab-pct">0%</div><div class="health-detail" id="health-collab-detail">0 active / 0 total opportunities</div><div class="health-bar"><div class="health-bar-fill" id="health-collab-bar"></div></div></div>
+            <div class="health-card health-card-activity" id="health-activity-card"><div class="health-activity-status" id="health-activity-status">OK</div><div class="health-detail" id="health-activity-detail">0 recent in last hour</div><div class="health-detail" id="health-notifications-detail">0 unread notifications</div></div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="stat-total-opportunities">0</div>
-            <div class="stat-label">Total Opportunities</div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="dashboard-section quick-actions-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions-grid" id="quick-actions-grid">
+            <a href="#" data-route="/admin/vetting" class="quick-action-btn"><span class="quick-action-label">User Vetting</span><span class="quick-action-badge" id="badge-vetting">0</span></a>
+            <a href="#" data-route="/admin/opportunities" class="quick-action-btn"><span class="quick-action-label">Project Moderation</span></a>
+            <a href="#" data-route="/admin/collaboration-models" class="quick-action-btn"><span class="quick-action-label">Models Management</span><span class="quick-action-badge" id="badge-models">0</span></a>
+            <a href="#" data-route="/admin/audit" class="quick-action-btn"><span class="quick-action-label">Audit Trail</span></a>
+            <a href="#" data-route="/admin/reports" class="quick-action-btn"><span class="quick-action-label">Reports</span></a>
+            <a href="#" data-route="/admin/settings" class="quick-action-btn"><span class="quick-action-label">Settings</span></a>
+            <a href="#" data-route="/admin/users" class="quick-action-btn"><span class="quick-action-label">User Management</span></a>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="stat-total-applications">0</div>
-            <div class="stat-label">Total Applications</div>
+    </section>
+
+    <!-- Collaboration Models Activity -->
+    <section class="dashboard-section collab-models-section">
+        <h2 class="section-title">Collaboration Models Activity</h2>
+        <div class="collab-models-summary" id="collab-models-summary">Total: 0 Active: 0 Pending: 0</div>
+        <div class="collab-models-cards" id="collab-models-cards"><div class="spinner"></div></div>
+        <div class="collab-models-actions">
+            <a href="#" data-route="/admin/collaboration-models" class="btn btn-primary">Manage All Models</a>
+            <a href="#" data-route="/admin/opportunities" class="btn btn-secondary" id="link-view-active">View Active</a>
+            <a href="#" data-route="/admin/opportunities" class="btn btn-secondary" id="link-view-pending">View Pending</a>
         </div>
-    </div>
-    
-    <div class="admin-actions">
-        <a href="#" data-route="/admin/users" class="btn btn-primary">Manage Users</a>
-        <a href="#" data-route="/admin/opportunities" class="btn btn-secondary">Moderate Opportunities</a>
-        <a href="#" data-route="/admin/audit" class="btn btn-secondary">View Audit Trail</a>
-        <a href="#" data-route="/admin/settings" class="btn btn-secondary">System Settings</a>
-    </div>
-    
-    <div class="admin-content">
-        <div class="card">
-            <div class="card-header">
-                <h2>Recent Activity</h2>
+    </section>
+
+    <!-- Pending Approvals Queue -->
+    <section class="dashboard-section pending-queue-section">
+        <h2 class="section-title">Pending Approvals Queue</h2>
+        <div class="pending-queue" id="pending-queue">
+            <div class="pending-queue-card">
+                <h3>Users Pending Review</h3>
+                <p class="pending-queue-count" id="pending-users-count">0 user(s) awaiting vetting</p>
+                <a href="#" data-route="/admin/vetting" class="btn btn-primary">Review Users</a>
             </div>
-            <div class="card-body">
-                <div id="recent-activity">
-                    <div class="spinner"></div>
-                </div>
+            <div class="pending-queue-card">
+                <h3>Collaboration Opportunities</h3>
+                <p class="pending-queue-count" id="pending-opps-count">0 opportunity/ies pending approval</p>
+                <a href="#" data-route="/admin/opportunities" class="btn btn-primary">Review Opportunities</a>
             </div>
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h2>Pending Approvals</h2>
-            </div>
-            <div class="card-body">
-                <div id="pending-approvals">
-                    <div class="spinner"></div>
-                </div>
-            </div>
+    </section>
+
+    <!-- Recent Activity Feed -->
+    <section class="dashboard-section activity-feed-section">
+        <div class="activity-feed-header">
+            <h2 class="section-title">Recent Activity Feed</h2>
+            <a href="#" data-route="/admin/audit" class="btn btn-secondary btn-sm">View All</a>
         </div>
-    </div>
+        <div class="activity-feed" id="recent-activity"><div class="spinner"></div></div>
+    </section>
+
     </div>
 </div>
 
 <style>
-.admin-dashboard-page {
-    /* Page specific styles */
-}
+.admin-dashboard-page { /* Page specific */ }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
-.admin-stats {
+.dashboard-section { margin-bottom: var(--spacing-2xl); }
+.section-title { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); }
+
+/* KPIs */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--spacing-lg);
+}
+.kpi-section .stat-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+.kpi-section .stat-value { font-size: var(--font-size-2xl); font-weight: 700; color: var(--primary-color); }
+.kpi-section .stat-label { font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: var(--spacing-xs); }
+
+/* Health */
+.health-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-lg);
+}
+.health-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+.health-value { font-size: var(--font-size-xl); font-weight: 700; }
+.health-detail { font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: var(--spacing-xs); }
+.health-bar { height: 6px; background: var(--border-color); border-radius: 3px; margin-top: var(--spacing-sm); overflow: hidden; }
+.health-bar-fill { height: 100%; background: var(--primary-color); border-radius: 3px; width: 0%; transition: width 0.2s; }
+.health-card-activity .health-activity-status { font-weight: 700; color: var(--success); }
+.health-card-activity.health-high .health-activity-status { color: var(--warning); }
+
+/* Quick Actions */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--spacing-md);
+}
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.15s, border-color 0.15s;
+}
+.quick-action-btn:hover { background: var(--bg-tertiary); border-color: var(--primary-color); }
+.quick-action-badge {
+    background: var(--warning);
+    color: #fff;
+    font-size: var(--font-size-xs);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    min-width: 1.5rem;
+    text-align: center;
+}
+.quick-action-badge:empty { display: none; }
+
+/* Collaboration Models Activity */
+.collab-models-summary { margin-bottom: var(--spacing-md); font-weight: 500; }
+.collab-models-summary .active-count { color: var(--success); }
+.collab-models-summary .pending-count { color: var(--warning); }
+.collab-models-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
 }
+.model-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+.model-card h4 { font-size: var(--font-size-base); margin-bottom: var(--spacing-sm); }
+.model-card .model-total { font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--spacing-sm); }
+.model-progress { height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; display: flex; margin-bottom: var(--spacing-sm); }
+.model-progress-active { background: var(--primary-color); }
+.model-progress-pending { background: var(--warning); }
+.model-card .model-counts { font-size: var(--font-size-sm); display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
+.model-card .model-counts span { display: inline-flex; align-items: center; gap: 0.25rem; }
+.collab-models-actions { display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
 
-.admin-actions {
+/* Pending Queue */
+.pending-queue { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-lg); }
+.pending-queue-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+.pending-queue-card h3 { font-size: var(--font-size-lg); margin: 0; }
+.pending-queue-count { margin: 0; color: var(--text-secondary); }
+.pending-queue-card .btn { align-self: flex-start; }
+
+/* Activity Feed */
+.activity-feed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); }
+.activity-feed { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-md); }
+.activity-feed-item {
     display: flex;
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-xl);
-    flex-wrap: wrap;
-}
-
-.admin-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-lg);
-}
-
-.activity-item {
     padding: var(--spacing-md);
     border-bottom: 1px solid var(--border-color);
+    align-items: flex-start;
 }
-
-.activity-item:last-child {
-    border-bottom: none;
-}
-
-.activity-item-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--spacing-xs);
-}
-
-.activity-item-title {
-    font-weight: 600;
-    font-size: var(--font-size-sm);
-}
-
-.activity-item-time {
-    color: var(--text-muted);
-    font-size: var(--font-size-xs);
-}
-
-.activity-item-details {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
-}
+.activity-feed-item:last-child { border-bottom: none; }
+.activity-feed-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--warning); opacity: 0.8; flex-shrink: 0; }
+.activity-feed-body { flex: 1; min-width: 0; }
+.activity-feed-title { font-weight: 600; font-size: var(--font-size-sm); margin-bottom: 0.25rem; }
+.activity-feed-desc { font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: 0.25rem; }
+.activity-feed-meta { display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-xs); color: var(--text-muted); }
 </style>

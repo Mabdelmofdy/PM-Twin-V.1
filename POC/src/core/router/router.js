@@ -182,9 +182,9 @@ class Router {
             await route.handler(route.params);
         }
 
-        // Update portal sidebar active state if layout service exists
-        if (window.layoutService && typeof window.layoutService.setActiveNav === 'function') {
-            window.layoutService.setActiveNav();
+        // Re-render layout so sidebar (main vs admin) and active state stay in sync with route
+        if (window.layoutService && typeof window.layoutService.updateNavigation === 'function') {
+            await window.layoutService.updateNavigation();
         }
 
         return true;

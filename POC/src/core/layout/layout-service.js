@@ -63,7 +63,16 @@ class LayoutService {
     }
 
     /**
+     * Whether current route is in admin portal area
+     */
+    isInAdminArea() {
+        const path = this.getCurrentPath();
+        return path === CONFIG.ROUTES.ADMIN || path.startsWith(CONFIG.ROUTES.ADMIN + '/');
+    }
+
+    /**
      * Render entire layout (sidebar when auth, top nav when public)
+     * When in admin area and user can access admin, render admin sidebar instead of main portal sidebar
      */
     async renderLayout() {
         const isAuthenticated = await this.authService.checkAuth();
@@ -72,7 +81,14 @@ class LayoutService {
         await this.applyLayoutMode(isAuthenticated);
 
         if (isAuthenticated) {
-            await this.renderSidebar(user);
+            const inAdminArea = this.isInAdminArea();
+            const canAccessAdmin = this.authService.canAccessAdmin();
+            if (inAdminArea && canAccessAdmin) {
+                await this.renderAdminSidebar(user);
+            } else {
+                await this.renderSidebar(user);
+            }
+            this.renderMaintenanceBanner();
             this.attachSidebarHandlers();
         } else {
             await this.renderPublicNav(user);
@@ -153,14 +169,106 @@ class LayoutService {
             const active = isActive(route);
             html += `<a href="#" data-route="${route}" class="portal-nav-link ${active ? 'portal-nav-active' : ''}"><i class="${icon}"></i><span>${label}</span></a>`;
         });
-        if (this.authService.isAdmin()) {
-            html += `<a href="#" data-route="${CONFIG.ROUTES.ADMIN}" class="portal-nav-link ${isActive(CONFIG.ROUTES.ADMIN) ? 'portal-nav-active' : ''}"><i class="ph-duotone ph-gear"></i><span>Admin</span></a>`;
+        if (this.authService.canAccessAdmin()) {
+            html += `<a href="#" data-route="${CONFIG.ROUTES.ADMIN}" class="portal-nav-link ${isActive(CONFIG.ROUTES.ADMIN) ? 'portal-nav-active' : ''}"><i class="ph-duotone ph-shield-check"></i><span>Admin</span></a>`;
             html += `<a href="#" data-route="${CONFIG.ROUTES.ADMIN_REPORTS}" class="portal-nav-link ${isActive(CONFIG.ROUTES.ADMIN_REPORTS) ? 'portal-nav-active' : ''}"><i class="ph-duotone ph-chart-bar"></i><span>Reports</span></a>`;
         }
         html += '</nav>';
         html += `<div class="portal-sidebar-footer"><button type="button" class="portal-logout-btn" onclick="layoutService.handleLogout()"><i class="ph-duotone ph-sign-out"></i><span>Logout</span></button></div>`;
         html += '</div>';
         sidebarEl.innerHTML = html;
+    }
+
+    /**
+     * Render admin portal sidebar – used when authenticated and path is /admin or /admin/*
+     * Role-based: Auditor = Audit + Reports only; Moderator = all except Settings & Collaboration Models; Admin = all
+     */
+    async renderAdminSidebar(user) {
+        const sidebarEl = document.getElementById('app-sidebar');
+        if (!sidebarEl) return;
+
+        const currentPath = this.getCurrentPath();
+        const isActive = (route) => {
+            if (route === CONFIG.ROUTES.ADMIN) return currentPath === CONFIG.ROUTES.ADMIN;
+            return currentPath === route || currentPath.startsWith(route + '/');
+        };
+
+        const displayName = user?.profile?.name || user?.email || 'User';
+        const initial = (displayName.charAt(0) || 'U').toUpperCase();
+        const roleLabel = (user?.role || 'user').toUpperCase().replace(/-/g, '_');
+        const isAuditor = user?.role === CONFIG.ROLES.AUDITOR;
+        const isModerator = user?.role === CONFIG.ROLES.MODERATOR;
+        const isFullAdmin = user?.role === CONFIG.ROLES.ADMIN;
+
+        let html = '<div class="portal-sidebar-inner">';
+        html += `<div class="portal-sidebar-brand"><i class="ph-duotone ph-shield-check"></i><span>${CONFIG.APP_NAME} Admin</span></div>`;
+        html += '<div class="portal-user-dropdown">';
+        html += '<div class="portal-sidebar-user-card portal-user-dropdown-trigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">';
+        html += `<div class="portal-user-avatar" aria-hidden="true">${initial}</div>`;
+        html += '<div class="portal-user-info">';
+        html += `<span class="portal-user-name">${displayName}</span>`;
+        html += `<span class="portal-user-role-tag">${roleLabel}</span>`;
+        html += '</div>';
+        html += '<i class="ph-duotone ph-caret-down portal-user-chevron" aria-hidden="true"></i>';
+        html += '</div>';
+        html += '<div class="portal-user-dropdown-menu">';
+        html += `<a href="#" data-route="${CONFIG.ROUTES.DASHBOARD}" class="portal-menu-item"><i class="ph-duotone ph-house"></i><span>Back to Portal</span></a>`;
+        html += '</div>';
+        html += '</div>';
+
+        html += '<p class="portal-sidebar-section">ADMIN</p>';
+        html += '<nav class="portal-sidebar-nav">';
+
+        const adminLinks = [];
+        if (!isAuditor) {
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN, label: 'Dashboard', icon: 'ph-duotone ph-house' });
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_VETTING, label: 'User Vetting', icon: 'ph-duotone ph-user-check' });
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_USERS, label: 'User Management', icon: 'ph-duotone ph-users' });
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_OPPORTUNITIES, label: 'Opportunities', icon: 'ph-duotone ph-briefcase' });
+        }
+        adminLinks.push({ route: CONFIG.ROUTES.ADMIN_AUDIT, label: 'Audit Trail', icon: 'ph-duotone ph-list-checks' });
+        adminLinks.push({ route: CONFIG.ROUTES.ADMIN_REPORTS, label: 'Reports', icon: 'ph-duotone ph-chart-bar' });
+        if (isFullAdmin) {
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_SETTINGS, label: 'Settings', icon: 'ph-duotone ph-gear' });
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_COLLABORATION_MODELS, label: 'Collaboration Models', icon: 'ph-duotone ph-stack' });
+        }
+
+        adminLinks.forEach(({ route, label, icon }) => {
+            const active = isActive(route);
+            html += `<a href="#" data-route="${route}" class="portal-nav-link ${active ? 'portal-nav-active' : ''}"><i class="${icon}"></i><span>${label}</span></a>`;
+        });
+        html += '</nav>';
+        html += `<div class="portal-sidebar-footer"><button type="button" class="portal-logout-btn" onclick="layoutService.handleLogout()"><i class="ph-duotone ph-sign-out"></i><span>Logout</span></button></div>`;
+        html += '</div>';
+        sidebarEl.innerHTML = html;
+    }
+
+    /**
+     * Show or hide maintenance mode banner in portal layout
+     */
+    renderMaintenanceBanner() {
+        const portalLayout = document.getElementById(this.portalLayoutId);
+        const appMain = portalLayout?.querySelector('.portal-main, #app-main');
+        if (!appMain) return;
+
+        const storage = window.storageService || (typeof storageService !== 'undefined' ? storageService : null);
+        const settings = storage?.get(CONFIG.STORAGE_KEYS.SYSTEM_SETTINGS) || {};
+        const maintenanceMode = !!settings.maintenanceMode;
+
+        let banner = document.getElementById('maintenance-banner');
+        if (maintenanceMode) {
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'maintenance-banner';
+                banner.setAttribute('role', 'alert');
+                banner.style.cssText = 'background: #fef3c7; border-bottom: 1px solid #f59e0b; color: #92400e; padding: 0.5rem 1rem; font-size: 0.875rem;';
+                appMain.insertBefore(banner, appMain.firstChild);
+            }
+            banner.innerHTML = '<span><strong>Maintenance mode is on.</strong> Some features may be limited. Admins can turn this off in Admin &rarr; Settings.</span>';
+            banner.style.display = '';
+        } else if (banner) {
+            banner.style.display = 'none';
+        }
     }
 
     /**

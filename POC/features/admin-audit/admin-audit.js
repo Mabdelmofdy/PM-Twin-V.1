@@ -3,11 +3,11 @@
  */
 
 async function initAdminAudit() {
-    if (!authService.isAdmin()) {
+    if (!authService.canAccessAdmin()) {
         router.navigate(CONFIG.ROUTES.DASHBOARD);
         return;
     }
-    
+
     await loadUsersForFilter();
     await loadAuditLogs();
     setupFilters();
@@ -40,24 +40,32 @@ async function loadAuditLogs() {
     try {
         const filters = {
             userId: document.getElementById('filter-user')?.value || undefined,
-            entityType: undefined, // Could add filter for this
+            entityType: document.getElementById('filter-entity-type')?.value || undefined,
             startDate: document.getElementById('filter-start-date')?.value || undefined,
             endDate: document.getElementById('filter-end-date')?.value || undefined
         };
-        
-        // Remove undefined filters
+
         Object.keys(filters).forEach(key => {
-            if (filters[key] === undefined) delete filters[key];
+            if (filters[key] === undefined || filters[key] === '') delete filters[key];
         });
-        
+
         let logs = await dataService.getAuditLogs(filters);
-        
-        // Filter by action if specified
+
         const actionFilter = document.getElementById('filter-action')?.value;
         if (actionFilter) {
             logs = logs.filter(log => log.action === actionFilter);
         }
-        
+
+        const searchFilter = document.getElementById('filter-search')?.value?.toLowerCase();
+        if (searchFilter) {
+            logs = logs.filter(log => {
+                const actionMatch = (log.action || '').toLowerCase().includes(searchFilter);
+                const detailsStr = log.details ? JSON.stringify(log.details).toLowerCase() : '';
+                const entityMatch = (log.entityType || '').toLowerCase().includes(searchFilter);
+                return actionMatch || detailsStr.includes(searchFilter) || entityMatch;
+            });
+        }
+
         // Load user/company info for each log
         const logsWithUsers = await Promise.all(
             logs.map(async (log) => {
@@ -67,10 +75,11 @@ async function loadAuditLogs() {
         );
         
         if (logsWithUsers.length === 0) {
+            delete container.dataset.exportLogs;
             container.innerHTML = '<div class="empty-state">No audit logs found</div>';
             return;
         }
-        
+
         // Load template
         const template = await templateLoader.load('audit-log-item');
         
@@ -91,19 +100,69 @@ async function loadAuditLogs() {
         }).join('');
         
         container.innerHTML = html;
-        
+
+        // Store current logs for CSV export (same list we just rendered)
+        container.dataset.exportLogs = JSON.stringify(logsWithUsers.map(l => ({
+            timestamp: l.timestamp,
+            action: l.action,
+            entityType: l.entityType || '',
+            entityId: l.entityId || '',
+            userId: l.userId,
+            userEmail: l.user?.email || '',
+            details: l.details ? JSON.stringify(l.details) : ''
+        })));
+
     } catch (error) {
         console.error('Error loading audit logs:', error);
         container.innerHTML = '<div class="empty-state">Error loading audit logs</div>';
     }
 }
 
+function exportAuditCsv() {
+    const container = document.getElementById('audit-logs');
+    const dataJson = container?.dataset?.exportLogs;
+    if (!dataJson) {
+        alert('Load audit logs first, then export.');
+        return;
+    }
+    let rows;
+    try {
+        rows = JSON.parse(dataJson);
+    } catch (e) {
+        alert('No data to export.');
+        return;
+    }
+    if (rows.length === 0) {
+        alert('No audit logs to export.');
+        return;
+    }
+    const headers = ['timestamp', 'action', 'entityType', 'entityId', 'userId', 'userEmail', 'details'];
+    const csvContent = [
+        headers.join(','),
+        ...rows.map(r => headers.map(h => {
+            const v = (r[h] ?? '').toString();
+            return v.includes(',') || v.includes('"') || v.includes('\n') ? '"' + v.replace(/"/g, '""') + '"' : v;
+        }).join(','))
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
 function setupFilters() {
     const applyBtn = document.getElementById('apply-filters');
-    
+    const exportBtn = document.getElementById('export-csv');
     if (applyBtn) {
-        applyBtn.addEventListener('click', () => {
-            loadAuditLogs();
-        });
+        applyBtn.addEventListener('click', () => loadAuditLogs());
+    }
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => exportAuditCsv());
+    }
+    const searchEl = document.getElementById('filter-search');
+    if (searchEl) {
+        searchEl.addEventListener('keyup', (e) => { if (e.key === 'Enter') loadAuditLogs(); });
     }
 }

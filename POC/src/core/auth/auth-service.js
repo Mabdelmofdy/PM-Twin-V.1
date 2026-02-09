@@ -226,10 +226,18 @@ class AuthService {
     }
     
     /**
-     * Check if user is admin
+     * Check if user is admin (can manage content and users)
      */
     isAdmin() {
         return this.hasAnyRole([CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]);
+    }
+
+    /**
+     * Check if user can access admin portal (admin, moderator, or auditor)
+     * Used for showing Admin/Reports links and rendering admin sidebar
+     */
+    canAccessAdmin() {
+        return this.hasAnyRole([CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR, CONFIG.ROLES.AUDITOR]);
     }
     
     /**

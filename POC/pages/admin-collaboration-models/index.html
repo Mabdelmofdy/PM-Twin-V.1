@@ -1,0 +1,48 @@
+<div class="page-container admin-collaboration-models-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Collaboration Models Management</h1>
+            <p class="page-subtitle">Enable or disable collaboration models and set display labels and order</p>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Models</h2>
+            <button type="button" id="save-models-btn" class="btn btn-primary">Save changes</button>
+        </div>
+        <div class="card-body">
+            <p class="text-secondary mb-4">Disabled models will not appear in the collaboration wizard or opportunity creation.</p>
+            <div id="models-list" class="models-list">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<style>
+.admin-collaboration-models-page { /* Page specific styles */ }
+
+.models-list { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+
+.model-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: var(--spacing-md);
+    align-items: center;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+}
+
+.model-row label { display: flex; align-items: center; gap: var(--spacing-sm); }
+.model-row input[type="text"],
+.model-row input[type="number"] { max-width: 200px; }
+
+@media (max-width: 640px) {
+    .model-row { grid-template-columns: 1fr; }
+}
+</style>

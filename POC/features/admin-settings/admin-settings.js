@@ -7,9 +7,24 @@ async function initAdminSettings() {
         router.navigate(CONFIG.ROUTES.DASHBOARD);
         return;
     }
-    
+
+    loadFormFromSettings();
     await loadSystemInfo();
     setupSettingsForm();
+}
+
+function loadFormFromSettings() {
+    const settings = storageService.get(CONFIG.STORAGE_KEYS.SYSTEM_SETTINGS) || {};
+    const platformNameEl = document.getElementById('platform-name');
+    const maintenanceEl = document.getElementById('maintenance-mode');
+    const matchingEl = document.getElementById('matching-threshold');
+    const autoNotifyEl = document.getElementById('auto-notify-threshold');
+    const sessionEl = document.getElementById('session-duration');
+    if (platformNameEl) platformNameEl.value = settings.platformName || CONFIG.APP_NAME || '';
+    if (maintenanceEl) maintenanceEl.checked = !!settings.maintenanceMode;
+    if (matchingEl) matchingEl.value = Math.round((settings.matchingThreshold ?? CONFIG.MATCHING.MIN_THRESHOLD ?? 0.7) * 100);
+    if (autoNotifyEl) autoNotifyEl.value = Math.round((settings.autoNotifyThreshold ?? CONFIG.MATCHING.AUTO_NOTIFY_THRESHOLD ?? 0.8) * 100);
+    if (sessionEl) sessionEl.value = Math.round((settings.sessionDuration ?? CONFIG.SESSION_DURATION ?? 24 * 60 * 60 * 1000) / (60 * 60 * 1000));
 }
 
 async function loadSystemInfo() {
@@ -33,22 +48,26 @@ function setupSettingsForm() {
         
         const formData = new FormData(form);
         const settings = {
+            platformName: formData.get('platformName')?.toString().trim() || CONFIG.APP_NAME,
+            maintenanceMode: formData.get('maintenanceMode') === '1',
             matchingThreshold: parseFloat(formData.get('matchingThreshold')) / 100,
             autoNotifyThreshold: parseFloat(formData.get('autoNotifyThreshold')) / 100,
-            sessionDuration: parseInt(formData.get('sessionDuration')) * 60 * 60 * 1000
+            sessionDuration: parseInt(formData.get('sessionDuration'), 10) * 60 * 60 * 1000
         };
-        
+
         try {
-            // Save to system settings
             const currentSettings = storageService.get(CONFIG.STORAGE_KEYS.SYSTEM_SETTINGS) || {};
             const updatedSettings = { ...currentSettings, ...settings };
             storageService.set(CONFIG.STORAGE_KEYS.SYSTEM_SETTINGS, updatedSettings);
-            
-            // Update CONFIG if needed
+
+            CONFIG.APP_NAME = settings.platformName;
             CONFIG.MATCHING.MIN_THRESHOLD = settings.matchingThreshold;
             CONFIG.MATCHING.AUTO_NOTIFY_THRESHOLD = settings.autoNotifyThreshold;
             CONFIG.SESSION_DURATION = settings.sessionDuration;
-            
+
+            if (window.layoutService && typeof window.layoutService.updateNavigation === 'function') {
+                await window.layoutService.updateNavigation();
+            }
             alert('Settings saved successfully!');
             
         } catch (error) {

@@ -13,6 +13,16 @@
                 <option value="">All Users</option>
             </select>
             
+            <select id="filter-entity-type" class="form-select">
+                <option value="">All Entity Types</option>
+                <option value="user">User</option>
+                <option value="company">Company</option>
+                <option value="opportunity">Opportunity</option>
+                <option value="application">Application</option>
+                <option value="session">Session</option>
+                <option value="system">System</option>
+            </select>
+
             <select id="filter-action" class="form-select">
                 <option value="">All Actions</option>
                 <option value="user_registered">User Registered</option>
@@ -22,11 +32,14 @@
                 <option value="user_approved">User Approved</option>
                 <option value="user_rejected">User Rejected</option>
             </select>
-            
+
+            <input type="text" id="filter-search" class="form-input" placeholder="Search in action or details...">
+
             <input type="date" id="filter-start-date" class="form-input" placeholder="Start Date">
             <input type="date" id="filter-end-date" class="form-input" placeholder="End Date">
-            
+
             <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+            <button type="button" id="export-csv" class="btn btn-secondary">Export CSV</button>
         </div>
     </div>
     

@@ -3,7 +3,7 @@
  */
 
 async function initAdminReports() {
-    if (!authService.isAdmin()) {
+    if (!authService.canAccessAdmin()) {
         router.navigate(CONFIG.ROUTES.DASHBOARD);
         return;
     }
@@ -73,6 +73,77 @@ async function loadReports() {
                 <span class="report-value">${count}</span>
             </div>
         `).join('') || '<p class="text-muted">No audit activity in the last 30 days</p>';
+
+        // User & company status distribution
+        const allPeople = [...users, ...companies];
+        const byStatus = {};
+        allPeople.forEach(p => {
+            const s = p.status || 'active';
+            byStatus[s] = (byStatus[s] || 0) + 1;
+        });
+        const userStatusEl = document.getElementById('user-status-chart');
+        if (userStatusEl) {
+            const statusOrder = ['pending', 'active', 'suspended', 'rejected', 'clarification_requested'];
+            userStatusEl.innerHTML = statusOrder.filter(s => byStatus[s]).map(s => `
+                <div class="report-row">
+                    <span class="report-label">${s.replace(/_/g, ' ')}</span>
+                    <span class="report-value">${byStatus[s]}</span>
+                </div>
+            `).join('') || '<p class="text-muted">No users</p>';
+        }
+
+        // User & company by role
+        const byRole = {};
+        allPeople.forEach(p => {
+            const r = p.role || 'unknown';
+            byRole[r] = (byRole[r] || 0) + 1;
+        });
+        const userRoleEl = document.getElementById('user-role-chart');
+        if (userRoleEl) {
+            userRoleEl.innerHTML = Object.entries(byRole)
+                .sort((a, b) => b[1] - a[1])
+                .map(([role, count]) => `
+                <div class="report-row">
+                    <span class="report-label">${role.replace(/_/g, ' ')}</span>
+                    <span class="report-value">${count}</span>
+                </div>
+            `).join('') || '<p class="text-muted">No users</p>';
+        }
+
+        // Opportunity by model type
+        const oppByModel = {};
+        opportunities.forEach(o => {
+            const m = o.modelType || o.collaborationModel || 'unknown';
+            oppByModel[m] = (oppByModel[m] || 0) + 1;
+        });
+        const oppModelEl = document.getElementById('opportunity-model-chart');
+        if (oppModelEl) {
+            oppModelEl.innerHTML = Object.entries(oppByModel)
+                .sort((a, b) => b[1] - a[1])
+                .map(([model, count]) => `
+                <div class="report-row">
+                    <span class="report-label">${model.replace(/_/g, ' ')}</span>
+                    <span class="report-value">${count}</span>
+                </div>
+            `).join('') || '<p class="text-muted">No opportunities</p>';
+        }
+
+        // Opportunity by intent (request/offer)
+        const oppByIntent = {};
+        opportunities.forEach(o => {
+            const i = o.intent || 'request';
+            oppByIntent[i] = (oppByIntent[i] || 0) + 1;
+        });
+        const oppIntentEl = document.getElementById('opportunity-intent-chart');
+        if (oppIntentEl) {
+            oppIntentEl.innerHTML = Object.entries(oppByIntent)
+                .map(([intent, count]) => `
+                <div class="report-row">
+                    <span class="report-label">${intent}</span>
+                    <span class="report-value">${count}</span>
+                </div>
+            `).join('') || '<p class="text-muted">No opportunities</p>';
+        }
     } catch (err) {
         console.error('Error loading reports:', err);
     }

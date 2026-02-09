@@ -320,14 +320,18 @@ function initializeRoutes() {
         await loadPage('messages', params);
     }));
     
-    // Admin routes (protected, admin only)
+    // Admin routes (protected: admin/moderator get dashboard, auditor gets audit)
     router.register(CONFIG.ROUTES.ADMIN, authGuard.protect(async () => {
-        if (!authService.isAdmin()) {
+        if (!authService.canAccessAdmin()) {
             router.navigate(CONFIG.ROUTES.DASHBOARD);
             return;
         }
+        if (authService.hasRole(CONFIG.ROLES.AUDITOR)) {
+            router.navigate(CONFIG.ROUTES.ADMIN_AUDIT);
+            return;
+        }
         await loadPage('admin-dashboard');
-    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR, CONFIG.ROLES.AUDITOR]));
     
     router.register(CONFIG.ROUTES.ADMIN_USERS, authGuard.protect(async () => {
         if (!authService.isAdmin()) {
@@ -335,6 +339,14 @@ function initializeRoutes() {
             return;
         }
         await loadPage('admin-users');
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
+
+    router.register(CONFIG.ROUTES.ADMIN_VETTING, authGuard.protect(async () => {
+        if (!authService.isAdmin()) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-vetting');
     }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
     
     router.register(CONFIG.ROUTES.ADMIN_OPPORTUNITIES, authGuard.protect(async () => {
@@ -346,7 +358,7 @@ function initializeRoutes() {
     }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
     
     router.register(CONFIG.ROUTES.ADMIN_AUDIT, authGuard.protect(async () => {
-        if (!authService.isAdmin()) {
+        if (!authService.canAccessAdmin()) {
             router.navigate(CONFIG.ROUTES.DASHBOARD);
             return;
         }
@@ -360,14 +372,22 @@ function initializeRoutes() {
         }
         await loadPage('admin-settings');
     }, [CONFIG.ROLES.ADMIN]));
+
+    router.register(CONFIG.ROUTES.ADMIN_COLLABORATION_MODELS, authGuard.protect(async () => {
+        if (!authService.hasRole(CONFIG.ROLES.ADMIN)) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-collaboration-models');
+    }, [CONFIG.ROLES.ADMIN]));
     
     router.register(CONFIG.ROUTES.ADMIN_REPORTS, authGuard.protect(async () => {
-        if (!authService.isAdmin()) {
+        if (!authService.canAccessAdmin()) {
             router.navigate(CONFIG.ROUTES.DASHBOARD);
             return;
         }
         await loadPage('admin-reports');
-    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR, CONFIG.ROLES.AUDITOR]));
     
     router.register('/admin/users/:id', authGuard.protect(async (params) => {
         if (!authService.isAdmin()) {
