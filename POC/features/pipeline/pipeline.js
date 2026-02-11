@@ -4,7 +4,23 @@
 
 async function initPipeline() {
     setupTabs();
+    setupOpportunitiesIntentFilter();
+    setupApplicationsIntentFilter();
     await loadPipelineData();
+}
+
+function setupOpportunitiesIntentFilter() {
+    const filterEl = document.getElementById('filter-opportunities-intent');
+    if (filterEl) {
+        filterEl.addEventListener('change', () => loadOpportunitiesPipeline());
+    }
+}
+
+function setupApplicationsIntentFilter() {
+    const filterEl = document.getElementById('filter-applications-intent');
+    if (filterEl) {
+        filterEl.addEventListener('change', () => loadApplicationsPipeline());
+    }
 }
 
 function setupTabs() {
@@ -53,7 +69,13 @@ async function loadOpportunitiesPipeline() {
     
     try {
         const allOpportunities = await dataService.getOpportunities();
-        const userOpportunities = allOpportunities.filter(o => o.creatorId === user.id);
+        let userOpportunities = allOpportunities.filter(o => o.creatorId === user.id);
+        
+        // Apply intent filter (show only OFFER or only REQUEST)
+        const intentFilter = document.getElementById('filter-opportunities-intent')?.value;
+        if (intentFilter === 'request' || intentFilter === 'offer') {
+            userOpportunities = userOpportunities.filter(o => (o.intent || 'request') === intentFilter);
+        }
         
         const draft = userOpportunities.filter(o => o.status === 'draft');
         const published = userOpportunities.filter(o => o.status === 'published');
@@ -90,12 +112,18 @@ async function loadApplicationsPipeline() {
         const rejected = userApplications.filter(a => a.status === 'rejected');
         
         // Load opportunity details
-        const appsWithOpps = await Promise.all(
+        let appsWithOpps = await Promise.all(
             userApplications.map(async (app) => {
                 const opportunity = await dataService.getOpportunityById(app.opportunityId);
                 return { ...app, opportunity };
             })
         );
+        
+        // Apply intent filter (proposals for offers vs requests)
+        const intentFilter = document.getElementById('filter-applications-intent')?.value;
+        if (intentFilter === 'request' || intentFilter === 'offer') {
+            appsWithOpps = appsWithOpps.filter(a => (a.opportunity?.intent || 'request') === intentFilter);
+        }
         
         await renderApplicationColumn('kanban-app-pending', appsWithOpps.filter(a => a.status === 'pending'));
         await renderApplicationColumn('kanban-app-reviewing', appsWithOpps.filter(a => a.status === 'reviewing'));
@@ -163,11 +191,18 @@ async function renderKanbanColumn(containerId, items) {
     
     // Render items
     const html = items.map(item => {
+        const intent = item.intent || 'request';
+        const intentLabel = intent === 'offer' ? 'OFFER' : 'REQUEST';
+        const intentBadgeClass = typeof getIntentBadgeClass === 'function'
+            ? getIntentBadgeClass(intent, item.modelType)
+            : (intent === 'offer' ? 'badge-info' : 'badge-primary');
         const data = {
             ...item,
             title: item.title || 'Untitled',
             modelType: item.modelType || 'N/A',
-            createdDate: new Date(item.createdAt).toLocaleDateString()
+            createdDate: new Date(item.createdAt).toLocaleDateString(),
+            intentLabel,
+            intentBadgeClass
         };
         return templateRenderer.render(template, data);
     }).join('');
@@ -197,12 +232,19 @@ async function renderApplicationColumn(containerId, items) {
     
     // Render items
     const html = items.map(item => {
+        const intent = item.opportunity?.intent || 'request';
+        const intentLabel = intent === 'offer' ? 'OFFER' : 'REQUEST';
+        const intentBadgeClass = typeof getIntentBadgeClass === 'function'
+            ? getIntentBadgeClass(intent, item.opportunity?.modelType)
+            : (intent === 'offer' ? 'badge-info' : 'badge-primary');
         const data = {
             ...item,
             opportunity: {
                 title: item.opportunity?.title || 'Unknown Opportunity'
             },
-            createdDate: new Date(item.createdAt).toLocaleDateString()
+            createdDate: new Date(item.createdAt).toLocaleDateString(),
+            intentLabel,
+            intentBadgeClass
         };
         return templateRenderer.render(template, data);
     }).join('');

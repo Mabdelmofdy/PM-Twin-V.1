@@ -16,6 +16,14 @@
     <div class="pipeline-content">
         <!-- Opportunities Pipeline -->
         <div id="tab-opportunities" class="tab-content active">
+            <div class="pipeline-opportunities-filters">
+                <label class="text-sm font-medium text-gray-700 mr-2">Intent:</label>
+                <select id="filter-opportunities-intent" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="">All (Request &amp; Offer)</option>
+                    <option value="request">REQUEST</option>
+                    <option value="offer">OFFER</option>
+                </select>
+            </div>
             <div class="kanban-board">
                 <div class="kanban-column">
                     <h3>Draft</h3>
@@ -38,6 +46,14 @@
         
         <!-- Applications Pipeline -->
         <div id="tab-applications" class="tab-content" style="display: none;">
+            <div class="pipeline-applications-filters">
+                <label class="text-sm font-medium text-gray-700 mr-2">Intent:</label>
+                <select id="filter-applications-intent" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="">All (Request &amp; Offer)</option>
+                    <option value="request">REQUEST</option>
+                    <option value="offer">OFFER</option>
+                </select>
+            </div>
             <div class="kanban-board">
                 <div class="kanban-column">
                     <h3>Pending</h3>
@@ -75,6 +91,14 @@
 <style>
 .pipeline-page {
     /* Page specific styles */
+}
+
+.pipeline-applications-filters,
+.pipeline-opportunities-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .pipeline-tabs {

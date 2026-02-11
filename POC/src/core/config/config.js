@@ -123,6 +123,7 @@ const CONFIG = {
         PENDING: 'pending',
         REVIEWING: 'reviewing',
         SHORTLISTED: 'shortlisted',
+        IN_NEGOTIATION: 'in_negotiation',
         ACCEPTED: 'accepted',
         REJECTED: 'rejected',
         WITHDRAWN: 'withdrawn'
@@ -157,6 +158,7 @@ const CONFIG = {
         REGISTER: '/register',
         DASHBOARD: '/dashboard',
         OPPORTUNITIES: '/opportunities',
+        CONTRACTS: '/contracts',
         OPPORTUNITY_CREATE: '/opportunities/create',
         OPPORTUNITY_DETAIL: '/opportunities/:id',
         PEOPLE: '/people',

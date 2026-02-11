@@ -25,11 +25,13 @@ async function initOpportunities() {
         });
     }
     
-    if (clearFiltersBtn) {
+        if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', () => {
             document.getElementById('filter-model').value = '';
             document.getElementById('filter-status').value = '';
             document.getElementById('filter-search').value = '';
+            const intentFilter = document.getElementById('filter-intent');
+            if (intentFilter) intentFilter.value = '';
             if (categoryFilter) categoryFilter.value = '';
             loadOpportunities();
         });
@@ -90,7 +92,8 @@ async function loadOpportunities() {
         const modelFilter = document.getElementById('filter-model')?.value;
         const statusFilter = document.getElementById('filter-status')?.value;
         const searchFilter = document.getElementById('filter-search')?.value.toLowerCase();
-        const categoryFilter = document.getElementById('filter-category')?.value;
+        const categoryFilterVal = document.getElementById('filter-category')?.value;
+        const intentFilter = document.getElementById('filter-intent')?.value;
         
         if (modelFilter) {
             opportunities = opportunities.filter(o => o.subModelType === modelFilter);
@@ -100,6 +103,10 @@ async function loadOpportunities() {
             opportunities = opportunities.filter(o => o.status === statusFilter);
         }
         
+        if (intentFilter) {
+            opportunities = opportunities.filter(o => (o.intent || 'request') === intentFilter);
+        }
+        
         if (searchFilter) {
             opportunities = opportunities.filter(o => 
                 o.title?.toLowerCase().includes(searchFilter) ||
@@ -107,8 +114,8 @@ async function loadOpportunities() {
             );
         }
         
-        if (categoryFilter) {
-            opportunities = opportunities.filter(o => o.category === categoryFilter);
+        if (categoryFilterVal) {
+            opportunities = opportunities.filter(o => o.category === categoryFilterVal);
         }
         
         // Sort: mine first, then applied, then available, each group by date
@@ -157,7 +164,7 @@ async function loadOpportunities() {
                         ${opportunityIcon}
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-4">No opportunities found</h3>
-                    <p class="text-base text-gray-600 max-w-md mb-8 leading-relaxed">${searchFilter || modelFilter || statusFilter || categoryFilter ? 'Try adjusting your filters to see more results.' : 'Be the first to create an opportunity and start building connections.'}</p>
+                    <p class="text-base text-gray-600 max-w-md mb-8 leading-relaxed">${searchFilter || modelFilter || statusFilter || categoryFilterVal || intentFilter ? 'Try adjusting your filters to see more results.' : 'Be the first to create an opportunity and start building connections.'}</p>
                     <a href="#" data-route="/opportunities/create" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md hover:-translate-y-0.5 hover:shadow-lg no-underline">
                         ${plusIcon}
                         Create Opportunity

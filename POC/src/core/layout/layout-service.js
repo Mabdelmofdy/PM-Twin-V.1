@@ -161,6 +161,7 @@ class LayoutService {
             { route: CONFIG.ROUTES.DASHBOARD, label: 'Dashboard', icon: 'ph-duotone ph-house' },
             { route: CONFIG.ROUTES.OPPORTUNITIES, label: 'Opportunities', icon: 'ph-duotone ph-briefcase' },
             { route: '/pipeline', label: 'Pipeline', icon: 'ph-duotone ph-git-branch' },
+            { route: CONFIG.ROUTES.CONTRACTS, label: 'Contracts', icon: 'ph-duotone ph-file-text' },
             { route: '/people', label: 'People', icon: 'ph-duotone ph-users' },
             { route: CONFIG.ROUTES.MESSAGES, label: 'Messages', icon: 'ph-duotone ph-chat-circle' },
             { route: CONFIG.ROUTES.NOTIFICATIONS, label: 'Notifications', icon: 'ph-duotone ph-bell' },

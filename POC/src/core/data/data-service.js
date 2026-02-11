@@ -9,7 +9,7 @@ class DataService {
         this.storage = window.storageService || storageService;
         this.initialized = false;
         this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
-        this.CURRENT_SEED_VERSION = '1.7.0'; // Increment this to force re-seed (matching-compatible data with scope, sectors, certifications, paymentModes)
+        this.CURRENT_SEED_VERSION = '1.10.0'; // Re-seed: 5+ offer opportunities (opp-010, opp-011 to opp-014)
     }
     
     /**
@@ -547,6 +547,11 @@ class DataService {
         return contracts.find(c => c.opportunityId === opportunityId) || null;
     }
 
+    async getContractsByUserId(userId) {
+        const contracts = await this.getContracts();
+        return contracts.filter(c => c.creatorId === userId || c.contractorId === userId);
+    }
+
     async createContract(contractData) {
         const contracts = await this.getContracts();
         const newContract = {
@@ -688,6 +693,18 @@ class DataService {
 
     async rejectConnection(connectionId) {
         return this.updateConnection(connectionId, { status: CONFIG.CONNECTION_STATUS.REJECTED });
+    }
+
+    /** Ensure a connection exists between two users and is accepted (creates and auto-accepts if needed). Returns the connection. */
+    async ensureConnectionAccepted(userIdA, userIdB) {
+        let conn = await this.getConnectionBetweenUsers(userIdA, userIdB);
+        if (!conn) {
+            conn = await this.createConnection(userIdA, userIdB);
+        }
+        if (conn.status !== CONFIG.CONNECTION_STATUS.ACCEPTED) {
+            conn = await this.updateConnection(conn.id, { status: CONFIG.CONNECTION_STATUS.ACCEPTED });
+        }
+        return conn;
     }
 
     // Message Operations (1:1 messages between users)

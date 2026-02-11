@@ -100,6 +100,7 @@
                 <!-- Applications Section (for owners) -->
                 <div class="detail-section" id="applications-section" style="display: none;">
                     <h2><i class="ph-duotone ph-users"></i> Applications (<span id="applications-count">0</span>)</h2>
+                    <p id="applications-phase" class="text-sm text-gray-500 mt-1" style="display: none;"></p>
                     <div class="detail-content" id="applications-list">
                         <!-- Applications will be populated by JS -->
                     </div>
@@ -773,6 +774,10 @@
     border-radius: var(--radius-md);
     margin-bottom: var(--spacing-md);
     border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+.application-card:hover {
+    background: var(--bg-tertiary);
 }
 
 .application-card:last-child {

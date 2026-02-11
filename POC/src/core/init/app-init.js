@@ -303,6 +303,11 @@ function initializeRoutes() {
         await loadPage('pipeline');
     }));
     
+    // Contracts route (protected)
+    router.register(CONFIG.ROUTES.CONTRACTS, authGuard.protect(async () => {
+        await loadPage('contracts');
+    }));
+    
     // People routes (accessible to all users)
     router.register('/people', authGuard.protect(async () => {
         await loadPage('people');

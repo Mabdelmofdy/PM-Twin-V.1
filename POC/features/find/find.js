@@ -4,12 +4,12 @@
  * Shows limited info for non-authenticated users, full details for logged-in users
  */
 
-let allPeople = [];
-let allCompanies = [];
-let allOpportunities = [];
-let filteredPeople = [];
-let filteredCompanies = [];
-let filteredOpportunities = [];
+let findPeople = [];
+let findCompanies = [];
+let findOpportunities = [];
+let findFilteredPeople = [];
+let findFilteredCompanies = [];
+let findFilteredOpportunities = [];
 let currentTab = 'people';
 let isAuthenticated = false;
 
@@ -48,7 +48,7 @@ async function loadPeople() {
         const people = await dataService.getAllPeople();
         
         // Filter to only public profiles
-        allPeople = people.filter(user => {
+        findPeople = people.filter(user => {
             const isPublic = user.isPublic !== false;
             const isActive = user.status === 'active';
             const isNotAdmin = user.profile?.type !== 'admin';
@@ -57,12 +57,12 @@ async function loadPeople() {
             return isPublic && isActive && isNotAdmin && isProfessional;
         });
         
-        filteredPeople = [...allPeople];
-        updateTabCount('people', allPeople.length);
+        findFilteredPeople = [...findPeople];
+        updateTabCount('people', findPeople.length);
     } catch (error) {
         console.error('Error loading people:', error);
-        allPeople = [];
-        filteredPeople = [];
+        findPeople = [];
+        findFilteredPeople = [];
     }
 }
 
@@ -71,19 +71,19 @@ async function loadCompanies() {
         const companies = await dataService.getCompanies();
         
         // Filter to only public and active companies
-        allCompanies = companies.filter(company => {
+        findCompanies = companies.filter(company => {
             const isPublic = company.isPublic !== false;
             const isActive = company.status === 'active';
             
             return isPublic && isActive;
         });
         
-        filteredCompanies = [...allCompanies];
-        updateTabCount('companies', allCompanies.length);
+        findFilteredCompanies = [...findCompanies];
+        updateTabCount('companies', findCompanies.length);
     } catch (error) {
         console.error('Error loading companies:', error);
-        allCompanies = [];
-        filteredCompanies = [];
+        findCompanies = [];
+        findFilteredCompanies = [];
     }
 }
 
@@ -92,16 +92,16 @@ async function loadOpportunities() {
         const opportunities = await dataService.getOpportunities();
         
         // Filter to only published opportunities
-        allOpportunities = opportunities.filter(opp => {
+        findOpportunities = opportunities.filter(opp => {
             return opp.status === 'published';
         });
         
-        filteredOpportunities = [...allOpportunities];
-        updateTabCount('opportunities', allOpportunities.length);
+        findFilteredOpportunities = [...findOpportunities];
+        updateTabCount('opportunities', findOpportunities.length);
     } catch (error) {
         console.error('Error loading opportunities:', error);
-        allOpportunities = [];
-        filteredOpportunities = [];
+        findOpportunities = [];
+        findFilteredOpportunities = [];
     }
 }
 
@@ -197,7 +197,7 @@ function applyFilters() {
     const modelFilter = document.getElementById('filter-model')?.value || '';
     
     // Filter People
-    filteredPeople = allPeople.filter(person => {
+    findFilteredPeople = findPeople.filter(person => {
         const profile = person.profile || {};
         
         // Search filter
@@ -237,7 +237,7 @@ function applyFilters() {
     });
     
     // Filter Companies
-    filteredCompanies = allCompanies.filter(company => {
+    findFilteredCompanies = findCompanies.filter(company => {
         const profile = company.profile || {};
         
         // Search filter
@@ -276,7 +276,7 @@ function applyFilters() {
     });
     
     // Filter Opportunities
-    filteredOpportunities = allOpportunities.filter(opp => {
+    findFilteredOpportunities = findOpportunities.filter(opp => {
         // Search filter
         if (searchTerm) {
             const searchFields = [
@@ -318,9 +318,9 @@ function applyFilters() {
     });
     
     // Update counts
-    updateTabCount('people', filteredPeople.length);
-    updateTabCount('companies', filteredCompanies.length);
-    updateTabCount('opportunities', filteredOpportunities.length);
+    updateTabCount('people', findFilteredPeople.length);
+    updateTabCount('companies', findFilteredCompanies.length);
+    updateTabCount('opportunities', findFilteredOpportunities.length);
     
     // Render current tab
     renderResults();
@@ -346,7 +346,7 @@ function renderPeople() {
     
     if (!container) return;
     
-    if (filteredPeople.length === 0) {
+    if (findFilteredPeople.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.style.display = 'block';
         return;
@@ -354,7 +354,7 @@ function renderPeople() {
     
     if (emptyState) emptyState.style.display = 'none';
     
-    const html = filteredPeople.map(person => {
+    const html = findFilteredPeople.map(person => {
         const profile = person.profile || {};
         const name = profile.name || 'Unknown';
         const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
@@ -457,7 +457,7 @@ function renderCompanies() {
     
     if (!container) return;
     
-    if (filteredCompanies.length === 0) {
+    if (findFilteredCompanies.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.style.display = 'block';
         return;
@@ -465,7 +465,7 @@ function renderCompanies() {
     
     if (emptyState) emptyState.style.display = 'none';
     
-    const html = filteredCompanies.map(company => {
+    const html = findFilteredCompanies.map(company => {
         const profile = company.profile || {};
         const name = profile.name || 'Unknown Company';
         const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
@@ -568,7 +568,7 @@ function renderOpportunities() {
     
     if (!container) return;
     
-    if (filteredOpportunities.length === 0) {
+    if (findFilteredOpportunities.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.style.display = 'block';
         return;
@@ -576,7 +576,7 @@ function renderOpportunities() {
     
     if (emptyState) emptyState.style.display = 'none';
     
-    const html = filteredOpportunities.map(opp => {
+    const html = findFilteredOpportunities.map(opp => {
         if (isAuthenticated) {
             return renderFullOpportunityCard(opp);
         } else {

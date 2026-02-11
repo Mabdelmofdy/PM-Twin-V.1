@@ -279,7 +279,7 @@ async function loadAndRenderContract(opportunity) {
     }
     const allDone = milestones.length > 0 && milestones.every(m => m.status === 'completed');
     if (opportunity.status === 'in_execution' && allDone && isOwner) {
-        actionsHtml += `<button type="button" id="confirm-completion-btn" class="btn btn-success" data-opp-id="${opportunity.id}">Confirm completion</button>`;
+        actionsHtml += `<button type="button" id="confirm-completion-btn" class="btn btn-success" data-opp-id="${opportunity.id}" data-contract-id="${contract.id}">Confirm completion</button>`;
     }
     if (opportunity.status === 'completed' && isOwner) {
         actionsHtml += `<button type="button" id="close-opportunity-btn" class="btn btn-secondary" data-opp-id="${opportunity.id}">Close opportunity</button>`;
@@ -294,8 +294,11 @@ async function loadAndRenderContract(opportunity) {
         await loadOpportunity(oppId);
     });
     document.getElementById('confirm-completion-btn')?.addEventListener('click', async () => {
-        const oppId = document.getElementById('confirm-completion-btn').dataset.oppId;
+        const btn = document.getElementById('confirm-completion-btn');
+        const oppId = btn.dataset.oppId;
+        const contractId = btn.dataset.contractId;
         await dataService.updateOpportunity(oppId, { status: 'completed' });
+        if (contractId) await dataService.updateContract(contractId, { status: 'completed' });
         await loadOpportunity(oppId);
     });
     document.getElementById('close-opportunity-btn')?.addEventListener('click', async () => {
@@ -314,15 +317,65 @@ async function markMilestoneComplete(contractId, index) {
     await loadAndRenderContract(currentOpportunity);
 }
 
-async function addMilestone(contractId) {
-    const title = prompt('Milestone title:');
-    if (!title) return;
-    const dueDate = prompt('Due date (YYYY-MM-DD, optional):') || '';
-    const contract = await dataService.getContractById(contractId);
-    const milestones = [...(contract.milestones || [])];
-    milestones.push({ id: 'm' + Date.now(), title, dueDate, status: 'pending' });
-    await dataService.updateContract(contractId, { milestones });
-    await loadAndRenderContract(currentOpportunity);
+function addMilestone(contractId) {
+    const contentHTML = `
+        <form id="milestone-form" class="space-y-3">
+            <div>
+                <label for="milestone-title" class="block text-sm font-medium text-gray-700 mb-1">Milestone title <span class="text-red-500">*</span></label>
+                <input type="text" id="milestone-title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g. Design phase documentation" required />
+            </div>
+            <div>
+                <label for="milestone-due" class="block text-sm font-medium text-gray-700 mb-1">Due date (optional)</label>
+                <input type="date" id="milestone-due" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" id="milestone-form-add" class="btn btn-primary">Add milestone</button>
+                <button type="button" id="milestone-form-cancel" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    `;
+    if (typeof modalService === 'undefined') {
+        const title = prompt('Milestone title:');
+        if (!title) return;
+        const dueDate = prompt('Due date (YYYY-MM-DD, optional):') || '';
+        submitMilestoneForm(contractId, title, dueDate);
+        return;
+    }
+    modalService.showCustom(contentHTML, 'Add milestone', { confirmText: 'Close' }).then(() => {});
+    const modalEl = document.getElementById('modal-container');
+    if (!modalEl) return;
+    const addBtn = modalEl.querySelector('#milestone-form-add');
+    const cancelBtn = modalEl.querySelector('#milestone-form-cancel');
+    const titleInput = modalEl.querySelector('#milestone-title');
+    if (addBtn) {
+        addBtn.addEventListener('click', async () => {
+            const title = titleInput?.value?.trim();
+            if (!title) {
+                if (titleInput) titleInput.focus();
+                return;
+            }
+            const dueInput = modalEl.querySelector('#milestone-due');
+            const dueDate = dueInput?.value?.trim() || '';
+            modalService.close();
+            await submitMilestoneForm(contractId, title, dueDate);
+        });
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => modalService.close());
+    }
+}
+
+async function submitMilestoneForm(contractId, title, dueDate) {
+    try {
+        const contract = await dataService.getContractById(contractId);
+        const milestones = [...(contract.milestones || [])];
+        milestones.push({ id: 'm' + Date.now(), title, dueDate: dueDate || '', status: 'pending' });
+        await dataService.updateContract(contractId, { milestones });
+        await loadAndRenderContract(currentOpportunity);
+    } catch (error) {
+        console.error('Error adding milestone:', error);
+        alert('Failed to add milestone. Please try again.');
+    }
 }
 
 function renderExchangeDetails(exchangeData) {
@@ -1375,27 +1428,175 @@ async function loadApplications(opportunityId) {
             })
         );
         
-        // Render applications
-        applicationsList.innerHTML = applicationsWithUsers.map(app => `
-            <div class="application-card">
+        // Render applications (Accept/Reject/Start negotiation when status is pending, reviewing, shortlisted, or in_negotiation)
+        const canActOnApplication = (app) => {
+            const actionable = ['pending', 'reviewing', 'shortlisted', 'in_negotiation'].includes(app.status);
+            const opportunityClosed = currentOpportunity && ['contracted', 'in_execution', 'completed', 'closed', 'cancelled'].includes(currentOpportunity.status);
+            return actionable && !opportunityClosed;
+        };
+        const canStartNegotiation = (app) => {
+            return ['pending', 'reviewing', 'shortlisted'].includes(app.status) && currentOpportunity && !['contracted', 'in_execution', 'completed', 'closed', 'cancelled'].includes(currentOpportunity.status);
+        };
+        const transitionableStatuses = ['pending', 'reviewing', 'shortlisted', 'in_negotiation'];
+        applicationsList.innerHTML = applicationsWithUsers.map(app => {
+            const showActions = canActOnApplication(app);
+            const showStartNegotiation = canStartNegotiation(app);
+            let actionsHtml = '<div class="application-actions">';
+            actionsHtml += `<button type="button" class="btn btn-primary btn-sm btn-view-application" data-application-id="${escapeHtml(app.id)}">View</button>`;
+            if (showActions) {
+                const statusOptions = transitionableStatuses.map(s => {
+                    const selected = app.status === s ? ' selected' : '';
+                    return `<option value="${escapeHtml(s)}"${selected}>${escapeHtml(getApplicationStatusLabel(s))}</option>`;
+                }).join('');
+                actionsHtml += `<select class="application-status-select form-input form-input-sm" data-application-id="${escapeHtml(app.id)}" data-applicant-id="${escapeHtml(app.applicantId || '')}" title="Change status">${statusOptions}</select>`;
+            }
+            if (showStartNegotiation) {
+                actionsHtml += `<button type="button" class="btn btn-secondary btn-sm btn-start-negotiation" data-application-id="${escapeHtml(app.id)}" data-applicant-id="${escapeHtml(app.applicantId || '')}">Start negotiation</button>`;
+            }
+            if (showActions) {
+                actionsHtml += `<button type="button" class="btn btn-success btn-sm btn-accept-application" data-application-id="${escapeHtml(app.id)}">Accept</button>`;
+                actionsHtml += `<button type="button" class="btn btn-danger btn-sm btn-reject-application" data-application-id="${escapeHtml(app.id)}">Reject</button>`;
+            }
+            actionsHtml += '</div>';
+            const negotiationLine = app.status === 'in_negotiation' ? '<p class="text-xs text-gray-500 mt-1">Negotiation: In progress</p>' : '';
+            return `
+            <div class="application-card" data-application-id="${escapeHtml(app.id)}">
                 <div class="application-header">
                     <strong>${escapeHtml(app.applicant?.profile?.name || app.applicant?.email || 'Unknown')}</strong>
-                    <span class="badge badge-${getApplicationStatusBadgeClass(app.status)}">${app.status}</span>
+                    <span class="badge badge-${getApplicationStatusBadgeClass(app.status)}">${escapeHtml(getApplicationStatusLabel(app.status))}</span>
                 </div>
-                <p class="application-proposal">${escapeHtml(app.proposal || 'No proposal')}</p>
+                <p class="application-proposal">${escapeHtml((app.coverLetter || app.proposal) || 'No proposal')}</p>
                 <div class="application-meta">
                     Applied: ${new Date(app.createdAt).toLocaleDateString()}
                 </div>
-                <div class="application-actions">
-                    <button onclick="updateApplicationStatus('${app.id}', 'accepted')" class="btn btn-success btn-sm">Accept</button>
-                    <button onclick="updateApplicationStatus('${app.id}', 'rejected')" class="btn btn-danger btn-sm">Reject</button>
-                </div>
+                ${negotiationLine}
+                ${actionsHtml}
             </div>
-        `).join('');
-        
+        `;
+        }).join('');
+
+        // State dropdown: change application status; if set to In negotiation, open chat with applicant
+        applicationsList.querySelectorAll('.application-status-select').forEach(select => {
+            select.addEventListener('change', async (e) => {
+                e.stopPropagation();
+                const applicationId = select.dataset.applicationId;
+                const applicantId = select.dataset.applicantId;
+                const newStatus = select.value;
+                if (!applicationId || !newStatus) return;
+                try {
+                    await dataService.updateApplication(applicationId, { status: newStatus });
+                    await loadApplications(opportunityId);
+                    if (newStatus === 'in_negotiation' && applicantId) {
+                        await ensureConnectionAndOpenChat(applicantId);
+                    }
+                } catch (err) {
+                    console.error('Error updating application status:', err);
+                    alert('Failed to update application.');
+                }
+            });
+        });
+
+        // Start negotiation button: set status to in_negotiation, reload, then open Messages with applicant
+        applicationsList.querySelectorAll('.btn-start-negotiation').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const applicationId = btn.dataset.applicationId;
+                const applicantId = btn.dataset.applicantId;
+                if (!applicationId) return;
+                try {
+                    await dataService.updateApplication(applicationId, { status: 'in_negotiation' });
+                    await loadApplications(opportunityId);
+                    if (applicantId) {
+                        await ensureConnectionAndOpenChat(applicantId);
+                    }
+                } catch (err) {
+                    console.error('Error updating application status:', err);
+                    alert('Failed to update application.');
+                }
+            });
+        });
+        applicationsList.querySelectorAll('.btn-accept-application').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateApplicationStatus(btn.dataset.applicationId, 'accepted');
+            });
+        });
+        applicationsList.querySelectorAll('.btn-reject-application').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateApplicationStatus(btn.dataset.applicationId, 'rejected');
+            });
+        });
+
+        // View application click: show detail modal (button or card click)
+        applicationsList.querySelectorAll('.btn-view-application').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const applicationId = btn.dataset.applicationId;
+                if (applicationId) showApplicationDetailModal(applicationId);
+            });
+        });
+        applicationsList.querySelectorAll('.application-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('button') || e.target.closest('select')) return;
+                const applicationId = card.dataset.applicationId;
+                if (applicationId) showApplicationDetailModal(applicationId);
+            });
+        });
+
+        // Show opportunity phase in Applications section header when in negotiation
+        const phaseEl = document.getElementById('applications-phase');
+        if (phaseEl && currentOpportunity) {
+            if (currentOpportunity.status === 'in_negotiation') {
+                phaseEl.textContent = 'Phase: In negotiation';
+                phaseEl.style.display = 'block';
+            } else {
+                phaseEl.style.display = 'none';
+            }
+        }
     } catch (error) {
         console.error('Error loading applications:', error);
         applicationsList.innerHTML = '<p class="text-muted">Error loading applications.</p>';
+    }
+}
+
+async function showApplicationDetailModal(applicationId) {
+    try {
+        const application = await dataService.getApplicationById(applicationId);
+        if (!application) return;
+        const applicant = await dataService.getUserById(application.applicantId) || await dataService.getCompanyById(application.applicantId);
+        const applicantName = applicant?.profile?.name || applicant?.email || application.applicantId;
+        const proposalText = application.coverLetter || application.proposal || 'No proposal or cover letter provided.';
+        const responses = application.responses || {};
+        const responsesEntries = Object.entries(responses).filter(([, v]) => v != null && String(v).trim() !== '');
+        let responsesHtml = '';
+        if (responsesEntries.length > 0) {
+            responsesHtml = '<div class="mt-4"><h4 class="text-sm font-semibold text-gray-700 mb-2">Responses</h4><dl class="space-y-2">' +
+                responsesEntries.map(([key, value]) => `<div><dt class="text-xs text-gray-500">${escapeHtml(formatLabel(key))}</dt><dd class="text-sm text-gray-900">${escapeHtml(String(value))}</dd></div>`).join('') +
+                '</dl></div>';
+        }
+        const contentHTML = `
+            <div class="application-detail-modal">
+                <div class="mb-3">
+                    <strong>${escapeHtml(applicantName)}</strong>
+                    <span class="badge badge-${getApplicationStatusBadgeClass(application.status)} ml-2">${escapeHtml(getApplicationStatusLabel(application.status))}</span>
+                </div>
+                <div class="text-sm text-gray-500 mb-3">Applied: ${new Date(application.createdAt).toLocaleDateString()}</div>
+                <div class="mb-3">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-1">Cover letter / Proposal</h4>
+                    <p class="text-sm text-gray-900 whitespace-pre-wrap">${escapeHtml(proposalText)}</p>
+                </div>
+                ${responsesHtml}
+            </div>
+        `;
+        if (typeof modalService !== 'undefined') {
+            await modalService.showCustom(contentHTML, 'Application details', { confirmText: 'Close' });
+        } else {
+            alert('Application: ' + applicantName + '\nStatus: ' + application.status + '\n\n' + proposalText);
+        }
+    } catch (error) {
+        console.error('Error showing application detail:', error);
+        alert('Failed to load application details.');
     }
 }
 
@@ -1470,6 +1671,7 @@ function getApplicationStatusBadgeClass(status) {
         'pending': 'warning',
         'reviewing': 'primary',
         'shortlisted': 'primary',
+        'in_negotiation': 'info',
         'accepted': 'success',
         'rejected': 'danger',
         'withdrawn': 'secondary'
@@ -1477,11 +1679,39 @@ function getApplicationStatusBadgeClass(status) {
     return statusMap[status] || 'secondary';
 }
 
+function getApplicationStatusLabel(status) {
+    const labelMap = {
+        'pending': 'Pending',
+        'reviewing': 'Reviewing',
+        'shortlisted': 'Shortlisted',
+        'in_negotiation': 'In negotiation',
+        'accepted': 'Accepted',
+        'rejected': 'Rejected',
+        'withdrawn': 'Withdrawn'
+    };
+    return labelMap[status] || status;
+}
+
 function getModelDefinition(modelType, subModelType) {
     if (!window.OPPORTUNITY_MODELS) return null;
     const model = window.OPPORTUNITY_MODELS[modelType];
     if (!model || !model.subModels) return null;
     return model.subModels[subModelType] || null;
+}
+
+/** Ensure owner and applicant have an accepted connection, then navigate to Messages with the applicant. */
+async function ensureConnectionAndOpenChat(applicantId) {
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser || !applicantId) return;
+    try {
+        await dataService.ensureConnectionAccepted(currentUser.id, applicantId);
+        if (typeof router !== 'undefined' && router.navigate) {
+            router.navigate('/messages/' + applicantId);
+        }
+    } catch (err) {
+        console.error('Error ensuring connection or opening chat:', err);
+        alert('Could not open chat. Please try again.');
+    }
 }
 
 async function updateApplicationStatus(applicationId, status) {
