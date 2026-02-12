@@ -224,13 +224,14 @@ class LayoutService {
         if (!isAuditor) {
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN, label: 'Dashboard', icon: 'ph-duotone ph-house' });
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_VETTING, label: 'User Vetting', icon: 'ph-duotone ph-user-check' });
-            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_USERS, label: 'User Management', icon: 'ph-duotone ph-users' });
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_PEOPLE, label: 'People', icon: 'ph-duotone ph-users' });
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_OPPORTUNITIES, label: 'Opportunities', icon: 'ph-duotone ph-briefcase' });
         }
         adminLinks.push({ route: CONFIG.ROUTES.ADMIN_AUDIT, label: 'Audit Trail', icon: 'ph-duotone ph-list-checks' });
         adminLinks.push({ route: CONFIG.ROUTES.ADMIN_REPORTS, label: 'Reports', icon: 'ph-duotone ph-chart-bar' });
         if (isFullAdmin) {
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_SETTINGS, label: 'Settings', icon: 'ph-duotone ph-gear' });
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_SUBSCRIPTIONS, label: 'Subscriptions', icon: 'ph-duotone ph-credit-card' });
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_COLLABORATION_MODELS, label: 'Collaboration Models', icon: 'ph-duotone ph-stack' });
         }
 

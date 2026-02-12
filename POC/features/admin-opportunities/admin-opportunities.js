@@ -49,11 +49,14 @@ async function loadOpportunities() {
             return;
         }
         
-        // Load creator info
-        const oppsWithCreators = await Promise.all(
+        // Load creator info and application counts
+        const oppsWithCreatorsAndCounts = await Promise.all(
             opportunities.map(async (opp) => {
-                const creator = await dataService.getUserOrCompanyById(opp.creatorId);
-                return { ...opp, creator };
+                const [creator, applicationCount] = await Promise.all([
+                    dataService.getUserOrCompanyById(opp.creatorId),
+                    dataService.getApplicationCountByOpportunityId(opp.id)
+                ]);
+                return { ...opp, creator, applicationCount };
             })
         );
         
@@ -61,7 +64,7 @@ async function loadOpportunities() {
         const template = await templateLoader.load('admin-opportunity-card');
         
         // Render opportunities
-        const html = oppsWithCreators.map(opp => {
+        const html = oppsWithCreatorsAndCounts.map(opp => {
             const data = {
                 ...opp,
                 intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
@@ -74,6 +77,7 @@ async function loadOpportunities() {
                 creator: {
                     email: opp.creator?.email || 'Unknown'
                 },
+                applicationCount: opp.applicationCount,
                 showClose: opp.status === 'published' || opp.status === 'in_negotiation'
             };
             return templateRenderer.render(template, data);

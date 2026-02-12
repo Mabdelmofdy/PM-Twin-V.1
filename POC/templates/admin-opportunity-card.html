@@ -9,12 +9,16 @@
     <div class="card-body">
         <p>{{description}}</p>
         <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-md);">
-            Created by: {{creator.email}} | 
+            Created by: {{creator.email}} |
             {{createdDate}}
+            {{#if applicationCount}}
+            | <strong>{{applicationCount}}</strong> offer(s)
+            {{/if}}
         </p>
     </div>
     <div class="card-footer">
         <a href="#" data-route="/opportunities/{{id}}" class="btn btn-secondary btn-sm">View</a>
+        <a href="#" data-route="/opportunities/{{id}}/edit" class="btn btn-outline btn-sm">Edit</a>
         {{#if showClose}}
             <button data-action="close" data-opportunity-id="{{id}}" class="btn btn-warning btn-sm">Close</button>
         {{/if}}

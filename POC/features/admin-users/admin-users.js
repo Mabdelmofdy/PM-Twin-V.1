@@ -145,7 +145,7 @@ async function handleUserAction(action, userId) {
             break;
         case 'view':
             // Navigate to admin user detail
-            router.navigate(`/admin/users/${userId}`);
+            router.navigate(`/admin/people/${userId}`);
             break;
     }
 }

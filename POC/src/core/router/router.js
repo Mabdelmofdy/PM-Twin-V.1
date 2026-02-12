@@ -177,17 +177,23 @@ class Router {
         
         this.currentRoute = route;
 
-        // Execute route handler
-        if (route.handler) {
-            await route.handler(route.params);
+        // Execute route handler (skip if already handling this path to avoid duplicate load storms)
+        const routeKey = normalizedPath + JSON.stringify(route.params || {});
+        if (this._handlingRouteKey === routeKey) {
+            return true;
         }
-
-        // Re-render layout so sidebar (main vs admin) and active state stay in sync with route
-        if (window.layoutService && typeof window.layoutService.updateNavigation === 'function') {
-            await window.layoutService.updateNavigation();
+        this._handlingRouteKey = routeKey;
+        try {
+            if (route.handler) {
+                await route.handler(route.params);
+            }
+            if (window.layoutService && typeof window.layoutService.updateNavigation === 'function') {
+                await window.layoutService.updateNavigation();
+            }
+            return true;
+        } finally {
+            this._handlingRouteKey = null;
         }
-
-        return true;
     }
 }
 

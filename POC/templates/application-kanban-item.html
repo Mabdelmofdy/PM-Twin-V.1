@@ -8,4 +8,9 @@
     <div class="kanban-item-meta">
         Applied: {{createdDate}}
     </div>
+    {{#if showWithdraw}}
+    <div class="kanban-item-actions kanban-item-action">
+        <button type="button" class="btn btn-warning btn-sm kanban-btn-withdraw" data-id="{{id}}">Withdraw</button>
+    </div>
+    {{/if}}
 </div>

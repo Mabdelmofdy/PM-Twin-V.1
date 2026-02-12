@@ -51,10 +51,51 @@ async function initAdminDashboard() {
 
     await loadKpis();
     await loadHealth();
+    await loadOffersByTopSites();
     await loadCollaborationModelsActivity();
     loadPendingApprovalsQueue();
     await loadRecentActivity();
     updateQuickActionBadges();
+}
+
+async function loadOffersByTopSites() {
+    const widget = document.getElementById('offers-by-site-widget');
+    if (!widget) return;
+    try {
+        const applications = await dataService.getApplications();
+        const opportunities = await dataService.getOpportunities();
+        const oppById = {};
+        opportunities.forEach(o => { oppById[o.id] = o; });
+        const bySite = {};
+        applications.forEach((app) => {
+            const opp = oppById[app.opportunityId];
+            const site = opp
+                ? (opp.location || opp.locationRegion || opp.locationCity || 'Unknown').trim() || 'Unknown'
+                : 'Unknown';
+            bySite[site] = (bySite[site] || 0) + 1;
+        });
+        const topSites = Object.entries(bySite)
+            .map(([site, count]) => ({ site, count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5);
+        if (topSites.length === 0) {
+            widget.innerHTML = '<p class="text-muted">No offers by location yet</p>';
+        } else {
+            widget.innerHTML = topSites.map(({ site, count }) =>
+                `<div class="site-row"><span>${escapeHtml(site)}</span><strong>${count}</strong></div>`
+            ).join('');
+        }
+    } catch (e) {
+        console.error('Error loading offers by site:', e);
+        widget.innerHTML = '<p class="text-muted">Error loading data</p>';
+    }
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }
 
 async function loadKpis() {
@@ -79,6 +120,8 @@ async function loadKpis() {
         setEl('stat-total-projects', totalProjects);
         setEl('stat-active-projects', activeProjects);
         setEl('stat-total-proposals', totalProposals);
+        const totalOffers = applications.length;
+        setEl('stat-total-offers', totalOffers);
         setEl('stat-collab-opportunities', collabOpportunities);
         setEl('stat-pending-collab', pendingCollab);
         setEl('stat-active-collab', activeCollab);

@@ -278,7 +278,9 @@ class DataService {
             'messages': CONFIG.STORAGE_KEYS.MESSAGES,
             'audit': CONFIG.STORAGE_KEYS.AUDIT,
             'sessions': CONFIG.STORAGE_KEYS.SESSIONS,
-            'contracts': CONFIG.STORAGE_KEYS.CONTRACTS
+            'contracts': CONFIG.STORAGE_KEYS.CONTRACTS,
+            'subscription_plans': CONFIG.STORAGE_KEYS.SUBSCRIPTION_PLANS,
+            'subscriptions': CONFIG.STORAGE_KEYS.SUBSCRIPTIONS
         };
         return keyMap[domain];
     }
@@ -530,6 +532,16 @@ class DataService {
         };
         this.storage.set(CONFIG.STORAGE_KEYS.APPLICATIONS, applications);
         return applications[index];
+    }
+
+    async getApplicationsByOpportunityId(opportunityId) {
+        const applications = await this.getApplications();
+        return applications.filter(a => a.opportunityId === opportunityId);
+    }
+
+    async getApplicationCountByOpportunityId(opportunityId) {
+        const applications = await this.getApplicationsByOpportunityId(opportunityId);
+        return applications.length;
     }
 
     // Contract Operations
@@ -819,6 +831,114 @@ class DataService {
         }
         
         return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    }
+
+    // Subscription Plan Operations
+    async getSubscriptionPlans() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.SUBSCRIPTION_PLANS) || [];
+    }
+
+    async getPlanById(id) {
+        const plans = await this.getSubscriptionPlans();
+        return plans.find(p => p.id === id) || null;
+    }
+
+    async createPlan(planData) {
+        const plans = await this.getSubscriptionPlans();
+        const newPlan = {
+            id: this.generateId(),
+            name: planData.name || 'Unnamed',
+            tier: planData.tier || 'basic',
+            maxOpportunities: planData.maxOpportunities ?? 10,
+            features: planData.features || {},
+            isActive: planData.isActive !== false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        plans.push(newPlan);
+        this.storage.set(CONFIG.STORAGE_KEYS.SUBSCRIPTION_PLANS, plans);
+        return newPlan;
+    }
+
+    async updatePlan(id, updates) {
+        const plans = await this.getSubscriptionPlans();
+        const index = plans.findIndex(p => p.id === id);
+        if (index === -1) return null;
+        plans[index] = {
+            ...plans[index],
+            ...updates,
+            updatedAt: new Date().toISOString()
+        };
+        this.storage.set(CONFIG.STORAGE_KEYS.SUBSCRIPTION_PLANS, plans);
+        return plans[index];
+    }
+
+    async deletePlan(id) {
+        const plans = await this.getSubscriptionPlans();
+        const filtered = plans.filter(p => p.id !== id);
+        this.storage.set(CONFIG.STORAGE_KEYS.SUBSCRIPTION_PLANS, filtered);
+        return true;
+    }
+
+    // Subscription (assignments) Operations
+    async getSubscriptions() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.SUBSCRIPTIONS) || [];
+    }
+
+    async getSubscriptionsByUserId(userId) {
+        const subs = await this.getSubscriptions();
+        return subs.filter(s => !s.companyId && s.userId === userId);
+    }
+
+    async getSubscriptionsByCompanyId(companyId) {
+        const subs = await this.getSubscriptions();
+        return subs.filter(s => s.companyId === companyId);
+    }
+
+    async getSubscriptionById(id) {
+        const subs = await this.getSubscriptions();
+        return subs.find(s => s.id === id) || null;
+    }
+
+    async assignSubscription(entityId, planId, isCompany, options = {}) {
+        const subs = await this.getSubscriptions();
+        const now = new Date().toISOString();
+        const startsAt = options.startsAt || now;
+        const endsAt = options.endsAt || null;
+        const newSub = {
+            id: this.generateId(),
+            userId: isCompany ? undefined : entityId,
+            companyId: isCompany ? entityId : undefined,
+            planId,
+            startsAt,
+            endsAt,
+            status: options.status || 'active',
+            createdAt: now,
+            updatedAt: now
+        };
+        subs.push(newSub);
+        this.storage.set(CONFIG.STORAGE_KEYS.SUBSCRIPTIONS, subs);
+        return newSub;
+    }
+
+    async updateSubscription(id, updates) {
+        const subs = await this.getSubscriptions();
+        const index = subs.findIndex(s => s.id === id);
+        if (index === -1) return null;
+        subs[index] = {
+            ...subs[index],
+            ...updates,
+            updatedAt: new Date().toISOString()
+        };
+        this.storage.set(CONFIG.STORAGE_KEYS.SUBSCRIPTIONS, subs);
+        return subs[index];
+    }
+
+    async removeSubscription(id) {
+        const subs = await this.getSubscriptions();
+        const filtered = subs.filter(s => s.id !== id);
+        this.storage.set(CONFIG.STORAGE_KEYS.SUBSCRIPTIONS, filtered);
+        return true;
     }
     
     // Utility Methods

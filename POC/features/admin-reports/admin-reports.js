@@ -2,12 +2,55 @@
  * Admin Reports & Analytics – aggregate from dataService
  */
 
+let lastOffersPerOpportunity = [];
+let lastOffersBySite = [];
+
 async function initAdminReports() {
     if (!authService.canAccessAdmin()) {
         router.navigate(CONFIG.ROUTES.DASHBOARD);
         return;
     }
     await loadReports();
+    setupExportButtons();
+}
+
+function setupExportButtons() {
+    const exportBySite = document.getElementById('export-offers-by-site-csv');
+    const exportPerOpp = document.getElementById('export-offers-per-opp-csv');
+    if (exportBySite) {
+        exportBySite.addEventListener('click', () => exportOffersBySiteCSV());
+    }
+    if (exportPerOpp) {
+        exportPerOpp.addEventListener('click', () => exportOffersPerOpportunityCSV());
+    }
+}
+
+function downloadCSV(filename, rows, headers) {
+    const escape = (v) => {
+        const s = String(v == null ? '' : v);
+        if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+    };
+    const line = (row) => headers.map(h => escape(row[h])).join(',');
+    const csv = [headers.join(','), ...rows.map(row => line(row))].join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
+
+function exportOffersBySiteCSV() {
+    const headers = ['Site', 'Offers Count'];
+    const rows = lastOffersBySite.map(({ site, count }) => ({ Site: site, 'Offers Count': count }));
+    downloadCSV('offers-by-site.csv', rows, headers);
+}
+
+function exportOffersPerOpportunityCSV() {
+    const headers = ['Opportunity ID', 'Title', 'Offers Count'];
+    const rows = lastOffersPerOpportunity.map(({ id, title, count }) => ({ 'Opportunity ID': id, 'Title': title, 'Offers Count': count }));
+    downloadCSV('offers-per-opportunity.csv', rows, headers);
 }
 
 async function loadReports() {
@@ -144,7 +187,78 @@ async function loadReports() {
                 </div>
             `).join('') || '<p class="text-muted">No opportunities</p>';
         }
+
+        // Offers (applications) per opportunity
+        const offersPerOpp = await Promise.all(
+            opportunities.map(async (o) => ({
+                id: o.id,
+                title: o.title || o.id,
+                count: await dataService.getApplicationCountByOpportunityId(o.id)
+            }))
+        );
+        offersPerOpp.sort((a, b) => b.count - a.count);
+        lastOffersPerOpportunity = offersPerOpp;
+        const offersPerOppEl = document.getElementById('offers-per-opportunity');
+        if (offersPerOppEl) {
+            if (offersPerOpp.length === 0) {
+                offersPerOppEl.innerHTML = '<p class="text-muted">No opportunities</p>';
+            } else {
+                offersPerOppEl.innerHTML = `
+                    <table class="report-table">
+                        <thead><tr><th>Opportunity</th><th>Title</th><th># Offers</th></tr></thead>
+                        <tbody>
+                            ${offersPerOpp.map(o => `
+                                <tr>
+                                    <td><code>${escapeHtml(o.id)}</code></td>
+                                    <td>${escapeHtml(o.title)}</td>
+                                    <td>${o.count}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
+
+        // Offers by site (location): group applications by opportunity's location
+        const oppById = {};
+        opportunities.forEach(o => { oppById[o.id] = o; });
+        const bySite = {};
+        applications.forEach((app) => {
+            const opp = oppById[app.opportunityId];
+            const site = opp
+                ? (opp.location || opp.locationRegion || opp.locationCity || 'Unknown').trim() || 'Unknown'
+                : 'Unknown';
+            bySite[site] = (bySite[site] || 0) + 1;
+        });
+        lastOffersBySite = Object.entries(bySite)
+            .map(([site, count]) => ({ site, count }))
+            .sort((a, b) => b.count - a.count);
+        const offersBySiteEl = document.getElementById('offers-by-site');
+        if (offersBySiteEl) {
+            if (lastOffersBySite.length === 0) {
+                offersBySiteEl.innerHTML = '<p class="text-muted">No applications / no location data</p>';
+            } else {
+                offersBySiteEl.innerHTML = `
+                    <table class="report-table">
+                        <thead><tr><th>Site / Location</th><th># Offers</th></tr></thead>
+                        <tbody>
+                            ${lastOffersBySite.map(({ site, count }) => `
+                                <tr><td>${escapeHtml(site)}</td><td>${count}</td></tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
     } catch (err) {
         console.error('Error loading reports:', err);
     }
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }

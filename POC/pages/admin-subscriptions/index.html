@@ -1,0 +1,124 @@
+<div class="page-container admin-subscriptions-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Subscriptions</h1>
+            <p class="page-subtitle">Manage subscription plans and assign them to people</p>
+        </div>
+    </div>
+    <div class="page-body">
+
+    <section class="subscriptions-section">
+        <h2 class="section-title">Plans</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="plans-actions">
+                    <button type="button" id="btn-add-plan" class="btn btn-primary">Add plan</button>
+                </div>
+                <div id="plans-list" class="plans-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="subscriptions-section">
+        <h2 class="section-title">Assignments</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="assign-actions">
+                    <button type="button" id="btn-assign" class="btn btn-primary">Assign plan to person</button>
+                </div>
+                <div id="assignments-list" class="assignments-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal: Add/Edit Plan -->
+    <div id="plan-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="plan-modal-title">Add plan</h3>
+                <button type="button" class="modal-close" id="plan-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <form id="plan-form">
+                <input type="hidden" id="plan-id" name="planId">
+                <div class="form-group">
+                    <label for="plan-name" class="form-label">Name</label>
+                    <input type="text" id="plan-name" name="name" class="form-input" required placeholder="e.g. Professional">
+                </div>
+                <div class="form-group">
+                    <label for="plan-tier" class="form-label">Tier</label>
+                    <input type="text" id="plan-tier" name="tier" class="form-input" placeholder="e.g. basic, pro">
+                </div>
+                <div class="form-group">
+                    <label for="plan-max-opportunities" class="form-label">Max opportunities</label>
+                    <input type="number" id="plan-max-opportunities" name="maxOpportunities" class="form-input" min="0" value="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="plan-is-active" name="isActive" checked> Active
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="plan-modal-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Assign plan -->
+    <div id="assign-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Assign plan to person</h3>
+                <button type="button" class="modal-close" id="assign-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <form id="assign-form">
+                <div class="form-group">
+                    <label for="assign-entity" class="form-label">Person (user or company)</label>
+                    <select id="assign-entity" name="entityId" class="form-select" required>
+                        <option value="">Select...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assign-plan" class="form-label">Plan</label>
+                    <select id="assign-plan" name="planId" class="form-select" required>
+                        <option value="">Select...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assign-status" class="form-label">Status</label>
+                    <select id="assign-status" name="status" class="form-select">
+                        <option value="active">Active</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="assign-modal-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+
+<style>
+.admin-subscriptions-page { max-width: 900px; }
+.subscriptions-section { margin-bottom: var(--spacing-2xl); }
+.section-title { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); }
+.plans-list, .assignments-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.plans-actions, .assign-actions { margin-bottom: var(--spacing-lg); }
+.plan-item, .assign-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+    background: var(--bg-primary);
+}
+.plan-item .plan-info, .assign-item .assign-info { flex: 1; }
+.plan-item .plan-actions, .assign-item .assign-item-actions { display: flex; gap: var(--spacing-sm); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-overlay.hidden { display: none; }
+.modal-content { background: var(--bg-primary); border-radius: var(--radius-lg); padding: var(--spacing-lg); max-width: 480px; width: 90%; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); }
+.modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+.modal-footer { margin-top: var(--spacing-lg); display: flex; gap: var(--spacing-sm); justify-content: flex-end; }
+</style>

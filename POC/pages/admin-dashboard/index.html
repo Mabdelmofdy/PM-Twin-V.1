@@ -16,6 +16,7 @@
             <div class="stat-card"><div class="stat-value" id="stat-total-projects">0</div><div class="stat-label">Total Projects</div></div>
             <div class="stat-card"><div class="stat-value" id="stat-active-projects">0</div><div class="stat-label">Active Projects</div></div>
             <div class="stat-card"><div class="stat-value" id="stat-total-proposals">0</div><div class="stat-label">Total Proposals</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-total-offers">0</div><div class="stat-label">Total Offers</div></div>
             <div class="stat-card"><div class="stat-value" id="stat-collab-opportunities">0</div><div class="stat-label">Collaboration Opportunities</div></div>
             <div class="stat-card"><div class="stat-value" id="stat-pending-collab">0</div><div class="stat-label">Pending Collaborations</div></div>
             <div class="stat-card"><div class="stat-value" id="stat-active-collab">0</div><div class="stat-label">Active Collaborations</div></div>
@@ -34,6 +35,13 @@
         </div>
     </section>
 
+    <!-- Offers by top sites -->
+    <section class="dashboard-section offers-by-site-section">
+        <h2 class="section-title">Offers by top sites</h2>
+        <div class="offers-by-site-widget" id="offers-by-site-widget"><p class="text-muted">Loading...</p></div>
+        <a href="#" data-route="/admin/reports" class="btn btn-secondary btn-sm">View full reports</a>
+    </section>
+
     <!-- Quick Actions -->
     <section class="dashboard-section quick-actions-section">
         <h2 class="section-title">Quick Actions</h2>
@@ -44,7 +52,7 @@
             <a href="#" data-route="/admin/audit" class="quick-action-btn"><span class="quick-action-label">Audit Trail</span></a>
             <a href="#" data-route="/admin/reports" class="quick-action-btn"><span class="quick-action-label">Reports</span></a>
             <a href="#" data-route="/admin/settings" class="quick-action-btn"><span class="quick-action-label">Settings</span></a>
-            <a href="#" data-route="/admin/users" class="quick-action-btn"><span class="quick-action-label">User Management</span></a>
+            <a href="#" data-route="/admin/people" class="quick-action-btn"><span class="quick-action-label">People</span></a>
         </div>
     </section>
 
@@ -219,4 +227,8 @@
 .activity-feed-title { font-weight: 600; font-size: var(--font-size-sm); margin-bottom: 0.25rem; }
 .activity-feed-desc { font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: 0.25rem; }
 .activity-feed-meta { display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-xs); color: var(--text-muted); }
+
+.offers-by-site-section .offers-by-site-widget { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-md); }
+.offers-by-site-widget .site-row { display: flex; justify-content: space-between; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); }
+.offers-by-site-widget .site-row:last-child { border-bottom: none; }
 </style>

@@ -346,6 +346,14 @@ function initializeRoutes() {
         await loadPage('admin-users');
     }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
 
+    router.register(CONFIG.ROUTES.ADMIN_PEOPLE, authGuard.protect(async () => {
+        if (!authService.isAdmin()) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-users');
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
+
     router.register(CONFIG.ROUTES.ADMIN_VETTING, authGuard.protect(async () => {
         if (!authService.isAdmin()) {
             router.navigate(CONFIG.ROUTES.DASHBOARD);
@@ -385,6 +393,14 @@ function initializeRoutes() {
         }
         await loadPage('admin-collaboration-models');
     }, [CONFIG.ROLES.ADMIN]));
+
+    router.register(CONFIG.ROUTES.ADMIN_SUBSCRIPTIONS, authGuard.protect(async () => {
+        if (!authService.hasRole(CONFIG.ROLES.ADMIN)) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-subscriptions');
+    }, [CONFIG.ROLES.ADMIN]));
     
     router.register(CONFIG.ROUTES.ADMIN_REPORTS, authGuard.protect(async () => {
         if (!authService.canAccessAdmin()) {
@@ -395,6 +411,14 @@ function initializeRoutes() {
     }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR, CONFIG.ROLES.AUDITOR]));
     
     router.register('/admin/users/:id', authGuard.protect(async (params) => {
+        if (!authService.isAdmin()) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-user-detail', params);
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]));
+
+    router.register('/admin/people/:id', authGuard.protect(async (params) => {
         if (!authService.isAdmin()) {
             router.navigate(CONFIG.ROUTES.DASHBOARD);
             return;
@@ -420,6 +444,9 @@ function setupGlobalNavigation() {
     });
 }
 
+/** Guard to prevent concurrent/repeated load of the same or any page (avoids ERR_INSUFFICIENT_RESOURCES from storm of fetches) */
+let loadPageInProgress = false;
+
 /**
  * Load page content
  * Uses CONFIG.BASE_PATH for correct path resolution
@@ -428,11 +455,14 @@ async function loadPage(pageName, params = {}) {
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
     
-    // Get base path from CONFIG (set during initialization)
+    if (loadPageInProgress) {
+        return;
+    }
+    loadPageInProgress = true;
+    
     const basePath = window.CONFIG?.BASE_PATH || APP_BASE_PATH || '';
     
     try {
-        // Load page HTML using base path
         const pagePath = `${basePath}pages/${pageName}/index.html`;
         const response = await fetch(pagePath);
         if (!response.ok) {
@@ -440,14 +470,11 @@ async function loadPage(pageName, params = {}) {
         }
         const html = await response.text();
         
-        // Set content
         mainContent.innerHTML = html;
         
-        // Load page script if exists (loadScript already uses base path)
         const scriptPath = `features/${pageName}/${pageName}.js`;
         try {
             await loadScript(scriptPath);
-            // Initialize page - convert kebab-case to camelCase for function name
             const functionName = pageName.split('-').map((word, index) => 
                 index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
             ).join('');
@@ -457,11 +484,12 @@ async function loadPage(pageName, params = {}) {
                 window[initFunctionName](params);
             }
         } catch (error) {
-            // Script doesn't exist, that's okay
             console.log(`No script found for ${pageName}`);
         }
     } catch (error) {
         console.error(`Error loading page ${pageName}:`, error);
         mainContent.innerHTML = `<div class="error">Page not found: ${pageName}</div>`;
+    } finally {
+        loadPageInProgress = false;
     }
 }

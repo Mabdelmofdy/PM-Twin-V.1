@@ -25,20 +25,20 @@
                 </select>
             </div>
             <div class="kanban-board">
-                <div class="kanban-column">
-                    <h3>Draft</h3>
+                <div class="kanban-column" data-column-title="Draft">
+                    <h3 class="kanban-column-header">Draft <span class="column-count">(0)</span></h3>
                     <div id="kanban-draft" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>Published</h3>
+                <div class="kanban-column" data-column-title="Published">
+                    <h3 class="kanban-column-header">Published <span class="column-count">(0)</span></h3>
                     <div id="kanban-published" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>In Progress</h3>
+                <div class="kanban-column" data-column-title="In Progress">
+                    <h3 class="kanban-column-header">In Progress <span class="column-count">(0)</span></h3>
                     <div id="kanban-in-progress" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>Closed</h3>
+                <div class="kanban-column" data-column-title="Closed">
+                    <h3 class="kanban-column-header">Closed <span class="column-count">(0)</span></h3>
                     <div id="kanban-closed" class="kanban-items"></div>
                 </div>
             </div>
@@ -55,24 +55,28 @@
                 </select>
             </div>
             <div class="kanban-board">
-                <div class="kanban-column">
-                    <h3>Pending</h3>
+                <div class="kanban-column" data-column-title="Pending">
+                    <h3 class="kanban-column-header">Pending <span class="column-count">(0)</span></h3>
                     <div id="kanban-app-pending" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>Reviewing</h3>
+                <div class="kanban-column" data-column-title="Reviewing">
+                    <h3 class="kanban-column-header">Reviewing <span class="column-count">(0)</span></h3>
                     <div id="kanban-app-reviewing" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>Shortlisted</h3>
+                <div class="kanban-column" data-column-title="Shortlisted">
+                    <h3 class="kanban-column-header">Shortlisted <span class="column-count">(0)</span></h3>
                     <div id="kanban-app-shortlisted" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>Accepted</h3>
+                <div class="kanban-column" data-column-title="In negotiation">
+                    <h3 class="kanban-column-header">In negotiation <span class="column-count">(0)</span></h3>
+                    <div id="kanban-app-in-negotiation" class="kanban-items"></div>
+                </div>
+                <div class="kanban-column" data-column-title="Accepted">
+                    <h3 class="kanban-column-header">Accepted <span class="column-count">(0)</span></h3>
                     <div id="kanban-app-accepted" class="kanban-items"></div>
                 </div>
-                <div class="kanban-column">
-                    <h3>Rejected</h3>
+                <div class="kanban-column" data-column-title="Rejected / Withdrawn">
+                    <h3 class="kanban-column-header">Rejected / Withdrawn <span class="column-count">(0)</span></h3>
                     <div id="kanban-app-rejected" class="kanban-items"></div>
                 </div>
             </div>
@@ -159,6 +163,11 @@
     text-align: center;
 }
 
+.kanban-column-drag-over {
+    outline: 2px dashed var(--primary-color);
+    outline-offset: 2px;
+}
+
 .kanban-items {
     display: flex;
     flex-direction: column;
@@ -188,6 +197,13 @@
 .kanban-item-meta {
     font-size: var(--font-size-xs);
     color: var(--text-muted);
+}
+
+.kanban-item-actions {
+    margin-top: var(--spacing-sm);
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
 }
 
 .matches-container {

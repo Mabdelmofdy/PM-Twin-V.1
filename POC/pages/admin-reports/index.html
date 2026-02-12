@@ -9,6 +9,10 @@
 
     <section class="reports-stats">
         <h2>Overview</h2>
+        <div class="report-actions">
+            <button type="button" id="export-offers-by-site-csv" class="btn btn-secondary btn-sm">Export offers by site (CSV)</button>
+            <button type="button" id="export-offers-per-opp-csv" class="btn btn-secondary btn-sm">Export offers per opportunity (CSV)</button>
+        </div>
         <div class="stats-grid" id="reports-stats-grid">
             <div class="stat-card"><div class="stat-value" id="stat-users">0</div><div class="stat-label">Total Users & Companies</div></div>
             <div class="stat-card"><div class="stat-value" id="stat-opportunities">0</div><div class="stat-label">Opportunities</div></div>
@@ -43,6 +47,16 @@
     </section>
 
     <section class="reports-section">
+        <h2>Offers (applications) per opportunity</h2>
+        <div id="offers-per-opportunity" class="report-block"></div>
+    </section>
+
+    <section class="reports-section">
+        <h2>Offers by site (location)</h2>
+        <div id="offers-by-site" class="report-block"></div>
+    </section>
+
+    <section class="reports-section">
         <h2>Application status distribution</h2>
         <div id="application-status-chart" class="report-block"></div>
     </section>
@@ -63,4 +77,8 @@
 .report-row:last-child { border-bottom: none; }
 .report-label { font-weight: 500; }
 .report-value { color: var(--text-secondary); }
+.report-actions { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); flex-wrap: wrap; }
+.report-table { width: 100%; border-collapse: collapse; }
+.report-table th, .report-table td { padding: var(--spacing-sm) var(--spacing-md); text-align: left; border-bottom: 1px solid var(--border-color); }
+.report-table th { font-weight: 600; }
 </style>

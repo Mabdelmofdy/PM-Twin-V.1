@@ -26,7 +26,9 @@ const CONFIG = {
         CONNECTIONS: 'pmtwin_connections',
         MESSAGES: 'pmtwin_messages',
         CONTRACTS: 'pmtwin_contracts',
-        SYSTEM_SETTINGS: 'pmtwin_system_settings'
+        SYSTEM_SETTINGS: 'pmtwin_system_settings',
+        SUBSCRIPTION_PLANS: 'pmtwin_subscription_plans',
+        SUBSCRIPTIONS: 'pmtwin_subscriptions'
     },
     
     // Session Management
@@ -174,6 +176,8 @@ const CONFIG = {
         ADMIN_AUDIT: '/admin/audit',
         ADMIN_SETTINGS: '/admin/settings',
         ADMIN_REPORTS: '/admin/reports',
+        ADMIN_PEOPLE: '/admin/people',
+        ADMIN_SUBSCRIPTIONS: '/admin/subscriptions',
         ADMIN_COLLABORATION_MODELS: '/admin/collaboration-models',
         NOTIFICATIONS: '/notifications',
         COLLABORATION_WIZARD: '/collaboration-wizard',
@@ -190,7 +194,18 @@ const CONFIG = {
             USERS: '/users',
             OPPORTUNITIES: '/opportunities',
             APPLICATIONS: '/applications',
-            MATCHES: '/matches'
+            MATCHES: '/matches',
+            ADMIN_OPPORTUNITIES: '/admin/opportunities',
+            ADMIN_OPPORTUNITIES_BY_ID: '/admin/opportunities/:id',
+            ADMIN_USERS: '/admin/users',
+            ADMIN_USERS_BY_ID: '/admin/users/:id',
+            ADMIN_APPLICATIONS: '/admin/applications',
+            ADMIN_APPLICATIONS_BY_OPPORTUNITY: '/admin/opportunities/:id/applications',
+            ADMIN_REPORTS_OFFERS_BY_SITE: '/admin/reports/offers-by-site',
+            ADMIN_REPORTS_OFFERS_BY_OPPORTUNITY: '/admin/reports/offers-by-opportunity',
+            ADMIN_SETTINGS: '/admin/settings',
+            ADMIN_SUBSCRIPTION_PLANS: '/admin/subscription-plans',
+            ADMIN_SUBSCRIPTIONS: '/admin/subscriptions'
         }
     }
 };
