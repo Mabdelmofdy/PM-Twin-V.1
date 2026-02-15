@@ -13,6 +13,20 @@ The Opportunity Creation module is the core workflow of the PMTwin platform. It 
 | User   | An authenticated company account or individual professional/consultant who creates the opportunity. |
 | System | Manages the wizard flow, validates inputs, persists data, triggers matching, and creates audit logs. |
 
+## Table of Contents
+
+- [Step 1 – Basic Information](#step-1-basic-information)
+- [Step 2 – Intent Label](#step-2-intent-label)
+- [Step 3 – Scope and Capabilities](#step-3-scope-and-capabilities)
+- [Step 4 – Category and Sub-Model Selection](#step-4-category-and-sub-model-selection)
+- [Collaboration Models and Sub-Models](#collaboration-models-and-sub-models)
+- [Step 5 – Exchange Mode and Financial Terms](#step-5-exchange-mode-and-financial-terms)
+- [Step 6 – Review and Publish](#step-6-review-and-publish)
+- [Field Types Reference](#field-types-reference)
+- [State Changes](#state-changes)
+- [Error and Edge Cases](#error-and-edge-cases)
+- [Output Data](#output-data)
+
 ---
 
 ## Step-by-Step Flow
@@ -21,6 +35,7 @@ The opportunity creation wizard consists of 6 sequential steps. The user can nav
 
 ---
 
+<a id="step-1-basic-information"></a>
 ### Step 1 -- Basic Information
 
 **Primary Question**
@@ -70,6 +85,7 @@ Location is a 4-level hierarchical selection:
 
 ---
 
+<a id="step-2-intent-label"></a>
 ### Step 2 -- Intent Label
 
 **Primary Question**
@@ -101,6 +117,7 @@ N/A -- radio buttons. Values from `lookups.json > intentLabels`:
 
 ---
 
+<a id="step-3-scope-and-capabilities"></a>
 ### Step 3 -- Scope and Capabilities
 
 **Primary Question**
@@ -133,6 +150,7 @@ None.
 
 ---
 
+<a id="step-4-category-and-sub-model-selection"></a>
 ### Step 4 -- Category and Sub-Model Selection
 
 **Primary Question**
@@ -177,6 +195,7 @@ Plus: all model-specific attribute fields (see detailed sub-model sections below
 
 ---
 
+<a id="collaboration-models-and-sub-models"></a>
 ## Collaboration Models and Sub-Models
 
 ### MODEL 1: Project-Based Collaboration (`project_based`)
@@ -497,6 +516,7 @@ Plus: all model-specific attribute fields (see detailed sub-model sections below
 
 ---
 
+<a id="step-5-exchange-mode-and-financial-terms"></a>
 ### Step 5 -- Exchange Mode and Financial Terms
 
 **Primary Question**
@@ -599,6 +619,7 @@ PMTwin supports multiple value exchange mechanisms beyond traditional cash payme
 
 ---
 
+<a id="step-6-review-and-publish"></a>
 ### Step 6 -- Review and Publish
 
 **Primary Question**
@@ -633,6 +654,7 @@ The review step gives the creator a final chance to verify all entered data. The
 
 ---
 
+<a id="field-types-reference"></a>
 ## Field Types Reference
 
 | Type              | Description                                                    |
@@ -653,6 +675,7 @@ The review step gives the creator a final chance to verify all entered data. The
 
 ---
 
+<a id="state-changes"></a>
 ## State Changes
 
 | Trigger                    | Status Transition                     |
@@ -670,6 +693,7 @@ Full opportunity status lifecycle: `draft` -> `published` -> `in_negotiation` ->
 
 ---
 
+<a id="error-and-edge-cases"></a>
 ## Error and Edge Cases
 
 | Scenario                                         | Behavior                                               |
@@ -691,6 +715,7 @@ Full opportunity status lifecycle: `draft` -> `published` -> `in_negotiation` ->
 
 ---
 
+<a id="output-data"></a>
 ## Output Data
 
 ### Opportunity Object (stored)

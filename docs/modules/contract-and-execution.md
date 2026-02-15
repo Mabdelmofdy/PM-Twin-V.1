@@ -14,10 +14,26 @@ The Contract and Execution module manages the post-acceptance lifecycle of an op
 | Contractor        | The applicant whose application was accepted. Participates in the contracted engagement. |
 | System            | Automatically creates the contract on application acceptance. Manages status transitions, milestone tracking, and UI rendering. |
 
+## Table of Contents
+
+- [Step 1 – Contract Auto-Creation (System-Triggered)](#step-1-contract-auto-creation-system-triggered)
+- [Step 2 – Contract View](#step-2-contract-view)
+- [Step 3 – Start Execution](#step-3-start-execution)
+- [Step 4 – Milestone Management](#step-4-milestone-management)
+- [Step 5 – Confirm Completion](#step-5-confirm-completion)
+- [Step 6 – Close Opportunity](#step-6-close-opportunity)
+- [Contract Data Model](#contract-data-model)
+- [State Changes](#state-changes)
+- [Error and Edge Cases](#error-and-edge-cases)
+- [Audit Log Entries](#audit-log-entries)
+- [Notifications](#notifications)
+- [Output Data](#output-data)
+
 ---
 
 ## Step-by-Step Flow
 
+<a id="step-1-contract-auto-creation-system-triggered"></a>
 ### Step 1 -- Contract Auto-Creation (System-Triggered)
 
 **Primary Question**
@@ -67,6 +83,7 @@ None (system-initiated).
 
 ---
 
+<a id="step-2-contract-view"></a>
 ### Step 2 -- Contract View
 
 **Primary Question**
@@ -105,6 +122,7 @@ Users can also open **Contracts** from the portal sidebar to see all contracts w
 
 ---
 
+<a id="step-3-start-execution"></a>
 ### Step 3 -- Start Execution
 
 **Primary Question**
@@ -137,6 +155,7 @@ None.
 
 ---
 
+<a id="step-4-milestone-management"></a>
 ### Step 4 -- Milestone Management
 
 **Primary Question**
@@ -200,6 +219,7 @@ None.
 
 ---
 
+<a id="step-5-confirm-completion"></a>
 ### Step 5 -- Confirm Completion
 
 **Primary Question**
@@ -229,6 +249,7 @@ Even when all milestones are marked as complete, the owner must explicitly confi
 
 ---
 
+<a id="step-6-close-opportunity"></a>
 ### Step 6 -- Close Opportunity
 
 **Primary Question**
@@ -257,6 +278,7 @@ None.
 
 ---
 
+<a id="contract-data-model"></a>
 ## Contract Data Model
 
 ```
@@ -287,6 +309,7 @@ None.
 
 ---
 
+<a id="state-changes"></a>
 ## State Changes
 
 ### Contract Status Transitions
@@ -315,6 +338,7 @@ None.
 
 ---
 
+<a id="error-and-edge-cases"></a>
 ## Error and Edge Cases
 
 | Scenario                                            | Behavior                                                    |
@@ -335,6 +359,7 @@ None.
 
 ---
 
+<a id="audit-log-entries"></a>
 ## Audit Log Entries
 
 | Action                      | Trigger                              |
@@ -345,6 +370,7 @@ Note: Contract-specific audit log entries for milestone updates, execution start
 
 ---
 
+<a id="notifications"></a>
 ## Notifications
 
 | Trigger                        | Recipient  | Type                          | Message                                                    |
@@ -356,6 +382,7 @@ Note: Notifications for execution start, milestone completion, and opportunity c
 
 ---
 
+<a id="output-data"></a>
 ## Output Data
 
 ### Contract Object (final state after full lifecycle)

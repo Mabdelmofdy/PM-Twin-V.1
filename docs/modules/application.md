@@ -14,8 +14,24 @@ The Application module enables authenticated users to apply for published opport
 | Opportunity Owner | The user who created the opportunity. Reviews applications and can accept, reject, or shortlist them. |
 | System            | Manages application creation, status transitions, matching, notifications, and automatic contract creation on acceptance. |
 
+## Table of Contents
+
+- [Step 1 – Overview (Read-Only)](#step-1-overview-read-only)
+- [Step 2 – Proposal](#step-2-proposal)
+- [Step 3 – Detailed Responses (Conditional)](#step-3-detailed-responses-conditional)
+- [Step 4 – Payment Preference](#step-4-payment-preference)
+- [Step 5 – Task Bidding (Conditional)](#step-5-task-bidding-conditional)
+- [Step 6 – Review and Submit](#step-6-review-and-submit)
+- [Application Management (Owner View)](#application-management-owner-view)
+- [Matching Algorithm](#matching-algorithm)
+- [Pipeline / Kanban View](#pipeline-kanban-view)
+- [State Changes](#state-changes)
+- [Error and Edge Cases](#error-and-edge-cases)
+- [Output Data](#output-data)
+
 ---
 
+<a id="build-proposal-workflow"></a>
 ## Build proposal workflow
 
 To build and submit a proposal (application), the user opens an opportunity (e.g. from the Opportunities list), then clicks **Apply** (or "Apply Now" on the opportunity detail page). This starts the application wizard. The user completes: **Proposal** (Step 2, required), optional **Requirements** (Step 3) if the opportunity has model-specific attributes, **Payment** preference (Step 4), optional **Bidding** (Step 5) for task-based opportunities, and **Review** (Step 6), then submits. The owner can then review, shortlist, accept, or reject the application. Accepting an application creates a contract (see Contract and Execution module).
@@ -33,6 +49,7 @@ To build and submit a proposal (application), the user opens an opportunity (e.g
 
 ---
 
+<a id="step-1-overview-read-only"></a>
 ### Step 1 -- Overview (Read-Only)
 
 **Primary Question**
@@ -72,6 +89,7 @@ None.
 
 ---
 
+<a id="step-2-proposal"></a>
 ### Step 2 -- Proposal
 
 **Primary Question**
@@ -101,6 +119,7 @@ None -- this step is always shown.
 
 ---
 
+<a id="step-3-detailed-responses-conditional"></a>
 ### Step 3 -- Detailed Responses (Conditional)
 
 **Primary Question**
@@ -140,6 +159,7 @@ None.
 
 ---
 
+<a id="step-4-payment-preference"></a>
 ### Step 4 -- Payment Preference
 
 **Primary Question**
@@ -176,6 +196,7 @@ None -- this step is always shown.
 
 ---
 
+<a id="step-5-task-bidding-conditional"></a>
 ### Step 5 -- Task Bidding (Conditional)
 
 **Primary Question**
@@ -213,6 +234,7 @@ For task-based engagement opportunities (`subModelType === 'task_based'`), appli
 
 ---
 
+<a id="step-6-review-and-submit"></a>
 ### Step 6 -- Review and Submit
 
 **Primary Question**
@@ -274,6 +296,7 @@ None on the review step itself.
 
 ---
 
+<a id="application-management-owner-view"></a>
 ## Application Management (Owner View)
 
 ### Applications List
@@ -323,6 +346,7 @@ Each application card displays:
 
 ---
 
+<a id="matching-algorithm"></a>
 ## Matching Algorithm
 
 The matching algorithm calculates a compatibility score (0.0 to 1.0) between an opportunity and a candidate. It runs automatically when an opportunity is published.
@@ -400,6 +424,7 @@ When a match score >= 80%, the system automatically:
 
 ---
 
+<a id="pipeline-kanban-view"></a>
 ## Pipeline / Kanban View
 
 Applications can be viewed in a kanban board layout at `/pipeline`, organized into columns by status:
@@ -416,6 +441,7 @@ The pipeline view includes tabs for Opportunities, Applications, and Matches.
 
 ---
 
+<a id="state-changes"></a>
 ## State Changes
 
 ### Application Status Transitions
@@ -443,6 +469,7 @@ The pipeline view includes tabs for Opportunities, Applications, and Matches.
 
 ---
 
+<a id="error-and-edge-cases"></a>
 ## Error and Edge Cases
 
 | Scenario                                       | Behavior                                                  |
@@ -461,6 +488,7 @@ The pipeline view includes tabs for Opportunities, Applications, and Matches.
 
 ---
 
+<a id="output-data"></a>
 ## Output Data
 
 ### Application Object (stored)

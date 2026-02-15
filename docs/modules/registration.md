@@ -14,10 +14,29 @@ The Registration module handles the onboarding of new users and companies onto t
 | System  | Creates the account record, sends OTP codes, validates inputs, creates audit logs, and manages status transitions. |
 | Admin   | Reviews pending registrations via the Admin Vetting interface. Can approve, reject, or request clarification. |
 
+## Table of Contents
+
+- [Step 0 – Account Type Selection](#step-0-account-type-selection)
+- [Company Registration Path (Steps A1 – A4)](#company-registration-path-steps-a1-a4)
+  - [Step A1 – Company Role Selection](#step-a1-company-role-selection)
+  - [Step A2 – Company Details and Verification](#step-a2-company-details-and-verification)
+  - [Step A3 – Documents and Terms](#step-a3-documents-and-terms)
+  - [Step A4 – Review and Submit](#step-a4-review-and-submit)
+- [Individual Registration Path (Steps B1 – B4)](#individual-registration-path-steps-b1-b4)
+  - [Step B1 – Individual Type Selection](#step-b1-individual-type-selection)
+  - [Step B2 – Personal Details and Verification](#step-b2-personal-details-and-verification)
+  - [Step B3 – Documents and Terms](#step-b3-documents-and-terms)
+  - [Step B4 – Review and Submit](#step-b4-review-and-submit)
+- [Admin Vetting Flow (Post-Registration)](#admin-vetting-flow-post-registration)
+- [State Changes](#state-changes)
+- [Error and Edge Cases](#error-and-edge-cases)
+- [Output Data](#output-data)
+
 ---
 
 ## Step-by-Step Flow
 
+<a id="step-0-account-type-selection"></a>
 ### Step 0 -- Account Type Selection
 
 **Primary Question**
@@ -50,8 +69,10 @@ N/A -- radio buttons with static values.
 
 ---
 
+<a id="company-registration-path-steps-a1-a4"></a>
 ## Company Registration Path (Steps A1 -- A4)
 
+<a id="step-a1-company-role-selection"></a>
 ### Step A1 -- Company Role Selection
 
 **Primary Question**
@@ -114,6 +135,7 @@ For `sub_contractor`:
 
 ---
 
+<a id="step-a2-company-details-and-verification"></a>
 ### Step A2 -- Company Details and Verification
 
 **Primary Question**
@@ -175,6 +197,7 @@ For both email and mobile:
 
 ---
 
+<a id="step-a3-documents-and-terms"></a>
 ### Step A3 -- Documents and Terms
 
 **Primary Question**
@@ -258,6 +281,7 @@ Documents are defined in `lookups.json > companyRoleDocuments`:
 
 ---
 
+<a id="step-a4-review-and-submit"></a>
 ### Step A4 -- Review and Submit
 
 **Primary Question**
@@ -304,8 +328,10 @@ None.
 
 ---
 
+<a id="individual-registration-path-steps-b1-b4"></a>
 ## Individual Registration Path (Steps B1 -- B4)
 
+<a id="step-b1-individual-type-selection"></a>
 ### Step B1 -- Individual Type Selection
 
 **Primary Question**
@@ -338,6 +364,7 @@ N/A -- radio buttons.
 
 ---
 
+<a id="step-b2-personal-details-and-verification"></a>
 ### Step B2 -- Personal Details and Verification
 
 **Primary Question**
@@ -388,6 +415,7 @@ Same flow as Company Step A2, but uses separate OTP code keys (`indEmail`, `indM
 
 ---
 
+<a id="step-b3-documents-and-terms"></a>
 ### Step B3 -- Documents and Terms
 
 **Primary Question**
@@ -443,6 +471,7 @@ Same as Company Step A3:
 
 ---
 
+<a id="step-b4-review-and-submit"></a>
 ### Step B4 -- Review and Submit
 
 **Primary Question**
@@ -489,6 +518,7 @@ None.
 
 ---
 
+<a id="admin-vetting-flow-post-registration"></a>
 ## Admin Vetting Flow (Post-Registration)
 
 ### Overview
@@ -546,6 +576,7 @@ After registration, accounts have `status: pending`. Admin users (with `admin` o
 
 ---
 
+<a id="state-changes"></a>
 ## State Changes
 
 | Trigger                       | From Status                | To Status                  |
@@ -558,6 +589,7 @@ After registration, accounts have `status: pending`. Admin users (with `admin` o
 
 ---
 
+<a id="error-and-edge-cases"></a>
 ## Error and Edge Cases
 
 | Scenario                                       | Behavior                                                     |
@@ -583,6 +615,7 @@ After registration, accounts have `status: pending`. Admin users (with `admin` o
 
 ---
 
+<a id="output-data"></a>
 ## Output Data
 
 ### Company Registration Payload (stored)

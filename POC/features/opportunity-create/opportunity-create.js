@@ -466,6 +466,7 @@ function setupWizardNavigation() {
     const nextBtn = document.getElementById('next-step');
     const prevBtn = document.getElementById('prev-step');
     const submitBtn = document.getElementById('submit-form');
+    if (!nextBtn || !prevBtn) return;
     
     nextBtn.addEventListener('click', () => {
         if (validateCurrentStep()) {

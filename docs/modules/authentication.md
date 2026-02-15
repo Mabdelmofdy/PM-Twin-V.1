@@ -14,10 +14,24 @@ The Authentication module manages user identity verification, session lifecycle,
 | System  | The PMTwin application itself, responsible for session creation, token management, route protection, and audit logging. |
 | Admin   | Indirectly involved -- admin roles (admin, moderator, auditor) are enforced by the authentication guard when accessing admin routes. |
 
+## Table of Contents
+
+- [Step 1.1 – Login](#step-1-1-login)
+- [Step 1.2 – Logout](#step-1-2-logout)
+- [Step 1.3 – Session Validation (checkAuth)](#step-1-3-session-validation-checkauth)
+- [Step 1.4 – Route Protection (Auth Guard)](#step-1-4-route-protection-auth-guard)
+- [Role-Based Access Control](#role-based-access-control)
+- [Session Data Model](#session-data-model)
+- [State Changes](#state-changes)
+- [Error and Edge Cases](#error-and-edge-cases)
+- [Audit Log Entries](#audit-log-entries)
+- [Output Data](#output-data)
+
 ---
 
 ## Step-by-Step Flow
 
+<a id="step-1-1-login"></a>
 ### Step 1.1 -- Login
 
 **Primary Question**
@@ -69,6 +83,7 @@ None.
 
 ---
 
+<a id="step-1-2-logout"></a>
 ### Step 1.2 -- Logout
 
 **Primary Question**
@@ -103,6 +118,7 @@ None.
 
 ---
 
+<a id="step-1-3-session-validation-checkauth"></a>
 ### Step 1.3 -- Session Validation (checkAuth)
 
 **Primary Question**
@@ -139,6 +155,7 @@ None.
 
 ---
 
+<a id="step-1-4-route-protection-auth-guard"></a>
 ### Step 1.4 -- Route Protection (Auth Guard)
 
 **Primary Question**
@@ -182,6 +199,7 @@ All other routes require authentication (any active or clarification_requested u
 
 ---
 
+<a id="role-based-access-control"></a>
 ## Role-Based Access Control
 
 The system defines 8 roles organized in 3 categories:
@@ -219,6 +237,7 @@ The system defines 8 roles organized in 3 categories:
 
 ---
 
+<a id="session-data-model"></a>
 ## Session Data Model
 
 ```
@@ -237,6 +256,7 @@ The system defines 8 roles organized in 3 categories:
 
 ---
 
+<a id="state-changes"></a>
 ## State Changes
 
 | Trigger          | State Change                                                   |
@@ -248,6 +268,7 @@ The system defines 8 roles organized in 3 categories:
 
 ---
 
+<a id="error-and-edge-cases"></a>
 ## Error and Edge Cases
 
 | Scenario                                  | Behavior                                                                 |
@@ -267,6 +288,7 @@ The system defines 8 roles organized in 3 categories:
 
 ---
 
+<a id="audit-log-entries"></a>
 ## Audit Log Entries
 
 | Action            | Entity Type | Trigger   |
@@ -276,6 +298,7 @@ The system defines 8 roles organized in 3 categories:
 
 ---
 
+<a id="output-data"></a>
 ## Output Data
 
 ### Login Response
