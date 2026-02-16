@@ -448,8 +448,16 @@ function setupGlobalNavigation() {
 let loadPageInProgress = false;
 
 /**
+ * Resolve URL for a page path relative to the current document (same origin).
+ * Avoids ERR_CONNECTION_REFUSED when opened via file:// or wrong base.
+ */
+function resolvePageUrl(relativePath) {
+    return new URL(relativePath, window.location.href).href;
+}
+
+/**
  * Load page content
- * Uses CONFIG.BASE_PATH for correct path resolution
+ * Fetches using a URL relative to the document so it works for any base path and origin.
  */
 async function loadPage(pageName, params = {}) {
     const mainContent = document.getElementById('main-content');
@@ -460,10 +468,10 @@ async function loadPage(pageName, params = {}) {
     }
     loadPageInProgress = true;
     
-    const basePath = window.CONFIG?.BASE_PATH || APP_BASE_PATH || '';
+    // Path relative to index.html (e.g. pages/notifications/index.html)
+    const pagePath = resolvePageUrl(`pages/${pageName}/index.html`);
     
     try {
-        const pagePath = `${basePath}pages/${pageName}/index.html`;
         const response = await fetch(pagePath);
         if (!response.ok) {
             throw new Error(`Page not found: ${pageName}`);
@@ -488,7 +496,11 @@ async function loadPage(pageName, params = {}) {
         }
     } catch (error) {
         console.error(`Error loading page ${pageName}:`, error);
-        mainContent.innerHTML = `<div class="error">Page not found: ${pageName}</div>`;
+        const isNetworkError = error?.message === 'Failed to fetch' || error?.name === 'TypeError';
+        const hint = isNetworkError && window.location.protocol === 'file:'
+            ? ' Open the app via a local server (e.g. Live Server) instead of file://.'
+            : isNetworkError ? ' Check that the server is running and the path is correct.' : '';
+        mainContent.innerHTML = `<div class="error">Page not found: ${pageName}.${hint}</div>`;
     } finally {
         loadPageInProgress = false;
     }
