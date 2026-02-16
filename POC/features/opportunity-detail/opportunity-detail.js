@@ -284,6 +284,9 @@ async function loadAndRenderContract(opportunity) {
     if (opportunity.status === 'completed' && isOwner) {
         actionsHtml += `<button type="button" id="close-opportunity-btn" class="btn btn-secondary" data-opp-id="${opportunity.id}">Close opportunity</button>`;
     }
+    if (opportunity.status === 'in_execution' && isOwner) {
+        actionsHtml += `<button type="button" id="terminate-contract-btn" class="btn btn-danger" data-opp-id="${opportunity.id}" data-contract-id="${contract.id}">Terminate contract</button>`;
+    }
     actionsEl.innerHTML = actionsHtml;
     
     document.getElementById('start-execution-btn')?.addEventListener('click', async () => {
@@ -291,6 +294,28 @@ async function loadAndRenderContract(opportunity) {
         const cId = document.getElementById('start-execution-btn').dataset.contractId;
         await dataService.updateOpportunity(oppId, { status: 'in_execution' });
         await dataService.updateContract(cId, { status: 'active' });
+        const user = authService.getCurrentUser();
+        if (user) {
+            await dataService.createAuditLog({
+                userId: user.id,
+                action: 'execution_started',
+                entityType: 'contract',
+                entityId: cId,
+                details: { opportunityId: oppId }
+            });
+        }
+        const contract = await dataService.getContractById(cId);
+        if (contract && contract.contractorId) {
+            const opp = await dataService.getOpportunityById(oppId);
+            const title = opp?.title || 'the opportunity';
+            await dataService.createNotification({
+                userId: contract.contractorId,
+                type: 'execution_started',
+                title: 'Execution started',
+                message: `Work has started for "${title}".`,
+                link: `/opportunities/${oppId}`
+            });
+        }
         await loadOpportunity(oppId);
     });
     document.getElementById('confirm-completion-btn')?.addEventListener('click', async () => {
@@ -299,21 +324,113 @@ async function loadAndRenderContract(opportunity) {
         const contractId = btn.dataset.contractId;
         await dataService.updateOpportunity(oppId, { status: 'completed' });
         if (contractId) await dataService.updateContract(contractId, { status: 'completed' });
+        const user = authService.getCurrentUser();
+        if (user) {
+            await dataService.createAuditLog({
+                userId: user.id,
+                action: 'completion_confirmed',
+                entityType: 'opportunity',
+                entityId: oppId,
+                details: { contractId: contractId || '' }
+            });
+        }
+        const contract = contractId ? await dataService.getContractById(contractId) : null;
+        if (contract && contract.contractorId) {
+            const opp = await dataService.getOpportunityById(oppId);
+            const title = opp?.title || 'the opportunity';
+            await dataService.createNotification({
+                userId: contract.contractorId,
+                type: 'opportunity_completed',
+                title: 'Engagement completed',
+                message: `"${title}" has been marked as completed by the opportunity owner.`,
+                link: `/opportunities/${oppId}`
+            });
+        }
         await loadOpportunity(oppId);
     });
     document.getElementById('close-opportunity-btn')?.addEventListener('click', async () => {
         const oppId = document.getElementById('close-opportunity-btn').dataset.oppId;
         await dataService.updateOpportunity(oppId, { status: 'closed' });
+        const user = authService.getCurrentUser();
+        if (user) {
+            await dataService.createAuditLog({
+                userId: user.id,
+                action: 'opportunity_closed',
+                entityType: 'opportunity',
+                entityId: oppId,
+                details: {}
+            });
+        }
         await loadOpportunity(oppId);
+    });
+    document.getElementById('terminate-contract-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('terminate-contract-btn');
+        if (!btn) return;
+        const oppId = btn.dataset.oppId;
+        const cId = btn.dataset.contractId;
+        if (!confirm('Are you sure you want to terminate this contract? The opportunity will be marked as cancelled.')) return;
+        const reason = prompt('Reason for termination (optional):') || '';
+        try {
+            await dataService.updateContract(cId, { status: 'terminated' });
+            await dataService.updateOpportunity(oppId, { status: 'cancelled' });
+            const user = authService.getCurrentUser();
+            if (user) {
+                await dataService.createAuditLog({
+                    userId: user.id,
+                    action: 'contract_terminated',
+                    entityType: 'contract',
+                    entityId: cId,
+                    details: { opportunityId: oppId, reason }
+                });
+            }
+            const contract = await dataService.getContractById(cId);
+            if (contract && contract.contractorId) {
+                const opp = await dataService.getOpportunityById(oppId);
+                const title = opp?.title || 'the opportunity';
+                await dataService.createNotification({
+                    userId: contract.contractorId,
+                    type: 'contract_terminated',
+                    title: 'Contract terminated',
+                    message: `The contract for "${title}" has been terminated by the opportunity owner.${reason ? ' Reason: ' + reason : ''}`,
+                    link: `/opportunities/${oppId}`
+                });
+            }
+            await loadOpportunity(oppId);
+        } catch (err) {
+            console.error('Error terminating contract:', err);
+            alert('Failed to terminate contract.');
+        }
     });
 }
 
 async function markMilestoneComplete(contractId, index) {
     const contract = await dataService.getContractById(contractId);
     if (!contract || !contract.milestones || !contract.milestones[index]) return;
+    const milestone = contract.milestones[index];
     const milestones = [...contract.milestones];
-    milestones[index] = { ...milestones[index], status: 'completed', completedAt: new Date().toISOString() };
+    milestones[index] = { ...milestone, status: 'completed', completedAt: new Date().toISOString() };
     await dataService.updateContract(contractId, { milestones });
+    const user = authService.getCurrentUser();
+    if (user) {
+        await dataService.createAuditLog({
+            userId: user.id,
+            action: 'milestone_completed',
+            entityType: 'contract',
+            entityId: contractId,
+            details: { milestoneIndex: index, milestoneTitle: milestone.title, opportunityId: currentOpportunity?.id }
+        });
+    }
+    if (contract.contractorId) {
+        const opp = currentOpportunity || await dataService.getOpportunityById(contract.opportunityId);
+        const title = opp?.title || 'the opportunity';
+        await dataService.createNotification({
+            userId: contract.contractorId,
+            type: 'milestone_completed',
+            title: 'Milestone completed',
+            message: `Milestone "${milestone.title}" was marked complete for "${title}".`,
+            link: `/opportunities/${contract.opportunityId}`
+        });
+    }
     await loadAndRenderContract(currentOpportunity);
 }
 
@@ -371,6 +488,16 @@ async function submitMilestoneForm(contractId, title, dueDate) {
         const milestones = [...(contract.milestones || [])];
         milestones.push({ id: 'm' + Date.now(), title, dueDate: dueDate || '', status: 'pending' });
         await dataService.updateContract(contractId, { milestones });
+        const user = authService.getCurrentUser();
+        if (user) {
+            await dataService.createAuditLog({
+                userId: user.id,
+                action: 'milestone_added',
+                entityType: 'contract',
+                entityId: contractId,
+                details: { title, dueDate: dueDate || '', opportunityId: currentOpportunity?.id }
+            });
+        }
         await loadAndRenderContract(currentOpportunity);
     } catch (error) {
         console.error('Error adding milestone:', error);
@@ -1725,7 +1852,7 @@ async function updateApplicationStatus(applicationId, status) {
             const opp = await dataService.getOpportunityById(currentOpportunity.id);
             const creatorId = opp.creatorId;
             const contractorId = application.applicantId;
-            await dataService.createContract({
+            const newContract = await dataService.createContract({
                 opportunityId: currentOpportunity.id,
                 applicationId: application.id,
                 creatorId,
@@ -1736,6 +1863,16 @@ async function updateApplicationStatus(applicationId, status) {
                 status: window.CONFIG?.CONTRACT_STATUS?.PENDING || 'pending'
             });
             await dataService.updateOpportunity(currentOpportunity.id, { status: 'contracted' });
+            const user = authService.getCurrentUser();
+            if (user) {
+                await dataService.createAuditLog({
+                    userId: user.id,
+                    action: 'contract_created',
+                    entityType: 'contract',
+                    entityId: newContract.id,
+                    details: { opportunityId: currentOpportunity.id, applicationId: application.id }
+                });
+            }
         }
         
         await dataService.createNotification({
