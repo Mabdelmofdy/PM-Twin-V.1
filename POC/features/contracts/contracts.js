@@ -156,7 +156,10 @@ async function loadContracts() {
                     <div class="flex items-center gap-2"><i class="ph-duotone ph-file-text text-gray-400"></i><span class="text-gray-600">Application:</span> <span>${escapeHtml(c.applicationStatusLabel)}</span></div>
                     <div class="flex items-center gap-2"><i class="ph-duotone ph-handshake text-gray-400"></i><span class="text-gray-600">Negotiation:</span> <span>${escapeHtml(c.negotiationLabel)}</span></div>
                 </div>
-                <a href="#" data-route="/opportunities/${escapeHtml(c.opportunityId)}" class="btn btn-sm btn-primary mt-3">View opportunity</a>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <a href="#" data-route="/contracts/${escapeHtml(c.id)}" class="btn btn-sm btn-secondary">View contract</a>
+                    <a href="#" data-route="/opportunities/${escapeHtml(c.opportunityId)}" class="btn btn-sm btn-primary">View opportunity</a>
+                </div>
             </div>
         `
             )

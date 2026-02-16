@@ -1,0 +1,112 @@
+<div class="page-container contract-detail-page">
+    <div id="contract-loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading contract...</p>
+    </div>
+
+    <div id="contract-error" class="error-state" style="display: none;">
+        <h2>Contract not found</h2>
+        <p>This contract does not exist or you do not have access to it.</p>
+        <a href="#" data-route="/contracts" class="btn btn-primary">Back to Contracts</a>
+    </div>
+
+    <div id="contract-content" class="contract-detail-content" style="display: none;">
+        <div class="contract-detail-header">
+            <a href="#" data-route="/contracts" class="back-link"><i class="ph-duotone ph-arrow-left"></i> Back to Contracts</a>
+            <h1 id="contract-title" class="page-title">Contract</h1>
+            <div class="contract-detail-meta">
+                <span id="contract-status-badge" class="badge">—</span>
+                <span id="contract-role-badge" class="badge badge-info">—</span>
+            </div>
+        </div>
+
+        <div class="contract-detail-sections">
+            <section class="detail-section">
+                <h2><i class="ph-duotone ph-users-three"></i> Parties</h2>
+                <div id="contract-parties" class="detail-content"></div>
+            </section>
+
+            <section class="detail-section">
+                <h2><i class="ph-duotone ph-file-text"></i> Scope & terms</h2>
+                <div id="contract-scope-terms" class="detail-content"></div>
+            </section>
+
+            <section class="detail-section" id="contract-milestones-section">
+                <h2><i class="ph-duotone ph-list-checks"></i> Milestones</h2>
+                <div id="contract-milestones" class="detail-content"></div>
+            </section>
+
+            <section class="detail-section">
+                <h2><i class="ph-duotone ph-calendar"></i> Dates</h2>
+                <div id="contract-dates" class="detail-content"></div>
+            </section>
+
+            <section class="detail-section">
+                <h2><i class="ph-duotone ph-briefcase"></i> Linked opportunity</h2>
+                <div id="contract-opportunity-link" class="detail-content"></div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+.contract-detail-page .loading-state,
+.contract-detail-page .error-state {
+    text-align: center;
+    padding: 2rem;
+}
+.contract-detail-page .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+.contract-detail-page .back-link:hover {
+    color: var(--color-primary);
+}
+.contract-detail-page .contract-detail-header {
+    margin-bottom: 1.5rem;
+}
+.contract-detail-page .contract-detail-meta {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.contract-detail-page .detail-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+.contract-detail-page .detail-section h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.contract-detail-page .detail-content {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+.contract-detail-page .detail-content p {
+    margin: 0.25rem 0;
+}
+.contract-detail-page .milestone-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.contract-detail-page .milestone-item:last-child {
+    border-bottom: none;
+}
+</style>

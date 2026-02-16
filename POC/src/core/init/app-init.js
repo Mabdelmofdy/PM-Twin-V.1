@@ -307,6 +307,10 @@ function initializeRoutes() {
     router.register(CONFIG.ROUTES.CONTRACTS, authGuard.protect(async () => {
         await loadPage('contracts');
     }));
+
+    router.register('/contracts/:id', authGuard.protect(async (params) => {
+        await loadPage('contract-detail', params);
+    }));
     
     // People routes (accessible to all users)
     router.register('/people', authGuard.protect(async () => {
