@@ -58,21 +58,41 @@ function getNegotiationLabel(opportunityStatus) {
     return map[opportunityStatus] || opportunityStatus;
 }
 
+function getMilestoneSummary(contract) {
+    if (contract.status !== 'active') return null;
+    const milestones = contract.milestones || [];
+    if (milestones.length === 0) return null;
+    const completed = milestones.filter((m) => m.status === 'completed').length;
+    const total = milestones.length;
+    if (completed === total) {
+        return `All ${total} milestone${total === 1 ? '' : 's'} complete`;
+    }
+    return `Milestones: ${completed}/${total} completed`;
+}
+
 async function initContracts() {
     await loadContracts();
 
     const applyBtn = document.getElementById('apply-filters');
     const clearBtn = document.getElementById('clear-filters');
+    const filterStatus = document.getElementById('filter-status');
+    const filterRole = document.getElementById('filter-role');
 
     if (applyBtn) {
         applyBtn.addEventListener('click', () => loadContracts());
     }
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
-            document.getElementById('filter-status').value = '';
-            document.getElementById('filter-role').value = '';
+            if (filterStatus) filterStatus.value = '';
+            if (filterRole) filterRole.value = '';
             loadContracts();
         });
+    }
+    if (filterStatus) {
+        filterStatus.addEventListener('change', () => loadContracts());
+    }
+    if (filterRole) {
+        filterRole.addEventListener('change', () => loadContracts());
     }
 }
 
@@ -127,6 +147,7 @@ async function loadContracts() {
                 const opportunityTitle = (opportunity && opportunity.title) || c.scope || '—';
                 const applicationStatusLabel = application ? formatApplicationStatus(application.status) : '—';
                 const negotiationLabel = opportunity ? getNegotiationLabel(opportunity.status) : '—';
+                const milestoneSummary = getMilestoneSummary(c);
                 return {
                     ...c,
                     opportunity,
@@ -136,10 +157,13 @@ async function loadContracts() {
                     scopeDisplay: c.scope || opportunityTitle,
                     opportunityTitle,
                     applicationStatusLabel,
-                    negotiationLabel
+                    negotiationLabel,
+                    milestoneSummary
                 };
             })
         );
+
+        enriched.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
 
         const html = enriched
             .map(
@@ -152,6 +176,7 @@ async function loadContracts() {
                     <span class="ml-2 text-gray-500">with ${escapeHtml(c.otherPartyName)}</span>
                 </div>
                 <div class="contract-card-links mt-3 space-y-1.5 text-sm">
+                    ${c.milestoneSummary ? `<div class="flex items-center gap-2"><i class="ph-duotone ph-list-checks text-gray-400"></i><span class="text-gray-600">${escapeHtml(c.milestoneSummary)}</span></div>` : ''}
                     <div class="flex items-center gap-2"><i class="ph-duotone ph-briefcase text-gray-400"></i><span class="text-gray-600">Linked opportunity:</span> <a href="#" data-route="/opportunities/${escapeHtml(c.opportunityId)}" class="contract-link text-primary font-medium">${escapeHtml(c.opportunityTitle)}</a></div>
                     <div class="flex items-center gap-2"><i class="ph-duotone ph-file-text text-gray-400"></i><span class="text-gray-600">Application:</span> <span>${escapeHtml(c.applicationStatusLabel)}</span></div>
                     <div class="flex items-center gap-2"><i class="ph-duotone ph-handshake text-gray-400"></i><span class="text-gray-600">Negotiation:</span> <span>${escapeHtml(c.negotiationLabel)}</span></div>

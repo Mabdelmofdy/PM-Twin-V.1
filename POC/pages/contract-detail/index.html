@@ -11,13 +11,15 @@
     </div>
 
     <div id="contract-content" class="contract-detail-content" style="display: none;">
+        <a href="#" data-route="/contracts" class="back-link no-print"><i class="ph-duotone ph-arrow-left"></i> Back to Contracts</a>
+        <div id="contract-print-area">
         <div class="contract-detail-header">
-            <a href="#" data-route="/contracts" class="back-link"><i class="ph-duotone ph-arrow-left"></i> Back to Contracts</a>
             <h1 id="contract-title" class="page-title">Contract</h1>
             <div class="contract-detail-meta">
                 <span id="contract-status-badge" class="badge">—</span>
                 <span id="contract-role-badge" class="badge badge-info">—</span>
             </div>
+            <div id="contract-detail-actions" class="contract-detail-actions no-print"></div>
         </div>
 
         <div class="contract-detail-sections">
@@ -45,6 +47,7 @@
                 <h2><i class="ph-duotone ph-briefcase"></i> Linked opportunity</h2>
                 <div id="contract-opportunity-link" class="detail-content"></div>
             </section>
+        </div>
         </div>
     </div>
 </div>
@@ -108,5 +111,30 @@
 }
 .contract-detail-page .milestone-item:last-child {
     border-bottom: none;
+}
+.contract-detail-page .contract-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+@media print {
+    body * { visibility: hidden; }
+    #contract-print-area, #contract-print-area * { visibility: visible; }
+    #contract-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    .contract-detail-page .no-print,
+    .contract-detail-page .contract-detail-actions { display: none !important; }
+    .contract-detail-page .detail-section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
 }
 </style>

@@ -147,6 +147,31 @@ async function initContractDetail(params) {
             <a href="#" data-route="/opportunities/${escapeHtml(oppId)}" class="btn btn-primary btn-sm">View opportunity</a>
         `;
 
+        const isCreator = contract.creatorId === user.id;
+        const canEditContract = isCreator && (contract.status === 'pending' || contract.status === 'active');
+        const oppStatus = opportunity ? opportunity.status : '';
+        const showManageExecution = ['contracted', 'in_execution', 'completed'].indexOf(oppStatus) !== -1;
+        const actionsEl = document.getElementById('contract-detail-actions');
+        if (actionsEl) {
+            let actionsHtml = '';
+            if (canEditContract) {
+                actionsHtml += `<button type="button" id="contract-edit-btn" class="btn btn-secondary no-print" data-contract-id="${escapeHtml(contract.id)}">Edit contract</button>`;
+            }
+            if (showManageExecution && oppId) {
+                actionsHtml += `<a href="#" data-route="/opportunities/${escapeHtml(oppId)}" class="btn btn-primary">Manage execution</a>`;
+            }
+            actionsHtml += `<button type="button" id="contract-print-btn" class="btn btn-secondary">Print contract</button>`;
+            actionsEl.innerHTML = actionsHtml;
+        }
+
+        document.getElementById('contract-edit-btn')?.addEventListener('click', () => {
+            showEditContractModal(contractId, contract.scope || '', contract.duration || '');
+        });
+
+        document.getElementById('contract-print-btn')?.addEventListener('click', () => {
+            window.print();
+        });
+
         wireBackLink(contentEl);
         contentEl.querySelectorAll('a[data-route]').forEach((link) => {
             link.addEventListener('click', (e) => {
@@ -161,6 +186,76 @@ async function initContractDetail(params) {
         errorEl.style.display = 'block';
         contentEl.style.display = 'none';
         wireBackLink(errorEl);
+    }
+}
+
+function showEditContractModal(contractId, currentScope, currentDuration) {
+    const contentHTML = `
+        <form id="contract-edit-form" class="space-y-3">
+            <div>
+                <label for="edit-contract-scope" class="block text-sm font-medium text-gray-700 mb-1">Scope <span class="text-red-500">*</span></label>
+                <input type="text" id="edit-contract-scope" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="${escapeHtml(currentScope || '')}" required placeholder="Contract scope / title" />
+            </div>
+            <div>
+                <label for="edit-contract-duration" class="block text-sm font-medium text-gray-700 mb-1">Duration (optional)</label>
+                <input type="text" id="edit-contract-duration" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="${escapeHtml(currentDuration || '')}" placeholder="e.g. 3 months, Q2 2026" />
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" id="contract-edit-save" class="btn btn-primary">Save</button>
+                <button type="button" id="contract-edit-cancel" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    `;
+
+    if (typeof modalService === 'undefined') {
+        const scope = prompt('Scope (required):', currentScope || '');
+        if (scope === null) return;
+        if (!scope.trim()) {
+            alert('Scope is required.');
+            return;
+        }
+        const duration = prompt('Duration (optional):', currentDuration || '') || '';
+        saveContractEdit(contractId, scope.trim(), duration.trim());
+        return;
+    }
+
+    modalService.showCustom(contentHTML, 'Edit contract', { confirmText: 'Close' }).then(() => {});
+
+    const modalEl = document.getElementById('modal-container');
+    if (!modalEl) return;
+
+    const saveBtn = modalEl.querySelector('#contract-edit-save');
+    const cancelBtn = modalEl.querySelector('#contract-edit-cancel');
+    const scopeInput = modalEl.querySelector('#edit-contract-scope');
+    const durationInput = modalEl.querySelector('#edit-contract-duration');
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+            const scope = scopeInput?.value != null ? String(scopeInput.value).trim() : '';
+            const duration = durationInput?.value != null ? String(durationInput.value).trim() : '';
+            if (!scope) {
+                alert('Scope is required.');
+                if (scopeInput) scopeInput.focus();
+                return;
+            }
+            modalService.close();
+            await saveContractEdit(contractId, scope, duration);
+        });
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => modalService.close());
+    }
+}
+
+async function saveContractEdit(contractId, scope, duration) {
+    try {
+        await dataService.updateContract(contractId, { scope, duration });
+        if (typeof initContractDetail === 'function') {
+            await initContractDetail({ id: contractId });
+        }
+    } catch (err) {
+        console.error('Error updating contract:', err);
+        alert('Failed to update contract. Please try again.');
     }
 }
 

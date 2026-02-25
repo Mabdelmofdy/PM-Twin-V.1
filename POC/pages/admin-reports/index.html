@@ -7,70 +7,141 @@
     </div>
     <div class="page-body">
 
-    <section class="reports-stats">
-        <h2>Overview</h2>
-        <div class="report-actions">
-            <button type="button" id="export-offers-by-site-csv" class="btn btn-secondary btn-sm">Export offers by site (CSV)</button>
-            <button type="button" id="export-offers-per-opp-csv" class="btn btn-secondary btn-sm">Export offers per opportunity (CSV)</button>
-        </div>
-        <div class="stats-grid" id="reports-stats-grid">
-            <div class="stat-card"><div class="stat-value" id="stat-users">0</div><div class="stat-label">Total Users & Companies</div></div>
-            <div class="stat-card"><div class="stat-value" id="stat-opportunities">0</div><div class="stat-label">Opportunities</div></div>
-            <div class="stat-card"><div class="stat-value" id="stat-applications">0</div><div class="stat-label">Applications</div></div>
-            <div class="stat-card"><div class="stat-value" id="stat-matches">0</div><div class="stat-label">Matches</div></div>
-        </div>
-    </section>
+        <nav class="report-module-tabs" role="tablist" aria-label="Report modules">
+            <button type="button" class="report-tab report-tab-active" data-module="overview" role="tab" aria-selected="true">Overview</button>
+            <button type="button" class="report-tab" data-module="users" role="tab" aria-selected="false">Users & Companies</button>
+            <button type="button" class="report-tab" data-module="opportunities" role="tab" aria-selected="false">Opportunities</button>
+            <button type="button" class="report-tab" data-module="applications" role="tab" aria-selected="false">Applications</button>
+            <button type="button" class="report-tab" data-module="matches" role="tab" aria-selected="false">Matches</button>
+            <button type="button" class="report-tab" data-module="audit" role="tab" aria-selected="false">Audit</button>
+        </nav>
 
-    <section class="reports-section">
-        <h2>User & company status</h2>
-        <div id="user-status-chart" class="report-block"></div>
-    </section>
+        <!-- Overview -->
+        <section id="report-module-overview" class="report-module-panel report-module-panel-visible" data-module="overview">
+            <h2 class="report-module-heading">Overview</h2>
+            <div class="report-actions">
+                <button type="button" id="export-offers-by-site-csv" class="btn btn-secondary btn-sm">Export offers by site (CSV)</button>
+                <button type="button" id="export-offers-per-opp-csv" class="btn btn-secondary btn-sm">Export offers per opportunity (CSV)</button>
+            </div>
+            <div class="stats-grid" id="reports-stats-grid">
+                <div class="stat-card"><div class="stat-value" id="stat-users">0</div><div class="stat-label">Total Users & Companies</div></div>
+                <div class="stat-card"><div class="stat-value" id="stat-opportunities">0</div><div class="stat-label">Opportunities</div></div>
+                <div class="stat-card"><div class="stat-value" id="stat-applications">0</div><div class="stat-label">Applications</div></div>
+                <div class="stat-card"><div class="stat-value" id="stat-matches">0</div><div class="stat-label">Matches</div></div>
+            </div>
+            <div class="report-charts-row">
+                <div class="report-chart-block">
+                    <h3 class="report-chart-title">Users & companies by status</h3>
+                    <div class="report-chart-container">
+                        <canvas id="chart-overview-users-status" aria-label="Users and companies by status"></canvas>
+                    </div>
+                </div>
+                <div class="report-chart-block">
+                    <h3 class="report-chart-title">Opportunities by status</h3>
+                    <div class="report-chart-container">
+                        <canvas id="chart-overview-opportunities-status" aria-label="Opportunities by status"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section class="reports-section">
-        <h2>User & company by role</h2>
-        <div id="user-role-chart" class="report-block"></div>
-    </section>
+        <!-- Users & Companies -->
+        <section id="report-module-users" class="report-module-panel" data-module="users" hidden>
+            <h2 class="report-module-heading">User & company status</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-user-status" aria-label="User and company status distribution"></canvas>
+                </div>
+            </div>
+            <h2 class="report-module-heading">User & company by role</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-user-role" aria-label="User and company by role"></canvas>
+                </div>
+            </div>
+        </section>
 
-    <section class="reports-section">
-        <h2>Opportunity status distribution</h2>
-        <div id="opportunity-status-chart" class="report-block"></div>
-    </section>
+        <!-- Opportunities -->
+        <section id="report-module-opportunities" class="report-module-panel" data-module="opportunities" hidden>
+            <h2 class="report-module-heading">Opportunity status distribution</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-opportunity-status" aria-label="Opportunity status distribution"></canvas>
+                </div>
+            </div>
+            <h2 class="report-module-heading">Opportunity by model type</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-opportunity-model" aria-label="Opportunity by model type"></canvas>
+                </div>
+            </div>
+            <h2 class="report-module-heading">Opportunity by intent</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-opportunity-intent" aria-label="Opportunity by intent"></canvas>
+                </div>
+            </div>
+            <h2 class="report-module-heading">Offers (applications) per opportunity</h2>
+            <div id="offers-per-opportunity" class="report-block"></div>
+            <h2 class="report-module-heading">Offers by site (location)</h2>
+            <div id="offers-by-site" class="report-block"></div>
+        </section>
 
-    <section class="reports-section">
-        <h2>Opportunity by model type</h2>
-        <div id="opportunity-model-chart" class="report-block"></div>
-    </section>
+        <!-- Applications -->
+        <section id="report-module-applications" class="report-module-panel" data-module="applications" hidden>
+            <h2 class="report-module-heading">Application status distribution</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-application-status" aria-label="Application status distribution"></canvas>
+                </div>
+            </div>
+        </section>
 
-    <section class="reports-section">
-        <h2>Opportunity by intent</h2>
-        <div id="opportunity-intent-chart" class="report-block"></div>
-    </section>
+        <!-- Matches -->
+        <section id="report-module-matches" class="report-module-panel" data-module="matches" hidden>
+            <h2 class="report-module-heading">Matches by notification status</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-matches-notified" aria-label="Matches notified vs not notified"></canvas>
+                </div>
+            </div>
+            <h2 class="report-module-heading">Matches by score band</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-matches-score-band" aria-label="Matches by score band"></canvas>
+                </div>
+            </div>
+        </section>
 
-    <section class="reports-section">
-        <h2>Offers (applications) per opportunity</h2>
-        <div id="offers-per-opportunity" class="report-block"></div>
-    </section>
-
-    <section class="reports-section">
-        <h2>Offers by site (location)</h2>
-        <div id="offers-by-site" class="report-block"></div>
-    </section>
-
-    <section class="reports-section">
-        <h2>Application status distribution</h2>
-        <div id="application-status-chart" class="report-block"></div>
-    </section>
-
-    <section class="reports-section">
-        <h2>Recent audit activity (last 30 days)</h2>
-        <div id="audit-summary" class="report-block"></div>
-    </section>
+        <!-- Audit -->
+        <section id="report-module-audit" class="report-module-panel" data-module="audit" hidden>
+            <h2 class="report-module-heading">Recent audit activity (last 30 days)</h2>
+            <div class="report-chart-block">
+                <div class="report-chart-container">
+                    <canvas id="chart-audit-actions" aria-label="Audit actions in last 30 days"></canvas>
+                </div>
+            </div>
+            <div id="audit-summary" class="report-block"></div>
+        </section>
     </div>
 </div>
 
 <style>
 .admin-reports-page { /* Page specific styles */ }
-.reports-stats h2, .reports-section h2 { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); }
+.report-module-tabs { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); margin-bottom: var(--spacing-xl); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); }
+.report-tab { padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border-color); background: var(--bg-primary); border-radius: var(--radius-md); cursor: pointer; font-weight: 500; color: var(--text-secondary); }
+.report-tab:hover { background: var(--bg-secondary, #f3f4f6); color: var(--text-primary); }
+.report-tab.report-tab-active { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+.report-module-panel { display: none; }
+.report-module-panel.report-module-panel-visible { display: block; }
+.report-module-panel[hidden] { display: none !important; }
+.report-module-heading { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); margin-top: var(--spacing-xl); }
+.report-module-heading:first-child { margin-top: 0; }
+.report-charts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-xl); margin-top: var(--spacing-xl); }
+.report-chart-block { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
+.report-chart-title { font-size: var(--font-size-lg); margin-bottom: var(--spacing-md); font-weight: 600; }
+.report-chart-container { position: relative; width: 100%; max-width: 100%; max-height: 360px; height: 320px; }
+.report-chart-container canvas { max-width: 100%; }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-2xl); }
 .report-block { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-lg); margin-bottom: var(--spacing-xl); }
 .report-row { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); }
