@@ -6,52 +6,166 @@
         </div>
     </div>
     <div class="page-body">
-    
-    <div class="filters-section">
-        <div class="filters">
-            <select id="filter-user" class="form-select">
-                <option value="">All Users</option>
-            </select>
+
+        <nav class="audit-view-tabs" role="tablist" aria-label="Audit view">
+            <button type="button" class="audit-view-tab audit-view-tab-active" data-view="logs" role="tab" aria-selected="true">Activity logs</button>
+            <button type="button" class="audit-view-tab" data-view="docs" role="tab" aria-selected="false">User & company documents</button>
+        </nav>
+
+        <div id="audit-view-logs" class="audit-view-panel audit-view-panel-active">
+            <div class="filters-section">
+                <div class="filters">
+                    <select id="filter-user" class="form-select">
+                        <option value="">All Users</option>
+                    </select>
+                    
+                    <select id="filter-entity-type" class="form-select">
+                        <option value="">All Entity Types</option>
+                        <option value="user">User</option>
+                        <option value="company">Company</option>
+                        <option value="opportunity">Opportunity</option>
+                        <option value="application">Application</option>
+                        <option value="session">Session</option>
+                        <option value="system">System</option>
+                    </select>
+
+                    <select id="filter-action" class="form-select">
+                        <option value="">All Actions</option>
+                        <option value="user_registered">User Registered</option>
+                        <option value="user_logged_in">User Logged In</option>
+                        <option value="opportunity_created">Opportunity Created</option>
+                        <option value="application_submitted">Application Submitted</option>
+                        <option value="user_approved">User Approved</option>
+                        <option value="user_rejected">User Rejected</option>
+                    </select>
+
+                    <input type="text" id="filter-search" class="form-input" placeholder="Search in action or details...">
+
+                    <input type="date" id="filter-start-date" class="form-input" placeholder="Start Date">
+                    <input type="date" id="filter-end-date" class="form-input" placeholder="End Date">
+
+                    <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
+                    <button type="button" id="export-csv" class="btn btn-secondary">Export CSV</button>
+                </div>
+            </div>
             
-            <select id="filter-entity-type" class="form-select">
-                <option value="">All Entity Types</option>
-                <option value="user">User</option>
-                <option value="company">Company</option>
-                <option value="opportunity">Opportunity</option>
-                <option value="application">Application</option>
-                <option value="session">Session</option>
-                <option value="system">System</option>
-            </select>
-
-            <select id="filter-action" class="form-select">
-                <option value="">All Actions</option>
-                <option value="user_registered">User Registered</option>
-                <option value="user_logged_in">User Logged In</option>
-                <option value="opportunity_created">Opportunity Created</option>
-                <option value="application_submitted">Application Submitted</option>
-                <option value="user_approved">User Approved</option>
-                <option value="user_rejected">User Rejected</option>
-            </select>
-
-            <input type="text" id="filter-search" class="form-input" placeholder="Search in action or details...">
-
-            <input type="date" id="filter-start-date" class="form-input" placeholder="Start Date">
-            <input type="date" id="filter-end-date" class="form-input" placeholder="End Date">
-
-            <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
-            <button type="button" id="export-csv" class="btn btn-secondary">Export CSV</button>
+            <div id="audit-logs" class="audit-logs">
+                <div class="spinner"></div>
+            </div>
         </div>
-    </div>
-    
-    <div id="audit-logs" class="audit-logs">
-        <div class="spinner"></div>
-    </div>
+
+        <div id="audit-view-docs" class="audit-view-panel" hidden>
+            <div class="audit-docs-filters">
+                <select id="filter-docs-type" class="form-select">
+                    <option value="">All (User & Company)</option>
+                    <option value="user">User only</option>
+                    <option value="company">Company only</option>
+                </select>
+                <input type="text" id="filter-docs-search" class="form-input" placeholder="Search by email or name...">
+                <button type="button" id="apply-docs-filters" class="btn btn-secondary">Apply</button>
+            </div>
+            <div id="audit-docs-list" class="audit-docs-list">
+                <div class="spinner"></div>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
 .admin-audit-page {
     /* Page specific styles */
+}
+
+.audit-view-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+.audit-view-tab {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.audit-view-tab:hover {
+    background: var(--bg-secondary, #f3f4f6);
+    color: var(--text-primary);
+}
+.audit-view-tab.audit-view-tab-active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.audit-view-panel {
+    display: none;
+}
+.audit-view-panel.audit-view-panel-active {
+    display: block;
+}
+.audit-view-panel[hidden] {
+    display: none !important;
+}
+
+.audit-docs-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    align-items: center;
+}
+.audit-docs-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+.audit-doc-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+.audit-doc-card-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+.audit-doc-card-title {
+    font-weight: 600;
+    margin: 0;
+}
+.audit-doc-card-meta {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+.audit-doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+.audit-doc-table th,
+.audit-doc-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+.audit-doc-table th {
+    font-weight: 600;
+}
+.audit-doc-table .audit-doc-view-link {
+    color: var(--primary-color);
+}
+.audit-doc-muted {
+    color: var(--text-muted, var(--text-secondary));
 }
 
 .audit-logs {

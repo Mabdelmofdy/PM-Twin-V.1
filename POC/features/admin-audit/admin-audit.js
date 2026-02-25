@@ -1,6 +1,14 @@
 /**
  * Admin Audit Component
+ * Activity logs + User & company documents for Checker
  */
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
 
 async function initAdminAudit() {
     if (!authService.canAccessAdmin()) {
@@ -11,6 +19,125 @@ async function initAdminAudit() {
     await loadUsersForFilter();
     await loadAuditLogs();
     setupFilters();
+    setupViewSwitcher();
+}
+
+function setupViewSwitcher() {
+    const tabs = document.querySelectorAll('.audit-view-tab');
+    const panelLogs = document.getElementById('audit-view-logs');
+    const panelDocs = document.getElementById('audit-view-docs');
+    if (!panelLogs || !panelDocs) return;
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const view = tab.getAttribute('data-view');
+            tabs.forEach(t => {
+                t.classList.remove('audit-view-tab-active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('audit-view-tab-active');
+            tab.setAttribute('aria-selected', 'true');
+
+            if (view === 'logs') {
+                panelLogs.classList.add('audit-view-panel-active');
+                panelLogs.hidden = false;
+                panelDocs.classList.remove('audit-view-panel-active');
+                panelDocs.hidden = true;
+            } else {
+                panelDocs.classList.add('audit-view-panel-active');
+                panelDocs.hidden = false;
+                panelLogs.classList.remove('audit-view-panel-active');
+                panelLogs.hidden = true;
+                loadDocumentsView();
+            }
+        });
+    });
+
+    const applyDocsBtn = document.getElementById('apply-docs-filters');
+    if (applyDocsBtn) {
+        applyDocsBtn.addEventListener('click', () => loadDocumentsView());
+    }
+    const searchDocs = document.getElementById('filter-docs-search');
+    if (searchDocs) {
+        searchDocs.addEventListener('keyup', (e) => { if (e.key === 'Enter') loadDocumentsView(); });
+    }
+}
+
+async function loadDocumentsView() {
+    const container = document.getElementById('audit-docs-list');
+    if (!container) return;
+
+    container.innerHTML = '<div class="spinner"></div>';
+
+    try {
+        const users = await dataService.getUsers();
+        const companies = await dataService.getCompanies();
+        const typeFilter = document.getElementById('filter-docs-type')?.value || '';
+        const searchFilter = (document.getElementById('filter-docs-search')?.value || '').toLowerCase().trim();
+
+        let entities = [
+            ...users.map(u => ({ ...u, entityType: 'user' })),
+            ...companies.map(c => ({ ...c, entityType: 'company' }))
+        ];
+
+        if (typeFilter === 'user') {
+            entities = entities.filter(e => e.entityType === 'user');
+        } else if (typeFilter === 'company') {
+            entities = entities.filter(e => e.entityType === 'company');
+        }
+
+        if (searchFilter) {
+            entities = entities.filter(e => {
+                const name = (e.profile?.name || '').toLowerCase();
+                const email = (e.email || '').toLowerCase();
+                return name.includes(searchFilter) || email.includes(searchFilter);
+            });
+        }
+
+        if (entities.length === 0) {
+            container.innerHTML = '<div class="empty-state">No users or companies match the filters</div>';
+            return;
+        }
+
+        container.innerHTML = entities.map(entity => {
+            const isCompany = entity.entityType === 'company';
+            const name = entity.profile?.name || entity.email || entity.id;
+            const docs = Array.isArray(entity.profile?.documents) ? entity.profile.documents : [];
+            const statusLabel = entity.status || '—';
+            const typeLabel = isCompany ? 'Company' : 'User';
+
+            const docsRows = docs.length === 0
+                ? '<tr><td colspan="3" class="audit-doc-muted">No documents</td></tr>'
+                : docs.map(doc => {
+                    const label = escapeHtml(doc.label || doc.type || 'Document');
+                    const fileName = escapeHtml(doc.fileName || '—');
+                    const hasData = typeof doc.data === 'string' && doc.data.length > 0;
+                    const viewCell = hasData
+                        ? `<a href="${escapeHtml(doc.data)}" target="_blank" rel="noopener" class="audit-doc-view-link">View</a>`
+                        : '<span class="audit-doc-muted">File not available</span>';
+                    return `<tr><td>${label}</td><td>${fileName}</td><td>${viewCell}</td></tr>`;
+                }).join('');
+
+            return `
+                <div class="audit-doc-card" data-entity-id="${escapeHtml(entity.id)}">
+                    <div class="audit-doc-card-header">
+                        <h3 class="audit-doc-card-title">${escapeHtml(name)}</h3>
+                        <span class="badge badge-secondary">${escapeHtml(typeLabel)}</span>
+                        <span class="badge badge-${entity.status === 'active' ? 'success' : entity.status === 'pending' ? 'warning' : 'secondary'}">${escapeHtml(statusLabel)}</span>
+                        <span class="audit-doc-card-meta">${escapeHtml(entity.email)}</span>
+                        <a href="#" data-route="/admin/users/${escapeHtml(entity.id)}" class="btn btn-secondary btn-sm">View detail</a>
+                    </div>
+                    <table class="audit-doc-table">
+                        <thead><tr><th>Document type</th><th>File name</th><th>Action</th></tr></thead>
+                        <tbody>${docsRows}</tbody>
+                    </table>
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Error loading documents view:', error);
+        container.innerHTML = '<div class="empty-state">Error loading user and company documents</div>';
+    }
 }
 
 async function loadUsersForFilter() {
