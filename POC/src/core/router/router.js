@@ -31,6 +31,10 @@ class Router {
         if (path.length > 1 && path.endsWith('/')) {
             path = path.substring(0, path.length - 1);
         }
+        // Strip query string for route matching
+        if (path.includes('?')) {
+            path = path.split('?')[0];
+        }
         return path || '/';
     }
     

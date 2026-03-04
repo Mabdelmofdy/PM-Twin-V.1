@@ -2,6 +2,19 @@
  * Admin User Detail – full profile, activity, opportunities, applications, audit
  */
 
+let adminDetailLookups = null;
+async function loadAdminDetailLookups() {
+    if (adminDetailLookups) return adminDetailLookups;
+    try {
+        const base = (window.CONFIG && window.CONFIG.BASE_PATH) || '';
+        const res = await fetch(base + 'data/lookups.json');
+        adminDetailLookups = await res.json();
+        return adminDetailLookups;
+    } catch (e) {
+        return {};
+    }
+}
+
 async function initAdminUserDetail(params) {
     if (!authService.isAdmin()) {
         router.navigate(CONFIG.ROUTES.DASHBOARD);
@@ -41,6 +54,43 @@ async function loadUserDetail(userId) {
         <div class="detail-item"><strong>Status</strong> ${person.status || '-'}</div>
         <div class="detail-item"><strong>Registered</strong> ${person.createdAt ? new Date(person.createdAt).toLocaleDateString() : '-'}</div>
     `;
+
+    await loadAdminDetailLookups();
+    const docs = person.profile?.documents || [];
+    const vc = person.profile?.vettingCaseStudy;
+    const inv = person.profile?.interview;
+    const caseStudies = person.profile?.caseStudies || [];
+    const hasCaseStudy = (vc && (vc.title || vc.url || vc.description)) || caseStudies.length > 0;
+    const type = person.profile?.type === 'consultant' || person.role === 'consultant' ? 'consultant' : 'professional';
+    const req = adminDetailLookups?.vettingRequirements?.[type] || {};
+    const certOk = docs.length > 0;
+    const caseStudyOk = req.caseStudy === 'optional' ? true : hasCaseStudy;
+    const interviewOk = !!(inv?.link || inv?.scheduledAt);
+    const vettingEl = document.getElementById('user-detail-vetting');
+    vettingEl.innerHTML = `
+        <div class="detail-item"><strong>Requirements</strong> <span class="badge badge-secondary">${type === 'consultant' ? 'Consultant' : 'Professional'}</span></div>
+        <div class="detail-item">Certifications ${req.certifications === 'required' ? (certOk ? '✓' : '✗') : '—'} ${docs.length === 0 ? 'None' : docs.map(d => d.label || d.type || 'Document').join(', ')}</div>
+        <div class="detail-item">Case study ${req.caseStudy ? (caseStudyOk ? '✓' : '✗') : '—'} ${vc && (vc.title || vc.url || vc.description) ? (vc.title || '') + (vc.url ? ' · ' + vc.url : '') + (vc.description ? ' · ' + vc.description : '') : (caseStudies.length ? 'Portfolio provided' : '—')}</div>
+        <div class="detail-item">Interview ${req.interview === 'required' ? (interviewOk ? '✓' : '✗') : '—'} ${inv?.link ? '<a href="' + inv.link + '" target="_blank">Link</a>' : '—'} ${inv?.scheduledAt ? ' · ' + new Date(inv.scheduledAt).toLocaleString() : ''}</div>
+    `;
+    const interviewEditWrap = document.getElementById('user-detail-interview-edit');
+    if (interviewEditWrap) interviewEditWrap.style.display = 'block';
+    document.getElementById('admin-interview-link').value = inv?.link || '';
+    document.getElementById('admin-interview-scheduledAt').value = inv?.scheduledAt ? new Date(inv.scheduledAt).toISOString().slice(0, 16) : '';
+    document.getElementById('admin-save-interview').onclick = async () => {
+        const link = document.getElementById('admin-interview-link').value.trim();
+        const scheduledAt = document.getElementById('admin-interview-scheduledAt').value;
+        const interview = { link: link || null, scheduledAt: scheduledAt ? new Date(scheduledAt).toISOString() : null };
+        const updatedProfile = { ...(person.profile || {}), interview };
+        try {
+            if (isCompany) await dataService.updateCompany(userId, { profile: updatedProfile });
+            else await dataService.updateUser(userId, { profile: updatedProfile });
+            await loadUserDetail(userId);
+        } catch (e) {
+            console.error(e);
+            alert('Failed to save interview details.');
+        }
+    };
 
     const opportunities = await dataService.getOpportunities();
     const userOpps = opportunities.filter(o => o.creatorId === userId);

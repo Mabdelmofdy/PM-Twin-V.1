@@ -92,17 +92,17 @@ Location is a 4-level hierarchical selection:
 "Are you requesting something or offering something?"
 
 **Why This Question Exists**
-The intent label (REQUEST vs OFFER) fundamentally changes how the opportunity is interpreted by other users and the matching algorithm. A REQUEST seeks collaborators to fulfill a need; an OFFER provides capabilities seeking a match.
+The intent label (NEED vs OFFER) fundamentally changes how the opportunity is interpreted by other users and the matching algorithm. A NEED seeks collaborators to fulfill a need; an OFFER provides capabilities seeking a match.
 
 **User Inputs**
 
 | Field  | Type  | Required | Values                    |
 |--------|-------|----------|---------------------------|
-| intent | radio | Yes      | `request` (REQUEST), `offer` (OFFER) |
+| intent | radio | Yes      | `request` (NEED), `offer` (OFFER) |
 
 **Dropdown Values**
 N/A -- radio buttons. Values from `lookups.json > intentLabels`:
-- `{ id: "request", label: "REQUEST" }`
+- `{ id: "request", label: "NEED" }`
 - `{ id: "offer", label: "OFFER" }`
 
 **Conditional Logic**

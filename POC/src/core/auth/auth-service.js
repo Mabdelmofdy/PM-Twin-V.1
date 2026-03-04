@@ -34,6 +34,10 @@ class AuthService {
         if (userData.documents) profile.documents = userData.documents;
         if (userData.emailVerified !== undefined) profile.emailVerified = userData.emailVerified;
         if (userData.mobileVerified !== undefined) profile.mobileVerified = userData.mobileVerified;
+        if (userData.preferredCollaborationModels) profile.preferredCollaborationModels = userData.preferredCollaborationModels;
+        if (userData.profile?.vettingSkippedAtRegistration !== undefined) profile.vettingSkippedAtRegistration = userData.profile.vettingSkippedAtRegistration === true;
+        if (userData.profile?.primaryDomain) profile.primaryDomain = userData.profile.primaryDomain;
+        if (Array.isArray(userData.profile?.expertiseAreas)) profile.expertiseAreas = userData.profile.expertiseAreas;
         
         const user = await this.dataService.createUser({
             email: userData.email,
@@ -75,7 +79,11 @@ class AuthService {
             companySubType: payload.companySubType || null,
             documents: payload.documents || [],
             emailVerified: payload.emailVerified === true,
-            mobileVerified: payload.mobileVerified === true
+            mobileVerified: payload.mobileVerified === true,
+            preferredCollaborationModels: payload.preferredCollaborationModels || [],
+            vettingSkippedAtRegistration: payload.vettingSkippedAtRegistration === true,
+            primaryDomain: payload.primaryDomain || null,
+            expertiseAreas: Array.isArray(payload.expertiseAreas) ? payload.expertiseAreas : []
         };
         if (payload.address) {
             profile.location = [payload.address.country, payload.address.region, payload.address.city].filter(Boolean).join(', ');
@@ -102,8 +110,11 @@ class AuthService {
     
     /**
      * Login user
+     * @param {string} email
+     * @param {string} password
+     * @param {{ rememberMe?: boolean }} [options] - If rememberMe is true, store session in localStorage so user stays signed in on trusted devices.
      */
-    async login(email, password) {
+    async login(email, password, options = {}) {
         const user = await this.dataService.getUserOrCompanyByEmail(email);
         if (!user) {
             throw new Error('Invalid email or password');
@@ -143,9 +154,9 @@ class AuthService {
             details: { email: user.email }
         });
         
-        // Store in sessionStorage for page refresh
-        sessionStorage.setItem('pmtwin_token', token);
-        sessionStorage.setItem('pmtwin_user', JSON.stringify(user));
+        const storage = options.rememberMe ? localStorage : sessionStorage;
+        storage.setItem('pmtwin_token', token);
+        storage.setItem('pmtwin_user', JSON.stringify(user));
         
         return { user, token };
     }
@@ -172,13 +183,17 @@ class AuthService {
         this.currentSession = null;
         sessionStorage.removeItem('pmtwin_token');
         sessionStorage.removeItem('pmtwin_user');
+        localStorage.removeItem('pmtwin_token');
+        localStorage.removeItem('pmtwin_user');
     }
     
     /**
      * Check if user is authenticated
+     * Looks in sessionStorage first (current tab), then localStorage (Remember Me).
      */
     async checkAuth() {
-        const token = sessionStorage.getItem('pmtwin_token');
+        let token = sessionStorage.getItem('pmtwin_token');
+        if (!token) token = localStorage.getItem('pmtwin_token');
         if (!token) {
             return false;
         }
@@ -187,6 +202,8 @@ class AuthService {
         if (!session) {
             sessionStorage.removeItem('pmtwin_token');
             sessionStorage.removeItem('pmtwin_user');
+            localStorage.removeItem('pmtwin_token');
+            localStorage.removeItem('pmtwin_user');
             return false;
         }
         
@@ -274,6 +291,35 @@ class AuthService {
      */
     generateToken() {
         return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${Math.random().toString(36).substr(2, 9)}`;
+    }
+
+    /**
+     * Request password reset. POC: creates token and returns it (no email); production would send email.
+     * @returns {{ token: string, expiresAt: string } | null} - Token info if account exists; null otherwise.
+     */
+    async requestPasswordReset(email) {
+        const user = await this.dataService.getUserOrCompanyByEmail(email);
+        if (!user) return null;
+        const { token, expiresAt } = await this.dataService.createResetToken(email);
+        return { token, expiresAt };
+    }
+
+    /**
+     * Reset password using a valid reset token.
+     */
+    async resetPassword(token, newPassword) {
+        const entry = await this.dataService.getResetTokenByToken(token);
+        if (!entry) throw new Error('Invalid or expired reset link. Please request a new one.');
+        const user = await this.dataService.getUserOrCompanyByEmail(entry.email);
+        if (!user) throw new Error('Account not found.');
+        const passwordHash = this.encodePassword(newPassword);
+        const isCompany = user.profile?.type === 'company';
+        if (isCompany) {
+            await this.dataService.updateCompany(user.id, { passwordHash });
+        } else {
+            await this.dataService.updateUser(user.id, { passwordHash });
+        }
+        await this.dataService.deleteResetToken(token);
     }
 }
 

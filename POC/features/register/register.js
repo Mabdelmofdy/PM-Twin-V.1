@@ -22,7 +22,11 @@ let regState = {
     individualType: null,
     fullName: '',
     specialty: '',
-    expertise: ''
+    expertise: '',
+    preferredCollaborationModels: [],
+    vettingSkippedAtRegistration: null,
+    primaryDomain: null,
+    expertiseAreas: []
 };
 
 let lookupsData = null;
@@ -58,8 +62,8 @@ function hideRegMessages() {
 
 function getRegStepId() {
     if (regState.currentStep === 0) return 'reg-step-0';
-    if (regState.accountType === 'company') return `reg-step-a${regState.currentStep}`;
-    return `reg-step-b${regState.currentStep}`;
+    if (regState.accountType === 'company') return `reg-step-a${Math.min(regState.currentStep, 5)}`;
+    return `reg-step-b${Math.min(regState.currentStep, 5)}`;
 }
 
 function showRegStep(stepId) {
@@ -68,6 +72,43 @@ function showRegStep(stepId) {
     });
     const step = document.getElementById(stepId);
     if (step) step.classList.remove('hidden');
+}
+
+function getRegPreferredModelsList() {
+    const list = [];
+    if (window.CONFIG?.MODELS) {
+        Object.entries(CONFIG.MODELS).forEach(([key, id]) => {
+            list.push({ id, label: key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) });
+        });
+    }
+    if (window.CONFIG?.COLLABORATION_MODEL) {
+        Object.entries(CONFIG.COLLABORATION_MODEL).forEach(([key, id]) => {
+            if (!list.some(m => m.id === id)) list.push({ id, label: key.charAt(0).toUpperCase() + key.slice(1) });
+        });
+    }
+    return list;
+}
+
+function fillRegPreferredModels(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    const preferred = regState.preferredCollaborationModels || [];
+    getRegPreferredModelsList().forEach(m => {
+        const label = document.createElement('label');
+        label.className = 'inline-flex items-center gap-1 cursor-pointer';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = m.id;
+        cb.checked = preferred.indexOf(m.id) !== -1;
+        cb.addEventListener('change', () => {
+            if (cb.checked) regState.preferredCollaborationModels = [...(regState.preferredCollaborationModels || []), m.id];
+            else regState.preferredCollaborationModels = (regState.preferredCollaborationModels || []).filter(id => id !== m.id);
+        });
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(m.label));
+        container.appendChild(label);
+    });
 }
 
 function updateRegProgress() {
@@ -79,18 +120,109 @@ function updateRegProgress() {
         return;
     }
     if (progressWrap) progressWrap.classList.remove('hidden');
-    const total = 4;
+    const total = 5;
     const pct = (regState.currentStep / total) * 100;
     if (label) label.textContent = `Step ${regState.currentStep} of ${total}`;
     if (bar) bar.style.width = `${pct}%`;
+}
+
+function getRegDomainsList() {
+    const cats = lookupsData?.jobCategories || [];
+    return cats.map(c => (typeof c === 'string' ? { id: c, label: c } : { id: c.id || c, label: c.label || c.id || c }));
 }
 
 function goToRegStep(step) {
     regState.currentStep = step;
     const stepId = getRegStepId();
     showRegStep(stepId);
+    if (stepId === 'reg-step-a4') fillRegPreferredModels('reg-company-preferred-models');
+    if (stepId === 'reg-step-b4') fillRegPreferredModels('reg-individual-preferred-models');
+    if (stepId === 'reg-step-a5') fillRegVettingStep('company');
+    if (stepId === 'reg-step-b5') fillRegVettingStep('individual');
     updateRegProgress();
     hideRegMessages();
+}
+
+function fillRegVettingStep(prefix) {
+    const domains = getRegDomainsList();
+    const primarySelect = document.getElementById(prefix === 'company' ? 'reg-vetting-primary-domain' : 'reg-vetting-ind-primary-domain');
+    if (primarySelect) {
+        primarySelect.innerHTML = '<option value="">Select primary domain</option>';
+        domains.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = d.label;
+            opt.selected = regState.primaryDomain === d.id;
+            primarySelect.appendChild(opt);
+        });
+    }
+    const listId = prefix === 'company' ? 'reg-vetting-expertise-list' : 'reg-vetting-ind-expertise-list';
+    renderRegExpertiseAreas(listId, prefix);
+    const choiceName = prefix === 'company' ? 'reg-vetting-choice' : 'reg-vetting-choice-ind';
+    const choice = document.querySelector(`input[name="${choiceName}"][value="skip"]`);
+    const complete = document.querySelector(`input[name="${choiceName}"][value="complete"]`);
+    const vettingForm = document.getElementById(prefix === 'company' ? 'reg-vetting-form-company' : 'reg-vetting-form-individual');
+    if (vettingForm) vettingForm.style.display = regState.vettingSkippedAtRegistration === false ? 'block' : 'none';
+    if (choice) choice.checked = regState.vettingSkippedAtRegistration === true;
+    if (complete) complete.checked = regState.vettingSkippedAtRegistration === false;
+}
+
+function renderRegExpertiseAreas(containerId, prefix) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const domains = getRegDomainsList();
+    container.innerHTML = '';
+    (regState.expertiseAreas || []).forEach((ea, i) => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-center mb-2 reg-expertise-row';
+        const domainSelect = document.createElement('select');
+        domainSelect.className = 'reg-expertise-domain px-4 py-2 border rounded flex-1 min-w-[120px]';
+        domainSelect.innerHTML = '<option value="">Domain</option>';
+        domains.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = d.label;
+            if (ea.domain === d.id) opt.selected = true;
+            domainSelect.appendChild(opt);
+        });
+        const roleSelect = document.createElement('select');
+        roleSelect.className = 'reg-expertise-role px-4 py-2 border rounded min-w-[120px]';
+        roleSelect.innerHTML = '<option value="professional">Professional</option><option value="consultant">Consultant</option>';
+        roleSelect.value = ea.role || 'professional';
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'px-3 py-1 border border-gray-300 rounded hover:bg-gray-50';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => { row.remove(); });
+        row.appendChild(domainSelect);
+        row.appendChild(roleSelect);
+        row.appendChild(removeBtn);
+        container.appendChild(row);
+    });
+}
+
+function addRegExpertiseRow(prefix) {
+    const listId = prefix === 'company' ? 'reg-vetting-expertise-list' : 'reg-vetting-ind-expertise-list';
+    const container = document.getElementById(listId);
+    if (!container) return;
+    regState.expertiseAreas = regState.expertiseAreas || [];
+    regState.expertiseAreas.push({ domain: '', role: 'professional' });
+    renderRegExpertiseAreas(listId, prefix);
+}
+
+function collectRegVettingFromForm(prefix) {
+    const primarySelect = document.getElementById(prefix === 'company' ? 'reg-vetting-primary-domain' : 'reg-vetting-ind-primary-domain');
+    regState.primaryDomain = primarySelect?.value?.trim() || null;
+    const listId = prefix === 'company' ? 'reg-vetting-expertise-list' : 'reg-vetting-ind-expertise-list';
+    const list = document.getElementById(listId);
+    regState.expertiseAreas = [];
+    if (list) {
+        list.querySelectorAll('.reg-expertise-row').forEach(row => {
+            const domain = row.querySelector('.reg-expertise-domain')?.value?.trim();
+            const role = row.querySelector('.reg-expertise-role')?.value || 'professional';
+            if (domain) regState.expertiseAreas.push({ domain, role });
+        });
+    }
 }
 
 function generateOTP() {
@@ -408,6 +540,7 @@ function renderReviewCompany() {
     const subLabel = regState.companySubType ? (subTypes.find(s => s.id === regState.companySubType)?.label || regState.companySubType) : '';
     const loc = [regState.address.country, regState.address.region, regState.address.city].filter(Boolean).join(', ');
     const docList = regState.documents.map(d => d.label + ': ' + d.fileName).join('; ');
+    const prefModels = (regState.preferredCollaborationModels || []).map(id => getRegPreferredModelsList().find(m => m.id === id)?.label || id).join(', ');
     container.innerHTML = `
         <p><strong>Role:</strong> ${roleLabel} ${subLabel ? ' / ' + subLabel : ''}</p>
         <p><strong>Company:</strong> ${regState.companyName}</p>
@@ -415,6 +548,7 @@ function renderReviewCompany() {
         <p><strong>Mobile:</strong> ${regState.mobile} (verified)</p>
         <p><strong>Address:</strong> ${loc || '—'}</p>
         <p><strong>Documents:</strong> ${docList || '—'}</p>
+        ${prefModels ? `<p><strong>Preferred collaboration models:</strong> ${prefModels}</p>` : ''}
     `;
 }
 
@@ -426,6 +560,7 @@ function renderReviewIndividual() {
     const spec = regState.individualType === 'professional' ? regState.specialty : regState.expertise;
     const loc = [regState.address.country, regState.address.region, regState.address.city].filter(Boolean).join(', ');
     const docList = regState.documents.map(d => d.label + ': ' + d.fileName).join('; ');
+    const prefModels = (regState.preferredCollaborationModels || []).map(id => getRegPreferredModelsList().find(m => m.id === id)?.label || id).join(', ');
     container.innerHTML = `
         <p><strong>Type:</strong> ${typeLabel}</p>
         <p><strong>Name:</strong> ${regState.fullName}</p>
@@ -434,11 +569,14 @@ function renderReviewIndividual() {
         <p><strong>Mobile:</strong> ${regState.mobile} (verified)</p>
         <p><strong>Address:</strong> ${loc || '—'}</p>
         <p><strong>Documents:</strong> ${docList || '—'}</p>
+        ${prefModels ? `<p><strong>Preferred collaboration models:</strong> ${prefModels}</p>` : ''}
     `;
 }
 
 async function submitCompany() {
     syncRegStateFromForm();
+    const companyPrefEl = document.getElementById('reg-company-preferred-models');
+    if (companyPrefEl) regState.preferredCollaborationModels = Array.from(companyPrefEl.querySelectorAll('input:checked')).map(cb => cb.value);
     const address = {
         country: regState.address.country,
         region: regState.address.region,
@@ -456,7 +594,11 @@ async function submitCompany() {
             companySubType: regState.companySubType || null,
             documents: regState.documents,
             emailVerified: true,
-            mobileVerified: true
+            mobileVerified: true,
+            preferredCollaborationModels: regState.preferredCollaborationModels || [],
+            vettingSkippedAtRegistration: regState.vettingSkippedAtRegistration === true,
+            primaryDomain: regState.primaryDomain || null,
+            expertiseAreas: regState.expertiseAreas || []
         });
         showRegSuccess('Account created successfully. Your account is pending admin approval. You will receive an email once approved. Redirecting to login...');
         setTimeout(() => router.navigate(CONFIG.ROUTES.LOGIN), 3000);
@@ -467,6 +609,8 @@ async function submitCompany() {
 
 async function submitIndividual() {
     syncRegStateFromForm();
+    const indPrefEl = document.getElementById('reg-individual-preferred-models');
+    if (indPrefEl) regState.preferredCollaborationModels = Array.from(indPrefEl.querySelectorAll('input:checked')).map(cb => cb.value);
     const role = regState.individualType === 'professional' ? CONFIG.ROLES.PROFESSIONAL : CONFIG.ROLES.CONSULTANT;
     const specialty = regState.individualType === 'professional' ? regState.specialty : regState.expertise;
     const profile = {
@@ -478,6 +622,12 @@ async function submitIndividual() {
         individualType: regState.individualType
     };
     try {
+        Object.assign(profile, {
+            preferredCollaborationModels: regState.preferredCollaborationModels || [],
+            vettingSkippedAtRegistration: regState.vettingSkippedAtRegistration === true,
+            primaryDomain: regState.primaryDomain || null,
+            expertiseAreas: regState.expertiseAreas || []
+        });
         await authService.register({
             email: regState.email,
             password: regState.password,
@@ -488,7 +638,8 @@ async function submitIndividual() {
             specialty,
             documents: regState.documents,
             emailVerified: true,
-            mobileVerified: true
+            mobileVerified: true,
+            preferredCollaborationModels: regState.preferredCollaborationModels || []
         });
         showRegSuccess('Account created successfully. Your account is pending admin approval. You will receive an email once approved. Redirecting to login...');
         setTimeout(() => router.navigate(CONFIG.ROUTES.LOGIN), 3000);
@@ -602,7 +753,11 @@ function initRegister() {
         individualType: null,
         fullName: '',
         specialty: '',
-        expertise: ''
+        expertise: '',
+        preferredCollaborationModels: [],
+        vettingSkippedAtRegistration: null,
+        primaryDomain: null,
+        expertiseAreas: []
     };
     otpCodes = { email: null, mobile: null, indEmail: null, indMobile: null };
 
@@ -694,8 +849,28 @@ function initRegister() {
         goToRegStep(4);
     });
     document.getElementById('reg-btn-back-a4')?.addEventListener('click', () => goToRegStep(3));
+    document.getElementById('reg-btn-next-a4')?.addEventListener('click', () => {
+        syncRegStateFromForm();
+        const companyPrefEl = document.getElementById('reg-company-preferred-models');
+        if (companyPrefEl) regState.preferredCollaborationModels = Array.from(companyPrefEl.querySelectorAll('input:checked')).map(cb => cb.value);
+        goToRegStep(5);
+    });
+    document.getElementById('reg-btn-back-a5')?.addEventListener('click', () => goToRegStep(4));
+    document.querySelectorAll('input[name="reg-vetting-choice"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            regState.vettingSkippedAtRegistration = document.querySelector('input[name="reg-vetting-choice"]:checked')?.value === 'skip';
+            const form = document.getElementById('reg-vetting-form-company');
+            if (form) form.style.display = regState.vettingSkippedAtRegistration === false ? 'block' : 'none';
+        });
+    });
+    document.getElementById('reg-vetting-add-expertise-company')?.addEventListener('click', () => addRegExpertiseRow('company'));
     document.getElementById('reg-btn-submit-company')?.addEventListener('click', () => {
-        if (!validateRegStep(2) || !validateRegStep(3)) return;
+        const choice = document.querySelector('input[name="reg-vetting-choice"]:checked')?.value;
+        if (choice === 'skip' || !choice) regState.vettingSkippedAtRegistration = true;
+        else if (choice === 'complete') {
+            regState.vettingSkippedAtRegistration = false;
+            collectRegVettingFromForm('company');
+        }
         submitCompany();
     });
 
@@ -726,8 +901,33 @@ function initRegister() {
         goToRegStep(4);
     });
     document.getElementById('reg-btn-back-b4')?.addEventListener('click', () => goToRegStep(3));
+    document.getElementById('reg-btn-next-b4')?.addEventListener('click', () => {
+        syncRegStateFromForm();
+        const indPrefEl = document.getElementById('reg-individual-preferred-models');
+        if (indPrefEl) regState.preferredCollaborationModels = Array.from(indPrefEl.querySelectorAll('input:checked')).map(cb => cb.value);
+        renderReviewIndividual();
+        goToRegStep(5);
+    });
+    document.getElementById('reg-btn-back-b5')?.addEventListener('click', () => goToRegStep(4));
+    document.querySelectorAll('input[name="reg-vetting-choice-ind"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            regState.vettingSkippedAtRegistration = document.querySelector('input[name="reg-vetting-choice-ind"]:checked')?.value === 'skip';
+            const form = document.getElementById('reg-vetting-form-individual');
+            if (form) form.style.display = regState.vettingSkippedAtRegistration === false ? 'block' : 'none';
+        });
+    });
+    document.getElementById('reg-vetting-add-expertise-individual')?.addEventListener('click', () => addRegExpertiseRow('individual'));
     document.getElementById('reg-btn-submit-individual')?.addEventListener('click', () => {
-        if (!validateRegStep(2) || !validateRegStep(3)) return;
+        const choice = document.querySelector('input[name="reg-vetting-choice-ind"]:checked')?.value;
+        if (choice === 'skip' || !choice) regState.vettingSkippedAtRegistration = true;
+        else if (choice === 'complete') {
+            regState.vettingSkippedAtRegistration = false;
+            collectRegVettingFromForm('individual');
+            if (!regState.primaryDomain && (!regState.expertiseAreas || regState.expertiseAreas.length === 0)) {
+                showRegError('Please select at least primary domain or one expertise area when completing vetting now.');
+                return;
+            }
+        }
         submitIndividual();
     });
 

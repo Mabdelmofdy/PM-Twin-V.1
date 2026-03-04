@@ -192,13 +192,13 @@
             <div class="form-section">
                 <h2>Step 2: Intent Label</h2>
                 <p class="text-gray-600 mb-6">Choose whether you are seeking work/service or offering work/service. This label is visible everywhere and cannot be changed later.</p>
-                <p class="text-sm text-gray-500 mb-4">Choose <strong>REQUEST</strong> if you need something (e.g. hiring, seeking partners). Choose <strong>OFFER</strong> if you are providing something (e.g. offering services, selling or bartering resources).</p>
+                <p class="text-sm text-gray-500 mb-4">Choose <strong>NEED</strong> if you need something (e.g. hiring, seeking partners). Choose <strong>OFFER</strong> if you are providing something (e.g. offering services, selling or bartering resources).</p>
                 <div class="form-group">
                     <label class="form-label">Intent <span class="text-red-600">*</span></label>
                     <div class="flex gap-6">
                         <label class="intent-option flex-1 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
                             <input type="radio" name="intent" value="request" class="sr-only" required>
-                            <span class="block font-semibold text-lg text-gray-900">REQUEST</span>
+                            <span class="block font-semibold text-lg text-gray-900">NEED</span>
                             <span class="block text-sm text-gray-600 mt-1">Seeking work / service</span>
                         </label>
                         <label class="intent-option flex-1 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50">
@@ -240,7 +240,55 @@
         <div class="wizard-step-content hidden" id="step-4" data-step="4">
             <div class="form-section">
                 <h2>Step 4: Category + Sub-Model</h2>
-                <p class="text-gray-600 mb-6">Select a category, then choose the sub-model that best fits this opportunity. This defines proposal structure, contract type, and execution style.</p>
+                <p class="text-gray-600 mb-4">Select a category, then choose the sub-model that best fits this opportunity. This defines proposal structure, contract type, and execution style.</p>
+
+                <!-- Inline AI Advisor -->
+                <div class="inline-advisor-trigger mb-6">
+                    <button type="button" id="inline-advisor-toggle" class="inline-advisor-btn">
+                        <i class="ph-duotone ph-magic-wand" style="font-size: 18px;" aria-hidden="true"></i>
+                        Help me choose
+                    </button>
+                </div>
+                <div id="inline-advisor-panel" class="inline-advisor-panel hidden">
+                    <div class="inline-advisor-header">
+                        <span class="inline-advisor-title">Quick Model Advisor</span>
+                        <button type="button" id="inline-advisor-close" class="inline-advisor-close">&times;</button>
+                    </div>
+                    <div id="inline-advisor-body" class="inline-advisor-body">
+                        <div class="inline-advisor-question active" data-q="0">
+                            <p class="inline-advisor-q-text">What is your primary goal?</p>
+                            <div class="inline-advisor-options">
+                                <button type="button" class="inline-advisor-opt" data-value="project" data-cats="project_based">Deliver a project</button>
+                                <button type="button" class="inline-advisor-opt" data-value="partner" data-cats="strategic_partnership">Find a strategic partner</button>
+                                <button type="button" class="inline-advisor-opt" data-value="resources" data-cats="resource_pooling">Pool or share resources</button>
+                                <button type="button" class="inline-advisor-opt" data-value="hire" data-cats="hiring">Hire talent</button>
+                                <button type="button" class="inline-advisor-opt" data-value="compete" data-cats="competition">Competition / RFP</button>
+                            </div>
+                        </div>
+                        <div class="inline-advisor-question" data-q="1" style="display:none;">
+                            <p class="inline-advisor-q-text">How large is the engagement?</p>
+                            <div class="inline-advisor-options">
+                                <button type="button" class="inline-advisor-opt" data-value="small" data-subs="task_based,mentorship,resource_sharing,professional_hiring,consultant_hiring">Small (under 1M SAR)</button>
+                                <button type="button" class="inline-advisor-opt" data-value="medium" data-subs="consortium,bulk_purchasing,equipment_sharing,strategic_alliance">Medium (1M-50M SAR)</button>
+                                <button type="button" class="inline-advisor-opt" data-value="large" data-subs="spv,project_jv,strategic_jv">Large (50M+ SAR)</button>
+                            </div>
+                        </div>
+                        <div class="inline-advisor-question" data-q="2" style="display:none;">
+                            <p class="inline-advisor-q-text">How many partners involved?</p>
+                            <div class="inline-advisor-options">
+                                <button type="button" class="inline-advisor-opt" data-value="one" data-subs="task_based,professional_hiring,consultant_hiring,mentorship">Just one partner</button>
+                                <button type="button" class="inline-advisor-opt" data-value="few" data-subs="project_jv,strategic_alliance,equipment_sharing,strategic_jv">2-3 partners</button>
+                                <button type="button" class="inline-advisor-opt" data-value="many" data-subs="consortium,spv,bulk_purchasing,competition_rfp">4+ partners</button>
+                            </div>
+                        </div>
+                        <div id="inline-advisor-result" style="display:none;">
+                            <p class="inline-advisor-result-text"><strong>Recommended:</strong> <span id="inline-advisor-rec"></span></p>
+                            <button type="button" id="inline-advisor-apply" class="btn btn-primary btn-sm">Apply recommendation</button>
+                            <button type="button" id="inline-advisor-reset" class="btn btn-secondary btn-sm">Try again</button>
+                        </div>
+                    </div>
+                </div>
+
                 <input type="hidden" id="model-type" name="modelType">
                 <input type="hidden" id="submodel-type" name="subModelType">
                 <div class="form-group mb-6">
@@ -951,4 +999,77 @@ input:disabled {
         display: none;
     }
 }
+
+/* Disabled sub-model styling */
+.submodel-disabled {
+    pointer-events: none;
+    background: #f9fafb;
+}
+.submodel-lock-icon {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: #9ca3af;
+    font-size: 1rem;
+}
+.submodel-restriction-note {
+    display: block;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.25rem;
+    font-weight: 400;
+}
+
+/* Inline AI Advisor */
+.inline-advisor-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px dashed #2563eb;
+    border-radius: 0.5rem;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.inline-advisor-btn:hover {
+    background: #dbeafe;
+    border-style: solid;
+}
+.inline-advisor-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #f9fafb;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+.inline-advisor-panel.hidden { display: none; }
+.inline-advisor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #eff6ff;
+    border-bottom: 1px solid #e5e7eb;
+}
+.inline-advisor-title { font-weight: 600; color: #1e40af; font-size: 0.9rem; }
+.inline-advisor-close { background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #6b7280; line-height: 1; }
+.inline-advisor-body { padding: 1rem; }
+.inline-advisor-q-text { font-weight: 500; margin-bottom: 0.75rem; }
+.inline-advisor-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.inline-advisor-opt {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.15s;
+}
+.inline-advisor-opt:hover { border-color: #2563eb; background: #eff6ff; }
+.inline-advisor-opt.selected { border-color: #2563eb; background: #dbeafe; font-weight: 500; }
+.inline-advisor-result-text { margin-bottom: 0.75rem; }
 </style>

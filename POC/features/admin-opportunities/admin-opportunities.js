@@ -67,7 +67,7 @@ async function loadOpportunities() {
         const html = oppsWithCreatorsAndCounts.map(opp => {
             const data = {
                 ...opp,
-                intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
+                intentLabel: opp.intent === 'offer' ? 'OFFER' : 'NEED',
                 title: opp.title || 'Untitled',
                 modelType: opp.modelType || opp.collaborationModel || 'N/A',
                 status: opp.status || 'draft',

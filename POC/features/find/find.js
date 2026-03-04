@@ -563,6 +563,20 @@ function renderFullCompanyCard(company, profile, initials) {
 }
 
 function renderOpportunities() {
+    const sampleSection = document.getElementById('sample-opportunities-section');
+    const sampleList = document.getElementById('sample-opportunities-list');
+    const sampleOpps = (findOpportunities || []).filter(o => o.isSample === true);
+    if (sampleSection && sampleList) {
+        if (sampleOpps.length > 0) {
+            sampleSection.style.display = 'block';
+            sampleList.innerHTML = sampleOpps.map(opp => `
+                <a href="#" data-route="/opportunities/${opp.id}" class="inline-flex items-center px-4 py-2 rounded-md border border-primary text-primary hover:bg-primary hover:text-white transition-colors">${(opp.title || 'Opportunity').substring(0, 50)}${(opp.title || '').length > 50 ? '…' : ''}</a>
+            `).join('');
+        } else {
+            sampleSection.style.display = 'none';
+        }
+    }
+
     const container = document.getElementById('opportunities-results');
     const emptyState = document.getElementById('opportunities-empty');
     

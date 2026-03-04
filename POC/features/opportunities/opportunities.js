@@ -183,7 +183,7 @@ async function loadOpportunities() {
             
             const data = {
                 ...opp,
-                intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
+                intentLabel: opp.intent === 'offer' ? 'OFFER' : 'NEED',
                 intentBadgeClass: typeof getIntentBadgeClass === 'function' ? getIntentBadgeClass(opp.intent, opp.modelType) : 'badge-intent-request-default',
                 title: opp.title || 'Untitled Opportunity',
                 modelType: formatModelType(opp.modelType) || (opp.collaborationModel || 'N/A'),

@@ -131,7 +131,7 @@ async function loadOpportunitiesPipeline() {
         const allOpportunities = await dataService.getOpportunities();
         let userOpportunities = allOpportunities.filter(o => o.creatorId === user.id);
         
-        // Apply intent filter (show only OFFER or only REQUEST)
+        // Apply intent filter (show only OFFER or only NEED)
         const intentFilter = document.getElementById('filter-opportunities-intent')?.value;
         if (intentFilter === 'request' || intentFilter === 'offer') {
             userOpportunities = userOpportunities.filter(o => (o.intent || 'request') === intentFilter);
@@ -260,7 +260,7 @@ async function renderKanbanColumn(containerId, items) {
     // Render items
     const html = items.map(item => {
         const intent = item.intent || 'request';
-        const intentLabel = intent === 'offer' ? 'OFFER' : 'REQUEST';
+        const intentLabel = intent === 'offer' ? 'OFFER' : 'NEED';
         const intentBadgeClass = typeof getIntentBadgeClass === 'function'
             ? getIntentBadgeClass(intent, item.modelType)
             : (intent === 'offer' ? 'badge-info' : 'badge-primary');
@@ -327,7 +327,7 @@ async function renderApplicationColumn(containerId, items) {
     // Render items
     const html = items.map(item => {
         const intent = item.opportunity?.intent || 'request';
-        const intentLabel = intent === 'offer' ? 'OFFER' : 'REQUEST';
+        const intentLabel = intent === 'offer' ? 'OFFER' : 'NEED';
         const intentBadgeClass = typeof getIntentBadgeClass === 'function'
             ? getIntentBadgeClass(intent, item.opportunity?.modelType)
             : (intent === 'offer' ? 'badge-info' : 'badge-primary');

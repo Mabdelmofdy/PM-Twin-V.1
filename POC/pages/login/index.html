@@ -29,9 +29,26 @@
                     >
                 </div>
                 
+                <div class="mb-4 flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember-me" name="rememberMe" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <label for="remember-me" class="ml-2 text-sm text-gray-700">Remember me</label>
+                    </div>
+                    <a href="#" data-route="/forgot-password" class="text-sm text-primary font-medium hover:underline">Forgot password?</a>
+                </div>
+                
                 <div id="login-error" class="alert alert-error" style="display: none;"></div>
                 
                 <button type="submit" class="w-full mt-4 px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark transition-all shadow-md">Login</button>
+
+                <div class="mt-4 flex flex-col gap-2">
+                    <button type="button" id="btn-login-google" class="w-full px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 flex items-center justify-center gap-2">
+                        Sign in with Google
+                    </button>
+                    <button type="button" id="btn-login-linkedin" class="w-full px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 flex items-center justify-center gap-2">
+                        Sign in with LinkedIn
+                    </button>
+                </div>
                 
                 <div class="mt-4 text-center">
                     <button type="button" id="btn-view-demo-credentials" class="text-primary text-sm font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 rounded">

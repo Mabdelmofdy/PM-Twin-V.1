@@ -26,12 +26,13 @@ function initLogin() {
         
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('remember-me') ? document.getElementById('remember-me').checked : false;
         
         // Hide previous errors
         errorDiv.style.display = 'none';
         
         try {
-            const result = await authService.login(email, password);
+            const result = await authService.login(email, password, { rememberMe });
             
             if (result) {
                 // Update navigation
@@ -72,6 +73,27 @@ function initLogin() {
                 modalService.showCustom(contentHTML, 'Demo user credentials');
             } else {
                 alert(DEMO_CREDENTIALS.map((r) => `${r.type}: ${r.email} / ${r.password}`).join('\n'));
+            }
+        });
+    }
+
+    const googleBtn = document.getElementById('btn-login-google');
+    const linkedInBtn = document.getElementById('btn-login-linkedin');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', () => {
+            if (window.CONFIG?.AUTH?.SOCIAL_LOGIN_ENABLED) {
+                // Future: authService.loginWithGoogle();
+            } else {
+                alert('Social login is coming soon. Please use email and password for now.');
+            }
+        });
+    }
+    if (linkedInBtn) {
+        linkedInBtn.addEventListener('click', () => {
+            if (window.CONFIG?.AUTH?.SOCIAL_LOGIN_ENABLED) {
+                // Future: authService.loginWithLinkedIn();
+            } else {
+                alert('Social login is coming soon. Please use email and password for now.');
             }
         });
     }

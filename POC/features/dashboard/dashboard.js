@@ -46,6 +46,19 @@ async function loadDashboardData(userId) {
         
         // Display recent applications
         await displayRecentApplications(userApplications.slice(0, 5));
+
+        // Sample opportunities to explore (when user has no applications, or always show if any)
+        const sampleOpps = allOpportunities.filter(o => o.isSample === true && o.status === 'published');
+        const sampleSection = document.getElementById('sample-opportunities-dashboard');
+        const sampleList = document.getElementById('sample-opportunities-dashboard-list');
+        if (sampleSection && sampleList && sampleOpps.length > 0) {
+            sampleSection.style.display = 'block';
+            sampleList.innerHTML = sampleOpps.map(opp => `
+                <a href="#" data-route="/opportunities/${opp.id}" class="inline-flex items-center px-4 py-2 rounded-md border border-amber-400 text-amber-900 bg-white hover:bg-amber-100 transition-colors no-underline text-sm">${(opp.title || 'Opportunity').substring(0, 45)}${(opp.title || '').length > 45 ? '…' : ''}</a>
+            `).join('');
+        } else if (sampleSection) {
+            sampleSection.style.display = 'none';
+        }
         
     } catch (error) {
         console.error('Error loading dashboard data:', error);
@@ -83,7 +96,7 @@ async function displayRecentOpportunities(opportunities) {
     const html = opportunities.map(opp => {
         const data = {
             ...opp,
-            intentLabel: opp.intent === 'offer' ? 'OFFER' : 'REQUEST',
+            intentLabel: opp.intent === 'offer' ? 'OFFER' : 'NEED',
             intentBadgeClass: typeof getIntentBadgeClass === 'function' ? getIntentBadgeClass(opp.intent, opp.modelType) : 'badge-intent-request-default',
             statusBadgeClass: getStatusBadgeClass(opp.status),
             createdDate: new Date(opp.createdAt).toLocaleDateString(),

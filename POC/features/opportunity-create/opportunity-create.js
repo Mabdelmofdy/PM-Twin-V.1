@@ -318,6 +318,7 @@ async function initializeForm() {
     setupIntentLabels();
     setupScopeTags();
     setupCategoryAndSubModel();
+    setupInlineAdvisor();
     setupExchangeModeSelection();
     setupReviewSummary();
 }
@@ -399,6 +400,16 @@ function getOpportunityModels() {
     return window.OPPORTUNITY_MODELS || {};
 }
 
+function getCurrentUserEntityType() {
+    try {
+        if (typeof authService !== 'undefined') {
+            const user = authService.getCurrentUser();
+            if (user) return user.profile?.type === 'company' ? 'company' : 'user';
+        }
+    } catch (e) { /* ignore */ }
+    return null;
+}
+
 function renderSubModelOptions(categoryKey, clearSubModel) {
     const models = getOpportunityModels();
     const modelTypeInput = document.getElementById('model-type');
@@ -417,23 +428,40 @@ function renderSubModelOptions(categoryKey, clearSubModel) {
     submodelGroup.style.display = 'none';
     const category = models[categoryKey];
     if (!category || !category.subModels) return;
+
+    const userType = getCurrentUserEntityType();
+    const eligibility = (window.CONFIG && window.CONFIG.MODEL_ELIGIBILITY) || {};
     const subModelNames = {
         equipment_sharing: 'Equipment Sharing (Co-Ownership Pooling)'
     };
+
     Object.keys(category.subModels).forEach(subKey => {
         const sub = category.subModels[subKey];
         const displayName = subModelNames[subKey] || sub.name;
+        const rule = eligibility[subKey];
+        const isEligible = !rule || !userType || rule.allowedEntityTypes.includes(userType);
+
         const label = document.createElement('label');
-        label.className = 'submodel-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50';
-        label.innerHTML = `
-            <input type="radio" name="submodel" value="${escapeHtml(subKey)}" class="sr-only">
-            <span class="font-semibold text-gray-900">${escapeHtml(displayName)}</span>
-        `;
-        label.querySelector('input').addEventListener('change', () => {
-            subModelTypeInput.value = subKey;
-            if (modelDetailsSection) modelDetailsSection.style.display = 'block';
-            renderDynamicFields(categoryKey, subKey);
-        });
+        if (isEligible) {
+            label.className = 'submodel-option p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-blue-50';
+            label.innerHTML = `
+                <input type="radio" name="submodel" value="${escapeHtml(subKey)}" class="sr-only">
+                <span class="font-semibold text-gray-900">${escapeHtml(displayName)}</span>
+            `;
+            label.querySelector('input').addEventListener('change', () => {
+                subModelTypeInput.value = subKey;
+                if (modelDetailsSection) modelDetailsSection.style.display = 'block';
+                renderDynamicFields(categoryKey, subKey);
+            });
+        } else {
+            label.className = 'submodel-option submodel-disabled p-4 border-2 border-gray-100 rounded-lg opacity-50 cursor-not-allowed relative';
+            label.title = rule.reason || 'Not available for your account type';
+            label.innerHTML = `
+                <span class="font-semibold text-gray-400">${escapeHtml(displayName)}</span>
+                <span class="submodel-lock-icon"><i class="ph-duotone ph-lock-simple" aria-hidden="true"></i></span>
+                <span class="submodel-restriction-note">${escapeHtml(rule.reason || '')}</span>
+            `;
+        }
         submodelOptions.appendChild(label);
     });
     submodelGroup.style.display = 'block';
@@ -452,6 +480,116 @@ function setupCategoryAndSubModel() {
             renderSubModelOptions(categoryKey, true);
         });
     });
+}
+
+function setupInlineAdvisor() {
+    const toggle = document.getElementById('inline-advisor-toggle');
+    const panel = document.getElementById('inline-advisor-panel');
+    const closeBtn = document.getElementById('inline-advisor-close');
+    const resultDiv = document.getElementById('inline-advisor-result');
+    const recSpan = document.getElementById('inline-advisor-rec');
+    const applyBtn = document.getElementById('inline-advisor-apply');
+    const resetBtn = document.getElementById('inline-advisor-reset');
+    if (!toggle || !panel) return;
+
+    const advisorState = { q: 0, cats: null, subs: [] };
+    const SUB_TO_CAT = {
+        task_based: 'project_based', consortium: 'project_based', project_jv: 'project_based', spv: 'project_based',
+        strategic_jv: 'strategic_partnership', strategic_alliance: 'strategic_partnership', mentorship: 'strategic_partnership',
+        bulk_purchasing: 'resource_pooling', equipment_sharing: 'resource_pooling', resource_sharing: 'resource_pooling',
+        professional_hiring: 'hiring', consultant_hiring: 'hiring',
+        competition_rfp: 'competition'
+    };
+    const SUB_NAMES = {
+        task_based: 'Task-Based Engagement', consortium: 'Consortium', project_jv: 'Project-Specific JV',
+        spv: 'Special Purpose Vehicle (SPV)', strategic_jv: 'Strategic JV', strategic_alliance: 'Strategic Alliance',
+        mentorship: 'Mentorship', bulk_purchasing: 'Bulk Purchasing', equipment_sharing: 'Equipment Sharing',
+        resource_sharing: 'Resource Sharing', professional_hiring: 'Professional Hiring',
+        consultant_hiring: 'Consultant Hiring', competition_rfp: 'Competition / RFP'
+    };
+
+    toggle.addEventListener('click', () => { panel.classList.remove('hidden'); toggle.style.display = 'none'; });
+    closeBtn.addEventListener('click', () => { panel.classList.add('hidden'); toggle.style.display = ''; });
+
+    function advanceQuestion(btn) {
+        btn.parentElement.querySelectorAll('.inline-advisor-opt').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        if (advisorState.q === 0) {
+            advisorState.cats = btn.dataset.cats;
+        }
+        if (btn.dataset.subs) {
+            const picked = btn.dataset.subs.split(',');
+            advisorState.subs = advisorState.subs.length === 0 ? picked : advisorState.subs.filter(s => picked.includes(s));
+        }
+
+        const questions = panel.querySelectorAll('.inline-advisor-question');
+        const nextQ = advisorState.q + 1;
+        if (nextQ < questions.length) {
+            advisorState.q = nextQ;
+            questions.forEach((q, i) => q.style.display = i === nextQ ? '' : 'none');
+        } else {
+            showAdvisorResult();
+        }
+    }
+
+    function showAdvisorResult() {
+        panel.querySelectorAll('.inline-advisor-question').forEach(q => q.style.display = 'none');
+        const userType = getCurrentUserEntityType();
+        const eligibility = (window.CONFIG && window.CONFIG.MODEL_ELIGIBILITY) || {};
+        let candidates = advisorState.subs.length > 0 ? advisorState.subs : Object.keys(SUB_NAMES);
+        if (advisorState.cats) {
+            candidates = candidates.filter(s => SUB_TO_CAT[s] === advisorState.cats);
+        }
+        candidates = candidates.filter(s => {
+            const rule = eligibility[s];
+            return !rule || !userType || rule.allowedEntityTypes.includes(userType);
+        });
+        const best = candidates[0] || 'task_based';
+        advisorState.recommended = { sub: best, cat: SUB_TO_CAT[best] };
+        recSpan.textContent = SUB_NAMES[best] || best;
+        resultDiv.style.display = '';
+    }
+
+    panel.querySelectorAll('.inline-advisor-opt').forEach(btn => {
+        btn.addEventListener('click', () => advanceQuestion(btn));
+    });
+
+    if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+            const rec = advisorState.recommended;
+            if (!rec) return;
+            const catRadio = document.querySelector(`input[name="category"][value="${rec.cat}"]`);
+            if (catRadio) {
+                catRadio.checked = true;
+                catRadio.dispatchEvent(new Event('change', { bubbles: true }));
+                setTimeout(() => {
+                    const subRadio = document.querySelector(`input[name="submodel"][value="${rec.sub}"]`);
+                    if (subRadio) {
+                        subRadio.checked = true;
+                        subRadio.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                }, 100);
+            }
+            panel.classList.add('hidden');
+            toggle.style.display = '';
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            advisorState.q = 0;
+            advisorState.cats = null;
+            advisorState.subs = [];
+            advisorState.recommended = null;
+            resultDiv.style.display = 'none';
+            const questions = panel.querySelectorAll('.inline-advisor-question');
+            questions.forEach((q, i) => {
+                q.style.display = i === 0 ? '' : 'none';
+                q.querySelectorAll('.inline-advisor-opt').forEach(o => o.classList.remove('selected'));
+            });
+        });
+    }
 }
 
 function setupPaymentModes() {
@@ -513,7 +651,7 @@ function fillReviewSummary() {
     const title = document.getElementById('title')?.value || '—';
     const desc = document.getElementById('description')?.value || '—';
     const intentEl = document.querySelector('input[name="intent"]:checked');
-    const intent = intentEl ? (intentEl.value === 'request' ? 'REQUEST' : 'OFFER') : '—';
+    const intent = intentEl ? (intentEl.value === 'request' ? 'NEED' : 'OFFER') : '—';
     const location = document.getElementById('location')?.value || document.getElementById('location-country')?.value || '—';
     const modelType = document.getElementById('model-type')?.value;
     const subModelType = document.getElementById('submodel-type')?.value;
@@ -597,7 +735,7 @@ function validateCurrentStep() {
         case 2: {
             const intent = document.querySelector('input[name="intent"]:checked');
             if (!intent) {
-                showError('Please select an intent (REQUEST or OFFER)');
+                showError('Please select an intent (NEED or OFFER)');
                 return false;
             }
             break;

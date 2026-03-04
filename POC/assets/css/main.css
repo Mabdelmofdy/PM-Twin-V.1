@@ -56,7 +56,7 @@
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
 
-    /* Intent badge colors per module (OFFER / REQUEST): project_based, strategic_partnership, resource_pooling, hiring */
+    /* Intent badge colors per module (OFFER / NEED): project_based, strategic_partnership, resource_pooling, hiring */
     --intent-offer-project_based: #93c5fd;
     --intent-request-project_based: #1d4ed8;
     --intent-offer-strategic_partnership: #6ee7b7;

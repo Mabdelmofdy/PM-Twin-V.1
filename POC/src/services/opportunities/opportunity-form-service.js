@@ -71,6 +71,27 @@ class OpportunityFormService {
     }
     
     /**
+     * Get models filtered by entity-type eligibility.
+     * Ineligible sub-models are marked with { eligible: false, reason } instead of removed,
+     * so the UI can show them as disabled with a tooltip.
+     */
+    getFilteredModels(userType) {
+        const models = this.getModels();
+        const eligibility = (window.CONFIG && window.CONFIG.MODEL_ELIGIBILITY) || {};
+
+        return models.map(model => ({
+            ...model,
+            subModels: model.subModels.map(sub => {
+                const rule = eligibility[sub.key];
+                if (rule && userType && !rule.allowedEntityTypes.includes(userType)) {
+                    return { ...sub, eligible: false, reason: rule.reason };
+                }
+                return { ...sub, eligible: true, reason: null };
+            })
+        }));
+    }
+
+    /**
      * Get attributes for a sub-model
      */
     getAttributes(modelKey, subModelKey) {

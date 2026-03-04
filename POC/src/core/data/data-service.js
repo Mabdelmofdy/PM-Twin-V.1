@@ -451,6 +451,28 @@ class DataService {
         const filtered = sessions.filter(s => s.token !== token);
         this.storage.set(CONFIG.STORAGE_KEYS.SESSIONS, filtered);
     }
+
+    // Password reset tokens (POC: no email sent; token shown for testing)
+    async createResetToken(email) {
+        const tokens = this.storage.get(CONFIG.STORAGE_KEYS.RESET_TOKENS) || [];
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
+        const token = `${Date.now()}-${Math.random().toString(36).substr(2, 12)}`;
+        tokens.push({ email, token, expiresAt });
+        this.storage.set(CONFIG.STORAGE_KEYS.RESET_TOKENS, tokens);
+        return { token, expiresAt };
+    }
+
+    async getResetTokenByToken(token) {
+        const tokens = this.storage.get(CONFIG.STORAGE_KEYS.RESET_TOKENS) || [];
+        const entry = tokens.find(t => t.token === token && new Date(t.expiresAt) > new Date());
+        return entry || null;
+    }
+
+    async deleteResetToken(token) {
+        const tokens = this.storage.get(CONFIG.STORAGE_KEYS.RESET_TOKENS) || [];
+        const filtered = tokens.filter(t => t.token !== token);
+        this.storage.set(CONFIG.STORAGE_KEYS.RESET_TOKENS, filtered);
+    }
     
     // Opportunity Operations
     async getOpportunities() {

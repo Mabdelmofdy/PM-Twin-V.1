@@ -30,6 +30,13 @@
         </div>
     </div>
     
+    <div id="profile-vetting-banner" class="card border-primary mb-4" style="display: none;">
+        <div class="card-body">
+            <p class="mb-2"><strong>Complete vetting to get full access.</strong> Finish your vetting to view full opportunity details and apply. You can add your primary domain and expertise areas below.</p>
+            <a href="#company-profile-card" id="profile-vetting-cta" class="btn btn-primary btn-sm">Complete your vetting</a>
+        </div>
+    </div>
+    
     <div class="profile-content">
         <div class="profile-main">
             <div class="card">
@@ -86,6 +93,19 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="profile-view-item"><span class="text-gray-600">Financial Capacity (SAR)</span><span id="view-financial-capacity">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Preferred Payment Modes</span><span id="view-company-paymentModes">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Preferred Collaboration Models</span><span id="view-company-preferredModels">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Primary domain</span><span id="view-company-primaryDomain">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Expertise areas</span><span id="view-company-expertiseAreas">—</span></div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">Portfolio / case studies</h4>
+                        <div id="view-company-caseStudies" class="space-y-2 mb-4"></div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">References & testimonials</h4>
+                        <div id="view-company-references" class="space-y-2 mb-4"></div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting steps</h4>
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-600"><strong>Certifications:</strong> <span id="view-company-certifications-vetting">—</span></p>
+                            <p class="text-sm text-gray-600"><strong>Case study (vetting):</strong> <span id="view-company-vettingCaseStudy">—</span></p>
+                            <p class="text-sm text-gray-600"><strong>Interview:</strong> <span id="view-company-interview">—</span></p>
                         </div>
                     </div>
                     <form id="company-profile-form" style="display: none;">
@@ -115,6 +135,29 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="form-group"><label for="financial-capacity" class="form-label">Financial Capacity (SAR)</label><input type="number" id="financial-capacity" name="financialCapacity" class="form-input"></div>
                             <div class="form-group"><label for="company-paymentModes" class="form-label">Preferred Payment Modes</label><select id="company-paymentModes" name="preferredPaymentModes" class="form-input" multiple></select><small class="form-help">Hold Ctrl/Cmd to select multiple</small></div>
+                            <div class="form-group sm:col-span-2"><label class="form-label">Preferred Collaboration Models</label><div id="company-preferredModels-checkboxes" class="flex flex-wrap gap-2"></div></div>
+                            <div class="form-group"><label for="company-primaryDomain" class="form-label">Primary domain</label><select id="company-primaryDomain" name="primaryDomain" class="form-input"><option value="">Select domain</option></select></div>
+                            <div class="form-group sm:col-span-2">
+                                <label class="form-label">Expertise areas (domain + role)</label>
+                                <div id="company-expertiseAreas-list" class="space-y-2 mb-2"></div>
+                                <button type="button" id="company-add-expertise" class="btn btn-secondary btn-sm">Add expertise area</button>
+                            </div>
+                            <div class="form-group sm:col-span-2">
+                                <label class="form-label">Portfolio / case studies</label>
+                                <div id="company-caseStudies-list" class="space-y-3 mb-3"></div>
+                                <button type="button" id="company-add-caseStudy" class="btn btn-secondary btn-sm">Add case study</button>
+                            </div>
+                            <div class="form-group sm:col-span-2">
+                                <label class="form-label">References & testimonials</label>
+                                <div id="company-references-list" class="space-y-3 mb-3"></div>
+                                <button type="button" id="company-add-reference" class="btn btn-secondary btn-sm">Add reference</button>
+                            </div>
+                            <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting: case study (optional)</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <div class="form-group"><label for="company-vettingCaseStudy-title" class="form-label">Case study title</label><input type="text" id="company-vettingCaseStudy-title" class="form-input" placeholder="Title"></div>
+                                <div class="form-group"><label for="company-vettingCaseStudy-url" class="form-label">URL or document link</label><input type="url" id="company-vettingCaseStudy-url" class="form-input" placeholder="https://"></div>
+                                <div class="form-group sm:col-span-2"><label for="company-vettingCaseStudy-description" class="form-label">Description</label><textarea id="company-vettingCaseStudy-description" class="form-input" rows="2" placeholder="Brief case study summary"></textarea></div>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -156,6 +199,19 @@
                             <div class="profile-view-item"><span class="text-gray-600">Preferred Payment Modes</span><span id="view-prof-paymentModes">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Hourly Rate</span><span id="view-prof-hourlyRate">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Languages</span><span id="view-prof-languages">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Preferred Collaboration Models</span><span id="view-prof-preferredModels">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Primary domain</span><span id="view-prof-primaryDomain">—</span></div>
+                            <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Expertise areas</span><span id="view-prof-expertiseAreas">—</span></div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">Portfolio / case studies</h4>
+                        <div id="view-prof-caseStudies" class="space-y-2 mb-4"></div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">References & testimonials</h4>
+                        <div id="view-prof-references" class="space-y-2 mb-4"></div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting steps</h4>
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-600"><strong>Certifications:</strong> <span id="view-prof-certifications-vetting">—</span></p>
+                            <p class="text-sm text-gray-600"><strong>Case study (vetting):</strong> <span id="view-prof-vettingCaseStudy">—</span></p>
+                            <p class="text-sm text-gray-600"><strong>Interview:</strong> <span id="view-prof-interview">—</span></p>
                         </div>
                     </div>
                     <form id="professional-profile-form" style="display: none;">
@@ -187,6 +243,30 @@
                             <div class="form-group"><label for="prof-hourlyRate" class="form-label">Hourly Rate</label><input type="number" id="prof-hourlyRate" name="hourlyRate" class="form-input" min="0" step="1"></div>
                             <div class="form-group"><label for="prof-currency" class="form-label">Currency</label><input type="text" id="prof-currency" name="currency" class="form-input" placeholder="e.g. SAR" value="SAR"></div>
                             <div class="form-group"><label for="prof-languages" class="form-label">Languages</label><input type="text" id="prof-languages" name="languages" class="form-input" placeholder="Comma-separated (e.g. Arabic, English)"></div>
+                            <div class="form-group sm:col-span-2"><label class="form-label">Preferred Collaboration Models</label><div id="prof-preferredModels-checkboxes" class="flex flex-wrap gap-2"></div></div>
+                            <div class="form-group"><label for="prof-primaryDomain" class="form-label">Primary domain</label><select id="prof-primaryDomain" name="primaryDomain" class="form-input"><option value="">Select domain</option></select></div>
+                            <div class="form-group sm:col-span-2">
+                                <label class="form-label">Expertise areas (domain + role)</label>
+                                <div id="prof-expertiseAreas-list" class="space-y-2 mb-2"></div>
+                                <button type="button" id="prof-add-expertise" class="btn btn-secondary btn-sm">Add expertise area</button>
+                            </div>
+                            <div class="form-group sm:col-span-2">
+                                <label class="form-label">Portfolio / case studies</label>
+                                <div id="prof-caseStudies-list" class="space-y-3 mb-3"></div>
+                                <button type="button" id="prof-add-caseStudy" class="btn btn-secondary btn-sm">Add case study</button>
+                            </div>
+                            <div class="form-group sm:col-span-2">
+                                <label class="form-label">References & testimonials</label>
+                                <div id="prof-references-list" class="space-y-3 mb-3"></div>
+                                <button type="button" id="prof-add-reference" class="btn btn-secondary btn-sm">Add reference</button>
+                            </div>
+                            <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting: case study</h4>
+                            <p id="prof-vetting-case-study-hint" class="text-sm text-gray-600 mb-2">Optional for Professionals; required for Consultants.</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <div class="form-group"><label for="prof-vettingCaseStudy-title" class="form-label">Case study title</label><input type="text" id="prof-vettingCaseStudy-title" class="form-input" placeholder="Title"></div>
+                                <div class="form-group"><label for="prof-vettingCaseStudy-url" class="form-label">URL or document link</label><input type="url" id="prof-vettingCaseStudy-url" class="form-input" placeholder="https://"></div>
+                                <div class="form-group sm:col-span-2"><label for="prof-vettingCaseStudy-description" class="form-label">Description</label><textarea id="prof-vettingCaseStudy-description" class="form-input" rows="2" placeholder="Brief case study summary"></textarea></div>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>

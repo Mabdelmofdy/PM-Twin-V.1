@@ -11,6 +11,7 @@
         <div class="wizard-progress" id="wizard-progress">
             <div class="progress-bar" id="wizard-progress-bar" style="width: 0%"></div>
         </div>
+        <div class="wizard-step-indicator" id="wizard-step-indicator"></div>
         <div class="wizard-steps" id="wizard-steps"></div>
         <div class="wizard-actions">
             <button type="button" id="wizard-prev" class="btn btn-secondary" style="display: none;">Previous</button>
@@ -20,10 +21,12 @@
     </div>
 
     <div class="wizard-result card" id="wizard-result" style="display: none;">
-        <h2>Recommended collaboration models</h2>
+        <h2>Recommended Collaboration Models</h2>
+        <p class="result-intro">Based on your answers, here are the models that best fit your situation:</p>
         <div id="wizard-result-models"></div>
-        <p class="result-cta-text">Create an account to post or apply for opportunities.</p>
+        <p class="result-cta-text">Create an account to post or apply for opportunities using these models.</p>
         <div class="result-actions">
+            <button type="button" id="wizard-restart" class="btn btn-secondary">Start Over</button>
             <a href="#" data-route="/register" class="btn btn-primary">Register</a>
             <a href="#" data-route="/opportunities/create" class="btn btn-secondary" id="wizard-create-opp">Create opportunity</a>
             <a href="#" data-route="/opportunities" class="btn btn-secondary">Browse opportunities</a>
@@ -33,21 +36,34 @@
 </div>
 
 <style>
-.collaboration-wizard-page { max-width: 640px; margin: 0 auto; }
-.wizard-progress { height: 6px; background: var(--border-color); border-radius: 3px; margin-bottom: var(--spacing-xl); overflow: hidden; }
+.collaboration-wizard-page { max-width: 660px; margin: 0 auto; }
+.wizard-progress { height: 6px; background: var(--border-color); border-radius: 3px; margin-bottom: var(--spacing-sm); overflow: hidden; }
 .progress-bar { height: 100%; background: var(--primary-color); transition: width 0.3s; }
-.wizard-steps { min-height: 200px; margin-bottom: var(--spacing-xl); }
+.wizard-step-indicator { text-align: right; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: var(--spacing-lg); }
+.wizard-steps { min-height: 240px; margin-bottom: var(--spacing-xl); }
 .wizard-step { display: none; }
 .wizard-step.active { display: block; }
-.wizard-step h3 { margin-bottom: var(--spacing-md); }
+.wizard-step h3 { margin-bottom: var(--spacing-xs); }
+.wizard-step-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md); }
 .wizard-options { display: flex; flex-direction: column; gap: var(--spacing-sm); }
-.wizard-option { padding: var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; }
+.wizard-option { padding: var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; transition: all 0.15s; }
 .wizard-option:hover { border-color: var(--primary-color); background: var(--bg-tertiary); }
-.wizard-option.selected { border-color: var(--primary-color); background: rgba(37, 99, 235, 0.08); }
+.wizard-option.selected { border-color: var(--primary-color); background: rgba(37, 99, 235, 0.08); font-weight: 500; }
 .wizard-actions { display: flex; gap: var(--spacing-md); justify-content: flex-end; }
-.wizard-result h2 { margin-bottom: var(--spacing-lg); }
-.wizard-result-models-list { list-style: none; padding: 0; margin: 0 0 var(--spacing-lg); }
-.wizard-result-models-list li { padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-color); }
-.result-cta-text { margin-bottom: var(--spacing-md); color: var(--text-secondary); }
+
+/* Result cards */
+.result-intro { color: var(--text-secondary); margin-bottom: var(--spacing-lg); }
+.wizard-result h2 { margin-bottom: var(--spacing-xs); }
+.wizard-result-card { border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--spacing-lg); margin-bottom: var(--spacing-md); transition: box-shadow 0.15s; }
+.wizard-result-card:first-child { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); }
+.result-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs); }
+.result-rank { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary-color); }
+.result-match-pct { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+.result-model-name { margin: 0 0 var(--spacing-xs) 0; font-size: 1.1rem; }
+.result-category-tag { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; background: var(--bg-tertiary); color: var(--text-secondary); margin-bottom: var(--spacing-sm); }
+.result-model-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-sm); }
+.result-why { font-size: 0.85rem; color: var(--text-secondary); padding-top: var(--spacing-sm); border-top: 1px solid var(--border-color); }
+.result-why strong { color: var(--text-primary); }
+.result-cta-text { margin: var(--spacing-md) 0; color: var(--text-secondary); }
 .result-actions { display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
 </style>

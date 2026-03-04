@@ -63,7 +63,7 @@ None. This is a read-only summary.
 
 **Displayed Information**
 - Opportunity title
-- Intent label (REQUEST or OFFER)
+- Intent label (NEED or OFFER)
 - Model type and sub-model
 - Status
 - Creation date

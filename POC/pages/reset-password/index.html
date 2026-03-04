@@ -1,0 +1,25 @@
+<div class="page-container reset-password-page min-h-[calc(100vh-16rem)] flex items-center justify-center p-8">
+    <div class="w-full max-w-md">
+        <div class="bg-white rounded-lg p-8 shadow-lg">
+            <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Set new password</h1>
+            <p class="text-center text-gray-600 mb-6">Enter your new password below.</p>
+            
+            <form id="reset-password-form">
+                <div class="mb-4">
+                    <label for="new-password" class="block mb-2 font-medium text-gray-900">New password</label>
+                    <input type="password" id="new-password" name="newPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required minlength="6" placeholder="Enter new password">
+                </div>
+                <div class="mb-6">
+                    <label for="confirm-password" class="block mb-2 font-medium text-gray-900">Confirm password</label>
+                    <input type="password" id="confirm-password" name="confirmPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required minlength="6" placeholder="Confirm new password">
+                </div>
+                <div id="reset-error" class="alert alert-error mb-4" style="display: none;"></div>
+                <button type="submit" class="w-full px-6 py-3 bg-primary text-white font-medium rounded-md hover:bg-primary-dark">Reset password</button>
+            </form>
+            
+            <p class="text-center mt-6 text-gray-600">
+                <a href="#" data-route="/login" class="text-primary font-medium hover:underline">Back to login</a>
+            </p>
+        </div>
+    </div>
+</div>

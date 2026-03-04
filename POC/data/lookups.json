@@ -340,7 +340,7 @@
     "Other"
   ],
   "intentLabels": [
-    { "id": "request", "label": "REQUEST" },
+    { "id": "request", "label": "NEED" },
     { "id": "offer", "label": "OFFER" }
   ],
   "collaborationModels": [
@@ -440,5 +440,19 @@
       { "id": "cv_resume", "label": "CV / Resume", "required": true },
       { "id": "portfolio", "label": "Portfolio (optional)", "required": false }
     ]
+  },
+  "vettingRequirements": {
+    "professional": {
+      "certifications": "required",
+      "caseStudy": "optional",
+      "portfolio": "optional",
+      "interview": "required"
+    },
+    "consultant": {
+      "certifications": "required",
+      "caseStudy": "required",
+      "portfolio": "required",
+      "interview": "required"
+    }
   }
 }

@@ -55,11 +55,19 @@ async function loadOpportunity(id) {
         
         currentOpportunity = opportunity;
         
+        // Get current user and vetting status
+        const user = authService.getCurrentUser();
+        const isVetted = user && user.status === 'active';
+        if (user && !isVetted) {
+            renderTeaserView(opportunity);
+            loadingDiv.style.display = 'none';
+            contentDiv.style.display = 'block';
+            return;
+        }
+        
         // Load creator info
         const creator = await dataService.getUserOrCompanyById(opportunity.creatorId);
         
-        // Get current user
-        const user = authService.getCurrentUser();
         const isOwner = user && opportunity.creatorId === user.id;
         const canApply = user && !isOwner && (opportunity.status === 'published' || opportunity.status === 'in_negotiation');
         
@@ -97,6 +105,30 @@ async function loadOpportunity(id) {
     }
 }
 
+function renderTeaserView(opportunity) {
+    const contentDiv = document.getElementById('content');
+    if (!contentDiv) return;
+    const shortDesc = (opportunity.description || '')
+        .replace(/<[^>]+>/g, ' ')
+        .trim()
+        .slice(0, 300);
+    const profileRoute = (window.CONFIG && window.CONFIG.ROUTES && window.CONFIG.ROUTES.PROFILE) || '/profile';
+    contentDiv.innerHTML = `
+        <div class="card max-w-2xl mx-auto mt-6">
+            <div class="card-body">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">${escapeHtml(opportunity.title || 'Opportunity')}</h1>
+                <p class="text-gray-600 mb-4">${escapeHtml(shortDesc)}${shortDesc.length >= 300 ? '…' : ''}</p>
+                <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg mb-4">
+                    <p class="font-medium text-amber-800">Complete vetting to view full details and apply.</p>
+                    <p class="text-sm text-amber-700 mt-1">Finish your vetting from your profile to access full opportunity details and the apply button.</p>
+                </div>
+                <a href="#" data-route="${profileRoute}" class="btn btn-primary">Complete your vetting</a>
+            </div>
+        </div>
+    `;
+    contentDiv.style.display = 'block';
+}
+
 function determineWizardSteps(opportunity) {
     const modelSpecificData = opportunity.attributes || opportunity.modelData;
     
@@ -130,7 +162,7 @@ async function renderComprehensiveView(opportunity, creator, isOwner, canApply) 
     const intentEl = document.getElementById('opportunity-intent');
     if (intentEl) {
         const intent = opportunity.intent || 'request';
-        intentEl.textContent = intent === 'offer' ? 'OFFER' : 'REQUEST';
+        intentEl.textContent = intent === 'offer' ? 'OFFER' : 'NEED';
         intentEl.style.display = 'inline-block';
         intentEl.className = 'badge ' + (typeof getIntentBadgeClass === 'function' ? getIntentBadgeClass(intent, opportunity.modelType) : (intent === 'offer' ? 'badge-info' : 'badge-primary'));
     }

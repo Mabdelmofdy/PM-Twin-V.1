@@ -61,11 +61,13 @@
         "requiredSkills": ["Marine Construction", "Infrastructure Development", "Utilities Engineering", "Road Construction", "Project Management", "Mega Project Experience"]
       },
       "createdAt": "2026-01-10T08:00:00.000Z",
-      "updatedAt": "2026-01-10T08:00:00.000Z"
+      "updatedAt": "2026-01-10T08:00:00.000Z",
+      "isSample": true
     },
     {
       "id": "opp-002",
       "title": "Senior Structural Engineer - Riyadh Metro Extension",
+      "isSample": true,
       "description": "Looking for an experienced structural engineer to join our team for the Riyadh Metro Line 7 extension project. Must have experience with underground structures and transit systems. This is a high-profile project contributing to Riyadh's public transportation infrastructure.",
       "creatorId": "user-company-001",
       "modelType": "hiring",

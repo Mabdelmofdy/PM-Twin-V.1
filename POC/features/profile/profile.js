@@ -29,6 +29,211 @@ function formatArray(arr) {
     return arr.join(', ');
 }
 
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function renderCaseStudiesList(containerId, cases) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    (cases || []).forEach((c, i) => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-start border border-gray-200 rounded p-2 case-study-row';
+        row.innerHTML = `
+            <input type="text" class="case-study-title form-input flex-1 min-w-[120px]" placeholder="Title" value="${escapeHtml(c.title || '')}">
+            <input type="url" class="case-study-url form-input flex-1 min-w-[120px]" placeholder="URL" value="${escapeHtml(c.url || '')}">
+            <textarea class="case-study-desc form-input flex-1 min-w-[180px]" rows="1" placeholder="Description">${escapeHtml(c.description || '')}</textarea>
+            <button type="button" class="case-study-remove btn btn-ghost btn-sm">Remove</button>
+        `;
+        row.querySelector('.case-study-remove').addEventListener('click', () => row.remove());
+        container.appendChild(row);
+    });
+}
+
+function setupCaseStudyAddButton(btnId, listId) {
+    const btn = document.getElementById(btnId);
+    const list = document.getElementById(listId);
+    if (!btn || !list) return;
+    btn.onclick = () => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-start border border-gray-200 rounded p-2 case-study-row';
+        row.innerHTML = `
+            <input type="text" class="case-study-title form-input flex-1 min-w-[120px]" placeholder="Title">
+            <input type="url" class="case-study-url form-input flex-1 min-w-[120px]" placeholder="URL">
+            <textarea class="case-study-desc form-input flex-1 min-w-[180px]" rows="1" placeholder="Description"></textarea>
+            <button type="button" class="case-study-remove btn btn-ghost btn-sm">Remove</button>
+        `;
+        row.querySelector('.case-study-remove').addEventListener('click', () => row.remove());
+        list.appendChild(row);
+    };
+}
+
+function collectCaseStudiesFromList(listId) {
+    const list = document.getElementById(listId);
+    if (!list) return [];
+    return Array.from(list.querySelectorAll('.case-study-row')).map(row => ({
+        title: row.querySelector('.case-study-title')?.value?.trim() || null,
+        url: row.querySelector('.case-study-url')?.value?.trim() || null,
+        description: row.querySelector('.case-study-desc')?.value?.trim() || null,
+        createdAt: new Date().toISOString()
+    })).filter(c => c.title || c.url || c.description);
+}
+
+function renderReferencesList(containerId, refs) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    (refs || []).forEach((r, i) => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-start border border-gray-200 rounded p-2 reference-row';
+        row.innerHTML = `
+            <input type="text" class="ref-name form-input flex-1 min-w-[100px]" placeholder="Name" value="${escapeHtml(r.name || '')}">
+            <input type="text" class="ref-role form-input flex-1 min-w-[100px]" placeholder="Role" value="${escapeHtml(r.role || '')}">
+            <input type="text" class="ref-contact form-input flex-1 min-w-[120px]" placeholder="Contact" value="${escapeHtml(r.contact || '')}">
+            <textarea class="ref-text form-input flex-1 min-w-[180px]" rows="1" placeholder="Testimonial">${escapeHtml(r.text || '')}</textarea>
+            <button type="button" class="ref-remove btn btn-ghost btn-sm">Remove</button>
+        `;
+        row.querySelector('.ref-remove').addEventListener('click', () => row.remove());
+        container.appendChild(row);
+    });
+}
+
+function setupReferenceAddButton(btnId, listId) {
+    const btn = document.getElementById(btnId);
+    const list = document.getElementById(listId);
+    if (!btn || !list) return;
+    btn.onclick = () => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-start border border-gray-200 rounded p-2 reference-row';
+        row.innerHTML = `
+            <input type="text" class="ref-name form-input flex-1 min-w-[100px]" placeholder="Name">
+            <input type="text" class="ref-role form-input flex-1 min-w-[100px]" placeholder="Role">
+            <input type="text" class="ref-contact form-input flex-1 min-w-[120px]" placeholder="Contact">
+            <textarea class="ref-text form-input flex-1 min-w-[180px]" rows="1" placeholder="Testimonial"></textarea>
+            <button type="button" class="ref-remove btn btn-ghost btn-sm">Remove</button>
+        `;
+        row.querySelector('.ref-remove').addEventListener('click', () => row.remove());
+        list.appendChild(row);
+    };
+}
+
+function collectReferencesFromList(listId) {
+    const list = document.getElementById(listId);
+    if (!list) return [];
+    return Array.from(list.querySelectorAll('.reference-row')).map(row => ({
+        name: row.querySelector('.ref-name')?.value?.trim() || null,
+        role: row.querySelector('.ref-role')?.value?.trim() || null,
+        contact: row.querySelector('.ref-contact')?.value?.trim() || null,
+        text: row.querySelector('.ref-text')?.value?.trim() || null,
+        createdAt: new Date().toISOString()
+    })).filter(r => r.name || r.role || r.contact || r.text);
+}
+
+function getProfileDomainsList() {
+    const cats = profileLookups?.jobCategories || [];
+    return cats.map(c => (typeof c === 'string' ? { id: c, label: c } : { id: c.id || c, label: c.label || c.id || c }));
+}
+
+function renderExpertiseAreasList(containerId, areas) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const domains = getProfileDomainsList();
+    container.innerHTML = '';
+    (areas || []).forEach((ea, i) => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-center mb-2 expertise-area-row';
+        const domainSelect = document.createElement('select');
+        domainSelect.className = 'expertise-domain form-input flex-1 min-w-[120px]';
+        domainSelect.innerHTML = '<option value="">Domain</option>';
+        domains.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = d.label;
+            if (ea.domain === d.id) opt.selected = true;
+            domainSelect.appendChild(opt);
+        });
+        const roleSelect = document.createElement('select');
+        roleSelect.className = 'expertise-role form-input min-w-[120px]';
+        roleSelect.innerHTML = '<option value="professional">Professional</option><option value="consultant">Consultant</option>';
+        roleSelect.value = ea.role || 'professional';
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-ghost btn-sm';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => row.remove());
+        row.appendChild(domainSelect);
+        row.appendChild(roleSelect);
+        row.appendChild(removeBtn);
+        container.appendChild(row);
+    });
+}
+
+function setupExpertiseAddButton(btnId, listId) {
+    const btn = document.getElementById(btnId);
+    const list = document.getElementById(listId);
+    if (!btn || !list) return;
+    btn.onclick = () => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap gap-2 items-center mb-2 expertise-area-row';
+        const domains = getProfileDomainsList();
+        const domainSelect = document.createElement('select');
+        domainSelect.className = 'expertise-domain form-input flex-1 min-w-[120px]';
+        domainSelect.innerHTML = '<option value="">Domain</option>';
+        domains.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = d.label;
+            domainSelect.appendChild(opt);
+        });
+        const roleSelect = document.createElement('select');
+        roleSelect.className = 'expertise-role form-input min-w-[120px]';
+        roleSelect.innerHTML = '<option value="professional">Professional</option><option value="consultant">Consultant</option>';
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-ghost btn-sm';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => row.remove());
+        row.appendChild(domainSelect);
+        row.appendChild(roleSelect);
+        row.appendChild(removeBtn);
+        list.appendChild(row);
+    };
+}
+
+function collectExpertiseAreasFromList(listId) {
+    const list = document.getElementById(listId);
+    if (!list) return [];
+    return Array.from(list.querySelectorAll('.expertise-area-row')).map(row => ({
+        domain: row.querySelector('.expertise-domain')?.value?.trim() || null,
+        role: row.querySelector('.expertise-role')?.value || 'professional'
+    })).filter(ea => ea.domain);
+}
+
+function getPreferredCollaborationModelsList() {
+    const list = [];
+    if (window.CONFIG?.MODELS) {
+        Object.entries(CONFIG.MODELS).forEach(([key, id]) => {
+            list.push({ id, label: key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) });
+        });
+    }
+    if (window.CONFIG?.COLLABORATION_MODEL) {
+        Object.entries(CONFIG.COLLABORATION_MODEL).forEach(([key, id]) => {
+            if (!list.some(m => m.id === id)) list.push({ id, label: key.charAt(0).toUpperCase() + key.slice(1) });
+        });
+    }
+    return list;
+}
+
+function getPreferredModelsLabel(ids) {
+    if (!Array.isArray(ids) || ids.length === 0) return '—';
+    const list = getPreferredCollaborationModelsList();
+    return ids.map(id => list.find(m => m.id === id)?.label || id).join(', ');
+}
+
 async function initProfile() {
     const user = authService.getCurrentUser();
     if (!user) {
@@ -48,9 +253,13 @@ function getCompanyCompleteness(profile) {
             (Array.isArray(profile?.classifications) ? profile.classifications.length : parseArray(profile?.classifications).length) > 0,
         profile?.financialCapacity != null && profile?.financialCapacity !== '' && Number(profile.financialCapacity) >= 0,
         !!profile?.companyRole,
-        (Array.isArray(profile?.preferredPaymentModes) ? profile.preferredPaymentModes.length : 0) > 0
+        (Array.isArray(profile?.preferredPaymentModes) ? profile.preferredPaymentModes.length : 0) > 0,
+        (Array.isArray(profile?.preferredCollaborationModels) ? profile.preferredCollaborationModels.length : 0) > 0,
+        (Array.isArray(profile?.caseStudies) ? profile.caseStudies.length : 0) > 0,
+        (Array.isArray(profile?.references) ? profile.references.length : 0) > 0,
+        !!profile?.primaryDomain || (Array.isArray(profile?.expertiseAreas) && profile.expertiseAreas.length > 0)
     ];
-    const total = 6;
+    const total = 10;
     const filled = fields.filter(Boolean).length;
     return { percent: Math.round((filled / total) * 100), total, filled };
 }
@@ -65,8 +274,12 @@ function getProfessionalCompleteness(profile) {
     const hasLocation = !!profile?.location;
     const hasWorkMode = !!profile?.preferredWorkMode;
     const hasPaymentModes = (Array.isArray(profile?.preferredPaymentModes) ? profile.preferredPaymentModes.length : 0) > 0;
-    const fields = [hasName, hasSpec || hasSkills, hasCert, hasExp, hasHeadline, hasLocation, hasWorkMode, hasPaymentModes];
-    const total = 8;
+    const hasPreferredModels = (Array.isArray(profile?.preferredCollaborationModels) ? profile.preferredCollaborationModels.length : 0) > 0;
+    const hasCaseStudies = (Array.isArray(profile?.caseStudies) ? profile.caseStudies.length : 0) > 0;
+    const hasReferences = (Array.isArray(profile?.references) ? profile.references.length : 0) > 0;
+    const hasDomainOrExpertise = !!profile?.primaryDomain || (Array.isArray(profile?.expertiseAreas) && profile.expertiseAreas.length > 0);
+    const fields = [hasName, hasSpec || hasSkills, hasCert, hasExp, hasHeadline, hasLocation, hasWorkMode, hasPaymentModes, hasPreferredModels, hasCaseStudies, hasReferences, hasDomainOrExpertise];
+    const total = 12;
     const filled = fields.filter(Boolean).length;
     return { percent: Math.round((filled / total) * 100), total, filled };
 }
@@ -127,6 +340,55 @@ function setCompanyViewMode(profile) {
         profile?.financialCapacity != null && profile?.financialCapacity !== ''
             ? Number(profile.financialCapacity).toLocaleString() + ' SAR' : '—';
     document.getElementById('view-company-paymentModes').textContent = preferredText;
+    const prefModelsEl = document.getElementById('view-company-preferredModels');
+    if (prefModelsEl) prefModelsEl.textContent = getPreferredModelsLabel(profile?.preferredCollaborationModels);
+    const primaryDomainEl = document.getElementById('view-company-primaryDomain');
+    if (primaryDomainEl) primaryDomainEl.textContent = profile?.primaryDomain || '—';
+    const expertiseEl = document.getElementById('view-company-expertiseAreas');
+    if (expertiseEl) {
+        const areas = profile?.expertiseAreas || [];
+        expertiseEl.textContent = areas.length === 0 ? '—' : areas.map(ea => `${ea.domain || '?'} (${ea.role || 'professional'})`).join(', ');
+    }
+    const caseEl = document.getElementById('view-company-caseStudies');
+    if (caseEl) {
+        const cases = profile?.caseStudies || [];
+        caseEl.innerHTML = cases.length === 0 ? '—' : cases.map(c => `
+            <div class="border border-gray-200 rounded p-2">
+                <div class="font-medium">${escapeHtml(c.title || 'Untitled')}</div>
+                ${c.description ? `<div class="text-sm text-gray-600">${escapeHtml(c.description)}</div>` : ''}
+                ${c.url ? `<a href="${escapeHtml(c.url)}" target="_blank" rel="noopener" class="text-primary text-sm">View</a>` : ''}
+            </div>
+        `).join('');
+    }
+    const refEl = document.getElementById('view-company-references');
+    if (refEl) {
+        const refs = profile?.references || [];
+        refEl.innerHTML = refs.length === 0 ? '—' : refs.map(r => `
+            <div class="border border-gray-200 rounded p-2">
+                <div class="font-medium">${escapeHtml(r.name || '—')}${r.role ? ` · ${escapeHtml(r.role)}` : ''}</div>
+                ${r.contact ? `<div class="text-sm text-gray-600">${escapeHtml(r.contact)}</div>` : ''}
+                ${r.text ? `<div class="text-sm mt-1">${escapeHtml(r.text)}</div>` : ''}
+            </div>
+        `).join('');
+    }
+    const certVettingEl = document.getElementById('view-company-certifications-vetting');
+    if (certVettingEl) {
+        const docs = profile?.documents || [];
+        certVettingEl.textContent = docs.length === 0 ? 'None uploaded' : docs.map(d => d.label || d.type || 'Document').join(', ');
+    }
+    const vcEl = document.getElementById('view-company-vettingCaseStudy');
+    if (vcEl) {
+        const vc = profile?.vettingCaseStudy;
+        if (!vc || (!vc.title && !vc.description && !vc.url)) vcEl.textContent = '—';
+        else vcEl.innerHTML = (vc.title ? escapeHtml(vc.title) : '') + (vc.url ? ` · <a href="${escapeHtml(vc.url)}" target="_blank" rel="noopener">Link</a>` : '') + (vc.description ? ` · ${escapeHtml(vc.description)}` : '');
+    }
+    const intEl = document.getElementById('view-company-interview');
+    if (intEl) {
+        const inv = profile?.interview;
+        if (inv?.link) intEl.innerHTML = `<a href="${escapeHtml(inv.link)}" target="_blank" rel="noopener">Interview link</a>` + (inv.scheduledAt ? ` · ${new Date(inv.scheduledAt).toLocaleString()}` : '');
+        else if (inv?.scheduledAt) intEl.textContent = 'Scheduled: ' + new Date(inv.scheduledAt).toLocaleString();
+        else intEl.textContent = 'An interview may be scheduled; you will be notified.';
+    }
 }
 
 function setProfessionalViewMode(profile) {
@@ -160,6 +422,55 @@ function setProfessionalViewMode(profile) {
     const currency = profile?.currency || 'SAR';
     document.getElementById('view-prof-hourlyRate').textContent = rate != null && rate !== '' ? rate + ' ' + currency : '—';
     document.getElementById('view-prof-languages').textContent = formatArray(profile?.languages);
+    const prefModelsEl = document.getElementById('view-prof-preferredModels');
+    if (prefModelsEl) prefModelsEl.textContent = getPreferredModelsLabel(profile?.preferredCollaborationModels);
+    const primaryDomainEl = document.getElementById('view-prof-primaryDomain');
+    if (primaryDomainEl) primaryDomainEl.textContent = profile?.primaryDomain || '—';
+    const expertiseEl = document.getElementById('view-prof-expertiseAreas');
+    if (expertiseEl) {
+        const areas = profile?.expertiseAreas || [];
+        expertiseEl.textContent = areas.length === 0 ? '—' : areas.map(ea => `${ea.domain || '?'} (${ea.role || 'professional'})`).join(', ');
+    }
+    const caseEl = document.getElementById('view-prof-caseStudies');
+    if (caseEl) {
+        const cases = profile?.caseStudies || [];
+        caseEl.innerHTML = cases.length === 0 ? '—' : cases.map(c => `
+            <div class="border border-gray-200 rounded p-2">
+                <div class="font-medium">${escapeHtml(c.title || 'Untitled')}</div>
+                ${c.description ? `<div class="text-sm text-gray-600">${escapeHtml(c.description)}</div>` : ''}
+                ${c.url ? `<a href="${escapeHtml(c.url)}" target="_blank" rel="noopener" class="text-primary text-sm">View</a>` : ''}
+            </div>
+        `).join('');
+    }
+    const refEl = document.getElementById('view-prof-references');
+    if (refEl) {
+        const refs = profile?.references || [];
+        refEl.innerHTML = refs.length === 0 ? '—' : refs.map(r => `
+            <div class="border border-gray-200 rounded p-2">
+                <div class="font-medium">${escapeHtml(r.name || '—')}${r.role ? ` · ${escapeHtml(r.role)}` : ''}</div>
+                ${r.contact ? `<div class="text-sm text-gray-600">${escapeHtml(r.contact)}</div>` : ''}
+                ${r.text ? `<div class="text-sm mt-1">${escapeHtml(r.text)}</div>` : ''}
+            </div>
+        `).join('');
+    }
+    const certVettingEl = document.getElementById('view-prof-certifications-vetting');
+    if (certVettingEl) {
+        const docs = profile?.documents || [];
+        certVettingEl.textContent = docs.length === 0 ? 'None uploaded' : docs.map(d => d.label || d.type || 'Document').join(', ');
+    }
+    const vcEl = document.getElementById('view-prof-vettingCaseStudy');
+    if (vcEl) {
+        const vc = profile?.vettingCaseStudy;
+        if (!vc || (!vc.title && !vc.description && !vc.url)) vcEl.textContent = '—';
+        else vcEl.innerHTML = (vc.title ? escapeHtml(vc.title) : '') + (vc.url ? ` · <a href="${escapeHtml(vc.url)}" target="_blank" rel="noopener">Link</a>` : '') + (vc.description ? ` · ${escapeHtml(vc.description)}` : '');
+    }
+    const intEl = document.getElementById('view-prof-interview');
+    if (intEl) {
+        const inv = profile?.interview;
+        if (inv?.link) intEl.innerHTML = `<a href="${escapeHtml(inv.link)}" target="_blank" rel="noopener">Interview link</a>` + (inv.scheduledAt ? ` · ${new Date(inv.scheduledAt).toLocaleString()}` : '');
+        else if (inv?.scheduledAt) intEl.textContent = 'Scheduled: ' + new Date(inv.scheduledAt).toLocaleString();
+        else intEl.textContent = 'An interview may be scheduled; you will be notified.';
+    }
 }
 
 function fillCompanyLookups() {
@@ -183,6 +494,20 @@ function fillCompanyLookups() {
             opt.value = p.id;
             opt.textContent = p.label;
             paySelect.appendChild(opt);
+        });
+    }
+    const prefContainer = document.getElementById('company-preferredModels-checkboxes');
+    if (prefContainer && prefContainer.children.length === 0) {
+        getPreferredCollaborationModelsList().forEach(m => {
+            const label = document.createElement('label');
+            label.className = 'inline-flex items-center gap-1 cursor-pointer';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.name = 'preferredCollaborationModels';
+            cb.value = m.id;
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(m.label));
+            prefContainer.appendChild(label);
         });
     }
 }
@@ -226,6 +551,20 @@ function fillProfessionalLookups() {
             paySelect.appendChild(opt);
         });
     }
+    const prefContainer = document.getElementById('prof-preferredModels-checkboxes');
+    if (prefContainer && prefContainer.children.length === 0) {
+        getPreferredCollaborationModelsList().forEach(m => {
+            const label = document.createElement('label');
+            label.className = 'inline-flex items-center gap-1 cursor-pointer';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.name = 'preferredCollaborationModels';
+            cb.value = m.id;
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(m.label));
+            prefContainer.appendChild(label);
+        });
+    }
 }
 
 async function loadProfile(user) {
@@ -240,6 +579,15 @@ async function loadProfile(user) {
     const otherCard = document.getElementById('profile-other-card');
     if (otherCard) otherCard.style.display = 'none';
     
+    // Show vetting banner when not active or vetting was skipped at registration (for company/professional only)
+    const vettingBanner = document.getElementById('profile-vetting-banner');
+    if (vettingBanner) {
+        const showVetting = (user.status !== 'active' || user.profile?.vettingSkippedAtRegistration === true) &&
+            (user.profile?.type === 'company' || user.role === 'professional' || user.role === 'consultant');
+        vettingBanner.style.display = showVetting ? 'block' : 'none';
+        const cta = document.getElementById('profile-vetting-cta');
+        if (cta) cta.href = user.profile?.type === 'company' ? '#company-profile-card' : '#professional-profile-card';
+    }
     // Show clarification banner and "Submit for review again" when status is clarification_requested
     const clarificationBanner = document.getElementById('profile-clarification-banner');
     const submitReviewBtn = document.getElementById('profile-submit-review-again');
@@ -295,6 +643,30 @@ async function loadProfile(user) {
         const preferredPayment = profile.preferredPaymentModes || [];
         const paySelect = document.getElementById('company-paymentModes');
         if (paySelect) Array.from(paySelect.options).forEach(opt => { opt.selected = preferredPayment.indexOf(opt.value) !== -1; });
+        const preferredModels = profile.preferredCollaborationModels || [];
+        const prefContainer = document.getElementById('company-preferredModels-checkboxes');
+        if (prefContainer) prefContainer.querySelectorAll('input[name="preferredCollaborationModels"]').forEach(cb => { cb.checked = preferredModels.indexOf(cb.value) !== -1; });
+        const primaryDomainSelect = document.getElementById('company-primaryDomain');
+        if (primaryDomainSelect) {
+            primaryDomainSelect.innerHTML = '<option value="">Select domain</option>';
+            getProfileDomainsList().forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.id;
+                opt.textContent = d.label;
+                if (profile.primaryDomain === d.id) opt.selected = true;
+                primaryDomainSelect.appendChild(opt);
+            });
+        }
+        renderExpertiseAreasList('company-expertiseAreas-list', profile.expertiseAreas || []);
+        setupExpertiseAddButton('company-add-expertise', 'company-expertiseAreas-list');
+        renderCaseStudiesList('company-caseStudies-list', profile.caseStudies || []);
+        setupCaseStudyAddButton('company-add-caseStudy', 'company-caseStudies-list');
+        renderReferencesList('company-references-list', profile.references || []);
+        setupReferenceAddButton('company-add-reference', 'company-references-list');
+        const vc = profile.vettingCaseStudy || {};
+        document.getElementById('company-vettingCaseStudy-title').value = vc.title || '';
+        document.getElementById('company-vettingCaseStudy-url').value = vc.url || '';
+        document.getElementById('company-vettingCaseStudy-description').value = vc.description || '';
 
         setCompanyViewMode(profile);
         renderCompleteness(profile, true);
@@ -327,6 +699,33 @@ async function loadProfile(user) {
         document.getElementById('prof-hourlyRate').value = profile.hourlyRate ?? '';
         document.getElementById('prof-currency').value = profile.currency || 'SAR';
         document.getElementById('prof-languages').value = Array.isArray(profile.languages) ? profile.languages.join(', ') : (profile.languages || '');
+        const preferredModels = profile.preferredCollaborationModels || [];
+        const profPrefContainer = document.getElementById('prof-preferredModels-checkboxes');
+        if (profPrefContainer) profPrefContainer.querySelectorAll('input[name="preferredCollaborationModels"]').forEach(cb => { cb.checked = preferredModels.indexOf(cb.value) !== -1; });
+        const profPrimaryDomainSelect = document.getElementById('prof-primaryDomain');
+        if (profPrimaryDomainSelect) {
+            profPrimaryDomainSelect.innerHTML = '<option value="">Select domain</option>';
+            getProfileDomainsList().forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.id;
+                opt.textContent = d.label;
+                if (profile.primaryDomain === d.id) opt.selected = true;
+                profPrimaryDomainSelect.appendChild(opt);
+            });
+        }
+        renderExpertiseAreasList('prof-expertiseAreas-list', profile.expertiseAreas || []);
+        setupExpertiseAddButton('prof-add-expertise', 'prof-expertiseAreas-list');
+        renderCaseStudiesList('prof-caseStudies-list', profile.caseStudies || []);
+        setupCaseStudyAddButton('prof-add-caseStudy', 'prof-caseStudies-list');
+        renderReferencesList('prof-references-list', profile.references || []);
+        setupReferenceAddButton('prof-add-reference', 'prof-references-list');
+        const profVc = profile.vettingCaseStudy || {};
+        document.getElementById('prof-vettingCaseStudy-title').value = profVc.title || '';
+        document.getElementById('prof-vettingCaseStudy-url').value = profVc.url || '';
+        document.getElementById('prof-vettingCaseStudy-description').value = profVc.description || '';
+        const req = profileLookups?.vettingRequirements?.[profile.type || 'professional'];
+        const hintEl = document.getElementById('prof-vetting-case-study-hint');
+        if (hintEl) hintEl.textContent = req?.caseStudy === 'required' ? 'Required for Consultants.' : 'Optional for Professionals.';
 
         setProfessionalViewMode(profile);
         renderCompleteness(profile, false);
@@ -399,6 +798,9 @@ function setupCompanyForm(userId) {
         const formData = new FormData(form);
         const payEl = document.getElementById('company-paymentModes');
         const preferredPaymentModes = payEl ? Array.from(payEl.selectedOptions).map(o => o.value) : [];
+        const prefModelsEl = document.getElementById('company-preferredModels-checkboxes');
+        const preferredCollaborationModels = prefModelsEl ? Array.from(prefModelsEl.querySelectorAll('input[name="preferredCollaborationModels"]:checked')).map(cb => cb.value) : [];
+        const caseStudies = collectCaseStudiesFromList('company-caseStudies-list');
         const profileData = {
             type: 'company',
             name: formData.get('name') || null,
@@ -419,11 +821,22 @@ function setupCompanyForm(userId) {
             services: parseArray(formData.get('services')),
             interests: parseArray(formData.get('interests')),
             financialCapacity: parseFloat(formData.get('financialCapacity')) || 0,
-            preferredPaymentModes
+            preferredPaymentModes,
+            preferredCollaborationModels,
+            caseStudies,
+            references: collectReferencesFromList('company-references-list'),
+            primaryDomain: document.getElementById('company-primaryDomain')?.value?.trim() || null,
+            expertiseAreas: collectExpertiseAreasFromList('company-expertiseAreas-list'),
+            vettingCaseStudy: {
+                title: document.getElementById('company-vettingCaseStudy-title')?.value?.trim() || null,
+                description: document.getElementById('company-vettingCaseStudy-description')?.value?.trim() || null,
+                url: document.getElementById('company-vettingCaseStudy-url')?.value?.trim() || null
+            }
         };
         try {
             const user = authService.getCurrentUser();
             const merged = { ...(user?.profile || {}), ...profileData };
+            if (user?.profile?.interview) merged.interview = user.profile.interview;
             await dataService.updateCompany(userId, { profile: merged });
             authService.currentUser = { ...user, profile: merged };
             setCompanyViewMode(merged);
@@ -451,6 +864,9 @@ function setupProfessionalForm(userId) {
         const formData = new FormData(form);
         const payEl = document.getElementById('prof-paymentModes');
         const preferredPaymentModes = payEl ? Array.from(payEl.selectedOptions).map(o => o.value) : [];
+        const profPrefEl = document.getElementById('prof-preferredModels-checkboxes');
+        const preferredCollaborationModels = profPrefEl ? Array.from(profPrefEl.querySelectorAll('input[name="preferredCollaborationModels"]:checked')).map(cb => cb.value) : [];
+        const caseStudies = collectCaseStudiesFromList('prof-caseStudies-list');
         const yearsVal = formData.get('yearsExperience');
         const yearsExperience = yearsVal !== '' && yearsVal != null ? parseInt(yearsVal, 10) : null;
         const profileData = {
@@ -472,6 +888,16 @@ function setupProfessionalForm(userId) {
             availability: formData.get('availability') || null,
             preferredWorkMode: formData.get('preferredWorkMode') || null,
             preferredPaymentModes,
+            preferredCollaborationModels,
+            caseStudies,
+            references: collectReferencesFromList('prof-references-list'),
+            primaryDomain: document.getElementById('prof-primaryDomain')?.value?.trim() || null,
+            expertiseAreas: collectExpertiseAreasFromList('prof-expertiseAreas-list'),
+            vettingCaseStudy: {
+                title: document.getElementById('prof-vettingCaseStudy-title')?.value?.trim() || null,
+                description: document.getElementById('prof-vettingCaseStudy-description')?.value?.trim() || null,
+                url: document.getElementById('prof-vettingCaseStudy-url')?.value?.trim() || null
+            },
             hourlyRate: formData.get('hourlyRate') !== '' ? parseFloat(formData.get('hourlyRate')) : null,
             currency: formData.get('currency') || 'SAR',
             languages: parseArray(formData.get('languages'))
@@ -480,6 +906,7 @@ function setupProfessionalForm(userId) {
             const user = authService.getCurrentUser();
             const merged = { ...(user?.profile || {}), ...profileData };
             if (user?.profile?.type) merged.type = user.profile.type;
+            if (user?.profile?.interview) merged.interview = user.profile.interview;
             await dataService.updateUser(userId, { profile: merged });
             authService.currentUser = { ...user, profile: merged };
             setProfessionalViewMode(merged);

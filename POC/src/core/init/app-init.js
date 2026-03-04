@@ -242,6 +242,17 @@ function initializeRoutes() {
     router.register(CONFIG.ROUTES.REGISTER, async () => {
         await loadPage('register');
     });
+
+    router.register(CONFIG.ROUTES.FORGOT_PASSWORD, async () => {
+        await loadPage('forgot-password');
+    });
+
+    router.register(CONFIG.ROUTES.RESET_PASSWORD, async () => {
+        const hash = window.location.hash || '';
+        const qs = hash.indexOf('?') >= 0 ? hash.substring(hash.indexOf('?')) : '';
+        const token = new URLSearchParams(qs).get('token');
+        await loadPage('reset-password', { token });
+    });
     
     // Public: Collaboration Wizard, Knowledge Base, Collaboration Models (no auth)
     router.register(CONFIG.ROUTES.COLLABORATION_WIZARD, async () => {

@@ -12,6 +12,11 @@ const CONFIG = {
     // Base path for loading resources
     // This is set by app-init.js during initialization
     BASE_PATH: '',
+
+    // Auth options (POC: social login is placeholder; set SOCIAL_LOGIN_ENABLED when backend/OAuth is ready)
+    AUTH: {
+        SOCIAL_LOGIN_ENABLED: false
+    },
     
     // Storage Keys
     STORAGE_KEYS: {
@@ -28,7 +33,8 @@ const CONFIG = {
         CONTRACTS: 'pmtwin_contracts',
         SYSTEM_SETTINGS: 'pmtwin_system_settings',
         SUBSCRIPTION_PLANS: 'pmtwin_subscription_plans',
-        SUBSCRIPTIONS: 'pmtwin_subscriptions'
+        SUBSCRIPTIONS: 'pmtwin_subscriptions',
+        RESET_TOKENS: 'pmtwin_reset_tokens'
     },
     
     // Session Management
@@ -75,6 +81,22 @@ const CONFIG = {
         PROFESSIONAL_HIRING: 'professional_hiring',
         CONSULTANT_HIRING: 'consultant_hiring',
         COMPETITION_RFP: 'competition_rfp'
+    },
+
+    // Entity-type eligibility rules for sub-models
+    MODEL_ELIGIBILITY: {
+        spv: {
+            allowedEntityTypes: ['company'],
+            reason: 'SPV is a corporate structure available to companies only'
+        },
+        strategic_jv: {
+            allowedEntityTypes: ['company'],
+            reason: 'Strategic Joint Venture requires a company entity'
+        },
+        project_jv: {
+            allowedEntityTypes: ['company'],
+            reason: 'Project-Specific Joint Venture requires a company entity'
+        }
     },
     
     // Opportunity Status (unified lifecycle)
@@ -158,6 +180,8 @@ const CONFIG = {
         HOME: '/',
         LOGIN: '/login',
         REGISTER: '/register',
+        FORGOT_PASSWORD: '/forgot-password',
+        RESET_PASSWORD: '/reset-password',
         DASHBOARD: '/dashboard',
         OPPORTUNITIES: '/opportunities',
         CONTRACTS: '/contracts',

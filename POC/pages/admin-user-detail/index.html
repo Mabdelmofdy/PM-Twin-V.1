@@ -16,6 +16,19 @@
         </section>
 
         <section class="card">
+            <div class="card-header"><h2>Vetting</h2></div>
+            <div class="card-body">
+                <div id="user-detail-vetting"></div>
+                <div id="user-detail-interview-edit" class="mt-4" style="display: none;">
+                    <h4 class="font-medium mb-2">Set interview</h4>
+                    <div class="form-group"><label class="form-label">Interview link (e.g. Zoom)</label><input type="url" id="admin-interview-link" class="form-input" placeholder="https://"></div>
+                    <div class="form-group"><label class="form-label">Scheduled at</label><input type="datetime-local" id="admin-interview-scheduledAt" class="form-input"></div>
+                    <button type="button" id="admin-save-interview" class="btn btn-primary btn-sm">Save interview details</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
             <div class="card-header"><h2>Opportunities created</h2></div>
             <div class="card-body" id="user-opportunities"></div>
         </section>
