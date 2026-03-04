@@ -13,13 +13,17 @@ async function initOpportunityMap() {
     setupMapFilters();
     renderMapCards();
     placeMapMarkers();
+
+    if (mapSearchInstance && filteredMapOpportunities.length > 0) {
+        setTimeout(() => mapSearchInstance.fitToMarkers(), 400);
+    }
 }
 
 async function loadMapOpportunities() {
     try {
         const opportunities = await dataService.getOpportunities();
         allMapOpportunities = opportunities.filter(opp =>
-            opp.status === 'published' && opp.latitude != null && opp.longitude != null
+            opp.latitude != null && opp.longitude != null
         );
         filteredMapOpportunities = [...allMapOpportunities];
     } catch (error) {
@@ -126,6 +130,7 @@ function renderMapCards() {
         const intentClass = (opp.intent === 'offer')
             ? 'bg-green-100 text-green-800'
             : 'bg-blue-100 text-blue-800';
+        const statusBadge = getMapStatusBadge(opp.status);
         const locationText = opp.locationCity
             ? getMapCityName(opp.locationCity)
             : (opp.location || 'Unknown');
@@ -148,6 +153,7 @@ function renderMapCards() {
                 <div class="map-opp-card-badges">
                     <span class="badge ${intentClass}" style="font-size:0.7rem;padding:2px 6px;border-radius:4px;font-weight:600;">${intentLabel}</span>
                     <span class="badge bg-gray-100 text-gray-700" style="font-size:0.7rem;padding:2px 6px;border-radius:4px;">${modelLabel}</span>
+                    ${statusBadge}
                 </div>
                 <div class="map-opp-card-location">
                     <i class="ph-duotone ph-map-pin" style="font-size:14px;"></i> ${escapeMapHtml(locationText)}
@@ -222,6 +228,19 @@ function getMapCityName(cityId) {
         'doha': 'Doha', 'kuwait-city': 'Kuwait City', 'manama': 'Manama', 'muscat': 'Muscat'
     };
     return cityNames[cityId] || cityId;
+}
+
+function getMapStatusBadge(status) {
+    const map = {
+        'published': { label: 'Published', cls: 'bg-green-50 text-green-700' },
+        'draft': { label: 'Draft', cls: 'bg-gray-100 text-gray-600' },
+        'in_execution': { label: 'In Execution', cls: 'bg-yellow-50 text-yellow-700' },
+        'contracted': { label: 'Contracted', cls: 'bg-purple-50 text-purple-700' },
+        'completed': { label: 'Completed', cls: 'bg-teal-50 text-teal-700' },
+        'cancelled': { label: 'Cancelled', cls: 'bg-red-50 text-red-700' }
+    };
+    const info = map[status] || { label: status || 'Unknown', cls: 'bg-gray-100 text-gray-600' };
+    return `<span class="badge ${info.cls}" style="font-size:0.65rem;padding:1px 5px;border-radius:4px;">${info.label}</span>`;
 }
 
 function getMapModelLabel(modelType) {

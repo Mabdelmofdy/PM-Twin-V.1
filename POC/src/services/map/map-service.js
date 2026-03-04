@@ -318,11 +318,18 @@ const mapService = (() => {
         const intentClass = opp.intent === 'offer' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800';
         const intentLabel = opp.intent === 'offer' ? 'OFFER' : 'NEED';
         const locationText = opp.locationCity || opp.location || 'Unknown';
+        const statusColors = {
+            published: '#16a34a', in_execution: '#ca8a04', contracted: '#9333ea',
+            completed: '#0d9488', draft: '#6b7280', cancelled: '#dc2626'
+        };
+        const statusLabel = (opp.status || 'unknown').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const statusColor = statusColors[opp.status] || '#6b7280';
         return `
             <div style="min-width:200px;font-family:system-ui,sans-serif;">
                 <div style="font-weight:600;font-size:14px;margin-bottom:6px;line-height:1.3;">${_escapeHtml(opp.title)}</div>
-                <div style="margin-bottom:6px;">
+                <div style="margin-bottom:6px;display:flex;gap:4px;flex-wrap:wrap;">
                     <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;" class="${intentClass}">${intentLabel}</span>
+                    <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;color:${statusColor};border:1px solid ${statusColor};">${statusLabel}</span>
                 </div>
                 <div style="font-size:12px;color:#6b7280;margin-bottom:8px;">
                     <i class="ph-duotone ph-map-pin" style="font-size:14px;"></i> ${_escapeHtml(locationText)}
