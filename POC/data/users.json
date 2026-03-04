@@ -13,6 +13,12 @@
         "name": "Platform Administrator",
         "type": "admin",
         "phone": "+966 50 000 0001",
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-01T00:00:00.000Z",
@@ -50,6 +56,12 @@
         "hourlyRate": 350,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-20T08:00:00.000Z",
@@ -87,6 +99,12 @@
         "hourlyRate": 400,
         "currency": "SAR",
         "languages": ["Arabic", "English", "French"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-21T09:00:00.000Z",
@@ -124,6 +142,12 @@
         "hourlyRate": 450,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-22T10:00:00.000Z",
@@ -161,6 +185,12 @@
         "hourlyRate": 500,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-23T11:00:00.000Z",
@@ -198,6 +228,12 @@
         "hourlyRate": 380,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-24T08:00:00.000Z",
@@ -235,6 +271,12 @@
         "hourlyRate": 420,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-25T09:00:00.000Z",
@@ -272,6 +314,12 @@
         "hourlyRate": 480,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-25T10:00:00.000Z",
@@ -309,6 +357,12 @@
         "hourlyRate": 600,
         "currency": "SAR",
         "languages": ["Arabic", "English"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/in/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-25T11:00:00.000Z",

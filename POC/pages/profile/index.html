@@ -56,6 +56,11 @@
                         <label class="form-label">Status</label>
                         <input type="text" id="profile-status" class="form-input" readonly>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Social media</label>
+                        <div id="view-account-socialMedia" class="space-y-1"></div>
+                        <p class="text-sm text-gray-500 mt-1">Edit your Company or Professional profile below to add or change links.</p>
+                    </div>
                 </div>
             </div>
             
@@ -79,6 +84,8 @@
                             <div class="profile-view-item"><span class="text-gray-600">Address / Location</span><span id="view-company-location">—</span></div>
                             <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Description</span><span id="view-company-description">—</span></div>
                         </div>
+                        <h4 class="font-medium text-gray-700 mb-2">Social media</h4>
+                        <div id="view-company-socialMedia" class="space-y-1 mb-4"></div>
                         <h4 class="font-medium text-gray-700 mb-2">Capabilities</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="profile-view-item"><span class="text-gray-600">Sectors</span><span id="view-company-sectors">—</span></div>
@@ -117,6 +124,10 @@
                             <div class="form-group" id="company-subtype-wrap"><label for="company-subtype" class="form-label">Sub-type</label><select id="company-subtype" name="companySubType" class="form-input"><option value="">Select sub-type</option></select></div>
                             <div class="form-group"><label for="cr-number" class="form-label">CR / Registration Number</label><input type="text" id="cr-number" name="crNumber" class="form-input"></div>
                             <div class="form-group"><label for="company-website" class="form-label">Website</label><input type="url" id="company-website" name="website" class="form-input" placeholder="https://"></div>
+                            <div class="form-group"><label for="company-linkedin" class="form-label">LinkedIn</label><input type="url" id="company-linkedin" name="linkedin" class="form-input" placeholder="https://linkedin.com/company/..."></div>
+                            <div class="form-group"><label for="company-twitter" class="form-label">Twitter</label><input type="url" id="company-twitter" name="twitter" class="form-input" placeholder="https://twitter.com/..."></div>
+                            <div class="form-group"><label for="company-facebook" class="form-label">Facebook</label><input type="url" id="company-facebook" name="facebook" class="form-input" placeholder="https://facebook.com/..."></div>
+                            <div class="form-group"><label for="company-instagram" class="form-label">Instagram</label><input type="url" id="company-instagram" name="instagram" class="form-input" placeholder="https://instagram.com/..."></div>
                             <div class="form-group"><label for="company-phone" class="form-label">Phone</label><input type="text" id="company-phone" name="phone" class="form-input"></div>
                             <div class="form-group"><label for="company-location" class="form-label">Address / Location</label><input type="text" id="company-location" name="location" class="form-input"></div>
                             <div class="form-group sm:col-span-2"><label for="company-description" class="form-label">Description</label><textarea id="company-description" name="description" class="form-input" rows="3"></textarea></div>
@@ -181,6 +192,8 @@
                             <div class="profile-view-item"><span class="text-gray-600">Location</span><span id="view-prof-location">—</span></div>
                             <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Bio</span><span id="view-prof-bio">—</span></div>
                         </div>
+                        <h4 class="font-medium text-gray-700 mb-2">Social media</h4>
+                        <div id="view-prof-socialMedia" class="space-y-1 mb-4"></div>
                         <h4 class="font-medium text-gray-700 mb-2">Experience & skills</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="profile-view-item"><span class="text-gray-600">Specializations</span><span id="view-specializations">—</span></div>
@@ -223,6 +236,10 @@
                             <div class="form-group"><label for="prof-phone" class="form-label">Phone</label><input type="text" id="prof-phone" name="phone" class="form-input"></div>
                             <div class="form-group"><label for="prof-location" class="form-label">Location</label><input type="text" id="prof-location" name="location" class="form-input"></div>
                             <div class="form-group sm:col-span-2"><label for="prof-bio" class="form-label">Bio</label><textarea id="prof-bio" name="bio" class="form-input" rows="3"></textarea></div>
+                            <div class="form-group"><label for="prof-linkedin" class="form-label">LinkedIn</label><input type="url" id="prof-linkedin" name="linkedin" class="form-input" placeholder="https://linkedin.com/in/..."></div>
+                            <div class="form-group"><label for="prof-twitter" class="form-label">Twitter</label><input type="url" id="prof-twitter" name="twitter" class="form-input" placeholder="https://twitter.com/..."></div>
+                            <div class="form-group"><label for="prof-facebook" class="form-label">Facebook</label><input type="url" id="prof-facebook" name="facebook" class="form-input" placeholder="https://facebook.com/..."></div>
+                            <div class="form-group"><label for="prof-instagram" class="form-label">Instagram</label><input type="url" id="prof-instagram" name="instagram" class="form-input" placeholder="https://instagram.com/..."></div>
                         </div>
                         <h4 class="font-medium text-gray-700 mb-2">Experience & skills</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">

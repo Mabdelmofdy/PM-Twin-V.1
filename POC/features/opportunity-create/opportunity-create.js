@@ -315,6 +315,7 @@ function flattenLocations() {
 
 async function initializeForm() {
     setupLocationSearch();
+    setupMapPicker();
     setupIntentLabels();
     setupScopeTags();
     setupCategoryAndSubModel();
@@ -1346,6 +1347,7 @@ function setupLocationSearch() {
                 // Enable and populate districts
                 enableDistrictSearch();
                 updateLocationString();
+                centerMapOnCity(city.id);
             }
         );
     }
@@ -1439,6 +1441,75 @@ function setupLocationSearch() {
         }
         
         locationInput.value = parts.join(' > ');
+    }
+}
+
+let createMapInstance = null;
+
+function setupMapPicker() {
+    if (typeof mapService === 'undefined') return;
+
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+    const coordsDisplay = document.getElementById('map-coordinates-display');
+    const latDisplay = document.getElementById('map-lat-display');
+    const lngDisplay = document.getElementById('map-lng-display');
+    const addressInput = document.getElementById('address-search-input');
+    const addressBtn = document.getElementById('address-search-btn');
+
+    function updateCoords(lat, lng) {
+        if (latInput) latInput.value = lat.toFixed(6);
+        if (lngInput) lngInput.value = lng.toFixed(6);
+        if (latDisplay) latDisplay.textContent = lat.toFixed(6);
+        if (lngDisplay) lngDisplay.textContent = lng.toFixed(6);
+        if (coordsDisplay) coordsDisplay.classList.remove('hidden');
+    }
+
+    createMapInstance = mapService.initMapPicker('location-map', {
+        center: mapService.DEFAULT_CENTER,
+        zoom: mapService.DEFAULT_ZOOM,
+        draggableMarker: true,
+        onClick: (lat, lng) => updateCoords(lat, lng),
+        onMarkerMove: (lat, lng) => updateCoords(lat, lng)
+    });
+
+    if (addressBtn && addressInput) {
+        const doGeocode = async () => {
+            const query = addressInput.value.trim();
+            if (!query) return;
+            addressBtn.disabled = true;
+            addressBtn.innerHTML = '<i class="ph-duotone ph-spinner ph-spin" style="font-size:16px;"></i> Searching...';
+            const result = await mapService.geocodeAddress(query);
+            addressBtn.disabled = false;
+            addressBtn.innerHTML = '<i class="ph-duotone ph-magnifying-glass" style="font-size:16px;"></i> Locate';
+            if (result) {
+                createMapInstance.setMarker(result.lat, result.lng);
+                updateCoords(result.lat, result.lng);
+            } else {
+                alert('Address not found. Try a different search term.');
+            }
+        };
+        addressBtn.addEventListener('click', doGeocode);
+        addressInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); doGeocode(); }
+        });
+    }
+}
+
+function centerMapOnCity(cityId) {
+    if (!createMapInstance) return;
+    const locations = getLocationsData();
+    if (!locations || !locations.countries) return;
+
+    for (const country of locations.countries) {
+        for (const region of (country.regions || [])) {
+            for (const city of (region.cities || [])) {
+                if (city.id === cityId && city.lat && city.lng) {
+                    createMapInstance.setMarker(city.lat, city.lng);
+                    return;
+                }
+            }
+        }
     }
 }
 
@@ -2601,6 +2672,9 @@ function setupFormHandlers() {
             }
             const attributesPayload = { ...scope, paymentModes: paymentModesArr, ...modelData };
             
+            const latVal = parseFloat(document.getElementById('latitude')?.value);
+            const lngVal = parseFloat(document.getElementById('longitude')?.value);
+
             const oppService = window.opportunityService;
             const opportunity = await oppService.createOpportunity({
                 title,
@@ -2616,6 +2690,8 @@ function setupFormHandlers() {
                 locationRegion,
                 locationCity,
                 locationDistrict,
+                latitude: isNaN(latVal) ? null : latVal,
+                longitude: isNaN(lngVal) ? null : lngVal,
                 exchangeMode,
                 exchangeData,
                 creatorId: user.id,

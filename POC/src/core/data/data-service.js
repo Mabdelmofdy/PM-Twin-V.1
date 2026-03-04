@@ -9,7 +9,7 @@ class DataService {
         this.storage = window.storageService || storageService;
         this.initialized = false;
         this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
-        this.CURRENT_SEED_VERSION = '1.10.0'; // Re-seed: 5+ offer opportunities (opp-010, opp-011 to opp-014)
+        this.CURRENT_SEED_VERSION = '1.11.0'; // Re-seed: add demo social links to all profiles
     }
     
     /**

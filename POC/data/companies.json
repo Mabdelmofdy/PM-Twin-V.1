@@ -30,6 +30,12 @@
         "preferredPaymentModes": ["cash", "barter"],
         "services": ["Equipment Supply", "Maintenance Services", "Technical Consulting", "Spare Parts Distribution"],
         "interests": ["Infrastructure Projects", "Agricultural Development", "Industrial Automation"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/company/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-15T08:00:00.000Z",
@@ -63,6 +69,12 @@
         "preferredPaymentModes": ["cash", "equity", "profit_sharing"],
         "services": ["General Contracting", "Design-Build", "EPC Projects", "Facility Management"],
         "interests": ["Mega Projects", "Smart Cities", "Sustainable Construction"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/company/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-16T09:00:00.000Z",
@@ -96,6 +108,12 @@
         "preferredPaymentModes": ["cash", "barter"],
         "services": ["Commercial Construction", "Residential Projects", "Renovation", "Project Management"],
         "interests": ["Commercial Real Estate", "Residential Development", "Interior Fit-out"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/company/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-17T10:00:00.000Z",
@@ -129,6 +147,12 @@
         "preferredPaymentModes": ["cash", "equity"],
         "services": ["EPC Contracting", "Infrastructure Development", "Industrial Construction", "MEP Services"],
         "interests": ["Energy Infrastructure", "Industrial Projects", "Transportation"],
+        "socialMediaLinks": {
+          "linkedin": "https://linkedin.com/company/pmtwin-demo",
+          "twitter": "https://twitter.com/pmtwin_demo",
+          "facebook": "https://facebook.com/pmtwin.demo",
+          "instagram": "https://instagram.com/pmtwin.demo"
+        },
         "avatar": null
       },
       "createdAt": "2025-01-18T11:00:00.000Z",

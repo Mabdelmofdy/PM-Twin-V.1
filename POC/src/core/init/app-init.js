@@ -104,6 +104,7 @@ loadScript('src/core/config/config.js').then(async () => {
     // Load services
     await loadScript('src/services/matching/matching-service.js');
     await loadScript('src/services/opportunities/opportunity-service.js');
+    await loadScript('src/services/map/map-service.js');
     
     // Initialize application
     await initializeApp();
@@ -284,6 +285,10 @@ function initializeRoutes() {
     
     router.register(CONFIG.ROUTES.OPPORTUNITY_CREATE, authGuard.protect(async () => {
         await loadPage('opportunity-create');
+    }));
+
+    router.register('/opportunities/map', authGuard.protect(async () => {
+        await loadPage('opportunity-map');
     }));
     
     router.register('/opportunities/:id', authGuard.protect(async (params) => {

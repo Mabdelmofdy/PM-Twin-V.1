@@ -129,6 +129,21 @@
 
                 <!-- Opportunities Tab Content -->
                 <div id="tab-opportunities" class="tab-content">
+                    <div id="find-map-link" class="mb-4" style="display: none;">
+                        <div class="flex items-center gap-3 mb-3">
+                            <button type="button" id="find-toggle-mini-map" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 hover:bg-blue-100 transition-all font-medium text-sm">
+                                <i class="ph-duotone ph-map-trifold" style="font-size:18px;"></i>
+                                <span id="find-mini-map-toggle-text">Show Map</span>
+                            </button>
+                            <a href="#" data-route="/opportunities/map" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-all font-medium text-sm">
+                                <i class="ph-duotone ph-arrows-out" style="font-size:16px;"></i>
+                                Full Map View
+                            </a>
+                        </div>
+                        <div id="find-mini-map-container" style="display: none;">
+                            <div id="find-mini-map" class="map-container" style="height:300px;margin-bottom:1rem;"></div>
+                        </div>
+                    </div>
                     <div id="sample-opportunities-section" class="mb-6" style="display: none;">
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Sample opportunities to explore</h3>
                         <p class="text-sm text-gray-600 mb-3">Get started by browsing these sample opportunities.</p>

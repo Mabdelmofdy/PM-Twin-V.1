@@ -4,14 +4,20 @@
       "id": "sa",
       "name": "Saudi Arabia",
       "code": "SA",
+      "lat": 24.7136,
+      "lng": 45.0792,
       "regions": [
         {
           "id": "riyadh",
           "name": "Riyadh",
+          "lat": 24.7136,
+          "lng": 46.6753,
           "cities": [
             {
               "id": "riyadh-city",
               "name": "Riyadh City",
+              "lat": 24.7136,
+              "lng": 46.6753,
               "districts": [
                 "Al Olaya",
                 "Al Malaz",
@@ -28,11 +34,15 @@
             {
               "id": "diriyah",
               "name": "Diriyah",
+              "lat": 24.7343,
+              "lng": 46.5725,
               "districts": []
             },
             {
               "id": "al-kharj",
               "name": "Al Kharj",
+              "lat": 24.1556,
+              "lng": 47.3122,
               "districts": []
             }
           ]
@@ -40,10 +50,14 @@
         {
           "id": "makkah",
           "name": "Makkah",
+          "lat": 21.4225,
+          "lng": 39.8262,
           "cities": [
             {
               "id": "makkah-city",
               "name": "Makkah",
+              "lat": 21.4225,
+              "lng": 39.8262,
               "districts": [
                 "Al Aziziyah",
                 "Al Nuzha",
@@ -55,6 +69,8 @@
             {
               "id": "jeddah",
               "name": "Jeddah",
+              "lat": 21.4858,
+              "lng": 39.1925,
               "districts": [
                 "Al Balad",
                 "Al Hamra",
@@ -70,6 +86,8 @@
             {
               "id": "taif",
               "name": "Taif",
+              "lat": 21.2703,
+              "lng": 40.4159,
               "districts": []
             }
           ]
@@ -77,10 +95,14 @@
         {
           "id": "eastern-province",
           "name": "Eastern Province",
+          "lat": 26.4207,
+          "lng": 50.0888,
           "cities": [
             {
               "id": "dammam",
               "name": "Dammam",
+              "lat": 26.4207,
+              "lng": 50.0888,
               "districts": [
                 "Al Faisaliah",
                 "Al Aziziyah",
@@ -92,6 +114,8 @@
             {
               "id": "khobar",
               "name": "Al Khobar",
+              "lat": 26.2172,
+              "lng": 50.1971,
               "districts": [
                 "Al Aziziyah",
                 "Al Corniche",
@@ -103,11 +127,15 @@
             {
               "id": "dhahran",
               "name": "Dhahran",
+              "lat": 26.2361,
+              "lng": 50.0393,
               "districts": []
             },
             {
               "id": "jubail",
               "name": "Jubail",
+              "lat": 27.0046,
+              "lng": 49.6225,
               "districts": []
             }
           ]
@@ -115,15 +143,21 @@
         {
           "id": "qassim",
           "name": "Qassim",
+          "lat": 26.3267,
+          "lng": 43.9717,
           "cities": [
             {
               "id": "buraydah",
               "name": "Buraydah",
+              "lat": 26.3267,
+              "lng": 43.9717,
               "districts": []
             },
             {
               "id": "unayzah",
               "name": "Unaizah",
+              "lat": 26.0842,
+              "lng": 43.9937,
               "districts": []
             }
           ]
@@ -131,15 +165,21 @@
         {
           "id": "tabuk",
           "name": "Tabuk",
+          "lat": 28.3838,
+          "lng": 36.5550,
           "cities": [
             {
               "id": "tabuk-city",
               "name": "Tabuk",
+              "lat": 28.3838,
+              "lng": 36.5550,
               "districts": []
             },
             {
               "id": "neom",
               "name": "NEOM",
+              "lat": 27.9500,
+              "lng": 35.3000,
               "districts": [
                 "The Line",
                 "Trojena",
@@ -152,15 +192,21 @@
         {
           "id": "asir",
           "name": "Asir",
+          "lat": 18.2164,
+          "lng": 42.5053,
           "cities": [
             {
               "id": "abha",
               "name": "Abha",
+              "lat": 18.2164,
+              "lng": 42.5053,
               "districts": []
             },
             {
               "id": "khamis-mushait",
               "name": "Khamis Mushait",
+              "lat": 18.3064,
+              "lng": 42.7294,
               "districts": []
             }
           ]
@@ -168,10 +214,14 @@
         {
           "id": "hail",
           "name": "Hail",
+          "lat": 27.5114,
+          "lng": 41.7208,
           "cities": [
             {
               "id": "hail-city",
               "name": "Hail",
+              "lat": 27.5114,
+              "lng": 41.7208,
               "districts": []
             }
           ]
@@ -179,10 +229,14 @@
         {
           "id": "northern-borders",
           "name": "Northern Borders",
+          "lat": 30.9753,
+          "lng": 41.0187,
           "cities": [
             {
               "id": "arar",
               "name": "Arar",
+              "lat": 30.9753,
+              "lng": 41.0187,
               "districts": []
             }
           ]
@@ -190,10 +244,14 @@
         {
           "id": "jazan",
           "name": "Jazan",
+          "lat": 16.8892,
+          "lng": 42.5511,
           "cities": [
             {
               "id": "jazan-city",
               "name": "Jazan",
+              "lat": 16.8892,
+              "lng": 42.5511,
               "districts": []
             }
           ]
@@ -201,10 +259,14 @@
         {
           "id": "najran",
           "name": "Najran",
+          "lat": 17.4933,
+          "lng": 44.1277,
           "cities": [
             {
               "id": "najran-city",
               "name": "Najran",
+              "lat": 17.4933,
+              "lng": 44.1277,
               "districts": []
             }
           ]
@@ -212,10 +274,14 @@
         {
           "id": "al-bahah",
           "name": "Al Bahah",
+          "lat": 20.0000,
+          "lng": 41.4667,
           "cities": [
             {
               "id": "al-bahah-city",
               "name": "Al Bahah",
+              "lat": 20.0000,
+              "lng": 41.4667,
               "districts": []
             }
           ]
@@ -223,10 +289,14 @@
         {
           "id": "al-jouf",
           "name": "Al Jouf",
+          "lat": 29.9697,
+          "lng": 40.2064,
           "cities": [
             {
               "id": "sakaka",
               "name": "Sakaka",
+              "lat": 29.9697,
+              "lng": 40.2064,
               "districts": []
             }
           ]
@@ -237,14 +307,20 @@
       "id": "uae",
       "name": "United Arab Emirates",
       "code": "AE",
+      "lat": 23.4241,
+      "lng": 53.8478,
       "regions": [
         {
           "id": "dubai-emirate",
           "name": "Dubai",
+          "lat": 25.2048,
+          "lng": 55.2708,
           "cities": [
             {
               "id": "dubai",
               "name": "Dubai",
+              "lat": 25.2048,
+              "lng": 55.2708,
               "districts": [
                 "Downtown Dubai",
                 "Dubai Marina",
@@ -260,10 +336,14 @@
         {
           "id": "abu-dhabi-emirate",
           "name": "Abu Dhabi",
+          "lat": 24.4539,
+          "lng": 54.3773,
           "cities": [
             {
               "id": "abu-dhabi",
               "name": "Abu Dhabi",
+              "lat": 24.4539,
+              "lng": 54.3773,
               "districts": [
                 "Al Khalidiyah",
                 "Al Markaziyah",
@@ -277,10 +357,14 @@
         {
           "id": "sharjah-emirate",
           "name": "Sharjah",
+          "lat": 25.3463,
+          "lng": 55.4209,
           "cities": [
             {
               "id": "sharjah",
               "name": "Sharjah",
+              "lat": 25.3463,
+              "lng": 55.4209,
               "districts": []
             }
           ]
@@ -291,14 +375,20 @@
       "id": "qa",
       "name": "Qatar",
       "code": "QA",
+      "lat": 25.2854,
+      "lng": 51.5310,
       "regions": [
         {
           "id": "doha-region",
           "name": "Doha",
+          "lat": 25.2854,
+          "lng": 51.5310,
           "cities": [
             {
               "id": "doha",
               "name": "Doha",
+              "lat": 25.2854,
+              "lng": 51.5310,
               "districts": [
                 "West Bay",
                 "Al Sadd",
@@ -315,14 +405,20 @@
       "id": "kw",
       "name": "Kuwait",
       "code": "KW",
+      "lat": 29.3759,
+      "lng": 47.9774,
       "regions": [
         {
           "id": "kuwait-region",
           "name": "Kuwait",
+          "lat": 29.3759,
+          "lng": 47.9774,
           "cities": [
             {
               "id": "kuwait-city",
               "name": "Kuwait City",
+              "lat": 29.3759,
+              "lng": 47.9774,
               "districts": [
                 "Sharq",
                 "Dasma",
@@ -339,14 +435,20 @@
       "id": "bh",
       "name": "Bahrain",
       "code": "BH",
+      "lat": 26.2285,
+      "lng": 50.5860,
       "regions": [
         {
           "id": "bahrain-region",
           "name": "Manama",
+          "lat": 26.2285,
+          "lng": 50.5860,
           "cities": [
             {
               "id": "manama",
               "name": "Manama",
+              "lat": 26.2285,
+              "lng": 50.5860,
               "districts": [
                 "Adliya",
                 "Juffair",
@@ -363,14 +465,20 @@
       "id": "om",
       "name": "Oman",
       "code": "OM",
+      "lat": 23.5880,
+      "lng": 58.3829,
       "regions": [
         {
           "id": "muscat-region",
           "name": "Muscat",
+          "lat": 23.5880,
+          "lng": 58.3829,
           "cities": [
             {
               "id": "muscat",
               "name": "Muscat",
+              "lat": 23.5880,
+              "lng": 58.3829,
               "districts": [
                 "Al Khuwair",
                 "Al Ghubra",

@@ -1534,3 +1534,71 @@ body {
 .back-link:hover {
     text-decoration: underline;
 }
+
+/* ========== Leaflet Map Overrides ========== */
+.pmtwin-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+.pmtwin-search-center {
+    background: transparent !important;
+    border: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-popup-content {
+    margin: 12px !important;
+}
+
+.map-container {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.map-container-sm {
+    height: 250px;
+}
+
+.map-container-md {
+    height: 400px;
+}
+
+.map-container-lg {
+    height: 600px;
+}
+
+.map-container-full {
+    height: calc(100vh - 200px);
+    min-height: 500px;
+}
+
+/* Social media icon links (icon-only, no URL text) */
+.social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+.social-icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary, #6b7280);
+    transition: color 0.15s ease;
+}
+.social-icon-link:hover {
+    color: var(--primary-color);
+}
+.social-icon-link svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}

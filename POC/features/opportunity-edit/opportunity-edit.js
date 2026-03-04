@@ -151,6 +151,7 @@ async function editPopulateForm(opportunity) {
     
     // Populate location fields
     editPopulateLocation(opportunity);
+    editInitMapPicker(opportunity);
     
     // Render and populate dynamic fields
     editRenderDynamicFields(opportunity);
@@ -1254,6 +1255,9 @@ function editSetupFormHandlers() {
             };
             
             // Update opportunity
+            const editLatVal = parseFloat(document.getElementById('latitude')?.value);
+            const editLngVal = parseFloat(document.getElementById('longitude')?.value);
+
             const updates = {
                 title: formData.title,
                 description: formData.description || '',
@@ -1263,6 +1267,8 @@ function editSetupFormHandlers() {
                 locationRegion: formData.locationRegion,
                 locationCity: formData.locationCity,
                 locationDistrict: formData.locationDistrict || '',
+                latitude: isNaN(editLatVal) ? null : editLatVal,
+                longitude: isNaN(editLngVal) ? null : editLngVal,
                 exchangeMode: formData.exchangeMode,
                 exchangeData: exchangeData,
                 paymentModes,
@@ -1312,6 +1318,66 @@ function editShowError(message) {
         errorDiv.classList.remove('hidden');
         const p = errorDiv.querySelector('p');
         if (p) p.textContent = message;
+    }
+}
+
+let editMapInstance = null;
+
+function editInitMapPicker(opportunity) {
+    if (typeof mapService === 'undefined') return;
+
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+    const coordsDisplay = document.getElementById('map-coordinates-display');
+    const latDisplay = document.getElementById('map-lat-display');
+    const lngDisplay = document.getElementById('map-lng-display');
+    const addressInput = document.getElementById('address-search-input');
+    const addressBtn = document.getElementById('address-search-btn');
+
+    function updateCoords(lat, lng) {
+        if (latInput) latInput.value = lat.toFixed(6);
+        if (lngInput) lngInput.value = lng.toFixed(6);
+        if (latDisplay) latDisplay.textContent = lat.toFixed(6);
+        if (lngDisplay) lngDisplay.textContent = lng.toFixed(6);
+        if (coordsDisplay) coordsDisplay.classList.remove('hidden');
+    }
+
+    const hasCoords = opportunity.latitude && opportunity.longitude;
+    const initialMarker = hasCoords ? [opportunity.latitude, opportunity.longitude] : null;
+
+    editMapInstance = mapService.initMapPicker('location-map', {
+        center: hasCoords ? [opportunity.latitude, opportunity.longitude] : mapService.DEFAULT_CENTER,
+        zoom: hasCoords ? 12 : mapService.DEFAULT_ZOOM,
+        draggableMarker: true,
+        initialMarker,
+        onClick: (lat, lng) => updateCoords(lat, lng),
+        onMarkerMove: (lat, lng) => updateCoords(lat, lng)
+    });
+
+    if (hasCoords) {
+        updateCoords(opportunity.latitude, opportunity.longitude);
+    }
+
+    if (addressBtn && addressInput) {
+        const doGeocode = async () => {
+            const query = addressInput.value.trim();
+            if (!query) return;
+            addressBtn.disabled = true;
+            addressBtn.innerHTML = '<i class="ph-duotone ph-spinner ph-spin" style="font-size:16px;"></i> Searching...';
+            const result = await mapService.geocodeAddress(query);
+            addressBtn.disabled = false;
+            addressBtn.innerHTML = '<i class="ph-duotone ph-magnifying-glass" style="font-size:16px;"></i> Locate';
+            if (result) {
+                editMapInstance.setMarker(result.lat, result.lng);
+                updateCoords(result.lat, result.lng);
+            } else {
+                alert('Address not found. Try a different search term.');
+            }
+        };
+        addressBtn.addEventListener('click', doGeocode);
+        addressInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); doGeocode(); }
+        });
     }
 }
 

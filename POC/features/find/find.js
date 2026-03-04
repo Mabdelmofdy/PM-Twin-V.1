@@ -31,6 +31,7 @@ async function initFind() {
     setupTabs();
     setupSearch();
     setupFilters();
+    setupFindMiniMap();
     
     // Initial render
     applyFilters();
@@ -141,14 +142,18 @@ function updateFilterVisibility() {
     const oppTypeFilter = document.getElementById('opportunity-type-filter');
     const modelFilter = document.getElementById('model-filter');
     
+    const mapLink = document.getElementById('find-map-link');
+
     if (currentTab === 'opportunities') {
         if (sectorFilter) sectorFilter.style.display = 'none';
         if (oppTypeFilter) oppTypeFilter.style.display = 'block';
         if (modelFilter) modelFilter.style.display = 'block';
+        if (mapLink) mapLink.style.display = 'block';
     } else {
         if (sectorFilter) sectorFilter.style.display = 'block';
         if (oppTypeFilter) oppTypeFilter.style.display = 'none';
         if (modelFilter) modelFilter.style.display = 'none';
+        if (mapLink) mapLink.style.display = 'none';
     }
 }
 
@@ -336,6 +341,7 @@ function renderResults() {
             break;
         case 'opportunities':
             renderOpportunities();
+            updateFindMiniMapMarkers();
             break;
     }
 }
@@ -694,6 +700,46 @@ function renderFullOpportunityCard(opp) {
             </div>
         </div>
     `;
+}
+
+let findMiniMapInstance = null;
+let findMiniMapVisible = false;
+
+function setupFindMiniMap() {
+    const toggleBtn = document.getElementById('find-toggle-mini-map');
+    const toggleText = document.getElementById('find-mini-map-toggle-text');
+    const container = document.getElementById('find-mini-map-container');
+    if (!toggleBtn || !container) return;
+
+    toggleBtn.addEventListener('click', () => {
+        findMiniMapVisible = !findMiniMapVisible;
+        container.style.display = findMiniMapVisible ? 'block' : 'none';
+        toggleText.textContent = findMiniMapVisible ? 'Hide Map' : 'Show Map';
+
+        if (findMiniMapVisible && !findMiniMapInstance && typeof mapService !== 'undefined') {
+            findMiniMapInstance = mapService.initSearchMap('find-mini-map', {
+                center: mapService.DEFAULT_CENTER,
+                zoom: mapService.DEFAULT_ZOOM
+            });
+            updateFindMiniMapMarkers();
+        }
+        if (findMiniMapInstance) findMiniMapInstance.invalidateSize();
+    });
+}
+
+function updateFindMiniMapMarkers() {
+    if (!findMiniMapInstance || !findMiniMapVisible) return;
+    findMiniMapInstance.clearMarkers();
+
+    const opps = findFilteredOpportunities.filter(o => o.latitude && o.longitude);
+    opps.forEach(opp => {
+        const popup = typeof mapService !== 'undefined' ? mapService.buildOpportunityPopup(opp) : opp.title;
+        findMiniMapInstance.addMarker(opp.id, opp.latitude, opp.longitude, popup);
+    });
+
+    if (opps.length > 0) {
+        findMiniMapInstance.fitToMarkers();
+    }
 }
 
 function formatDate(dateString) {

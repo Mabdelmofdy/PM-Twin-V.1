@@ -179,6 +179,17 @@ async function renderComprehensiveView(opportunity, creator, isOwner, canApply) 
         document.getElementById('info-location-chip').style.display = 'flex';
         document.getElementById('info-location').textContent = opportunity.location;
     }
+
+    // Location map
+    if (opportunity.latitude && opportunity.longitude && typeof mapService !== 'undefined') {
+        const mapSection = document.getElementById('detail-map-section');
+        if (mapSection) {
+            mapSection.style.display = 'block';
+            setTimeout(() => {
+                mapService.initStaticMap('detail-map', opportunity.latitude, opportunity.longitude, 13);
+            }, 200);
+        }
+    }
     
     // Exchange mode
     if (opportunity.exchangeMode) {
