@@ -359,6 +359,21 @@ function setLocationsData(data) {
     window.opportunityFormData.locationsData = data;
 }
 
+/** Get { lat, lng } for a city id from loaded locations (so new opportunities appear on map). */
+function getCityCoords(cityId) {
+    const locations = getLocationsData();
+    if (!locations || !cityId) return null;
+    for (const c of locations.countries || []) {
+        for (const r of c.regions || []) {
+            const city = (r.cities || []).find(ct => ct.id === cityId);
+            if (city && city.lat != null && city.lng != null) {
+                return { lat: city.lat, lng: city.lng };
+            }
+        }
+    }
+    return null;
+}
+
 async function initOpportunityCreate() {
     // Read-only demo: pending users can view but not submit
     if (authService.isPendingApproval && authService.isPendingApproval()) {
@@ -2867,8 +2882,15 @@ function setupFormHandlers() {
             }
             const attributesPayload = { ...scope, paymentModes: paymentModesArr, ...modelData };
             
-            const latVal = parseFloat(document.getElementById('latitude')?.value);
-            const lngVal = parseFloat(document.getElementById('longitude')?.value);
+            let latVal = parseFloat(document.getElementById('latitude')?.value);
+            let lngVal = parseFloat(document.getElementById('longitude')?.value);
+            if ((isNaN(latVal) || isNaN(lngVal)) && locationCity) {
+                const cityCoords = getCityCoords(locationCity);
+                if (cityCoords) {
+                    latVal = isNaN(latVal) ? cityCoords.lat : latVal;
+                    lngVal = isNaN(lngVal) ? cityCoords.lng : lngVal;
+                }
+            }
 
             const oppService = window.opportunityService;
             const opportunity = await oppService.createOpportunity({
@@ -2906,8 +2928,8 @@ function setupFormHandlers() {
             successDiv.classList.remove('hidden');
             
             setTimeout(() => {
-                router.navigate(`/opportunities/${opportunity.id}`);
-            }, 2000);
+                router.navigate('/opportunities/map');
+            }, 1500);
             
         } catch (error) {
             console.error('Error creating opportunity:', error);

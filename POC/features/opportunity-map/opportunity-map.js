@@ -19,12 +19,42 @@ async function initOpportunityMap() {
     }
 }
 
+/** Build city id -> { lat, lng } from locations.json for resolving missing coordinates */
+async function getCityCoordinatesMap() {
+    const base = (window.CONFIG && window.CONFIG.BASE_PATH) || '';
+    try {
+        const res = await fetch(base + 'data/locations.json');
+        const data = await res.json();
+        const map = {};
+        (data.countries || []).forEach(c => {
+            (c.regions || []).forEach(r => {
+                (r.cities || []).forEach(city => {
+                    if (city.id != null && city.lat != null && city.lng != null) {
+                        map[city.id] = { lat: city.lat, lng: city.lng };
+                    }
+                });
+            });
+        });
+        return map;
+    } catch (e) {
+        return {};
+    }
+}
+
 async function loadMapOpportunities() {
     try {
         const opportunities = await dataService.getOpportunities();
-        allMapOpportunities = opportunities.filter(opp =>
-            opp.latitude != null && opp.longitude != null
-        );
+        const cityCoords = await getCityCoordinatesMap();
+        const withCoords = opportunities.map(opp => {
+            let lat = opp.latitude;
+            let lng = opp.longitude;
+            if ((lat == null || lng == null) && opp.locationCity && cityCoords[opp.locationCity]) {
+                lat = cityCoords[opp.locationCity].lat;
+                lng = cityCoords[opp.locationCity].lng;
+            }
+            return { ...opp, latitude: lat, longitude: lng };
+        }).filter(opp => opp.latitude != null && opp.longitude != null);
+        allMapOpportunities = withCoords;
         filteredMapOpportunities = [...allMapOpportunities];
     } catch (error) {
         console.error('Error loading opportunities for map:', error);
