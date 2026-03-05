@@ -9,7 +9,7 @@ class DataService {
         this.storage = window.storageService || storageService;
         this.initialized = false;
         this.SEED_DATA_VERSION_KEY = 'pmtwin_seed_version';
-        this.CURRENT_SEED_VERSION = '1.12.0'; // Re-seed: diversify opportunity locations across GCC
+        this.CURRENT_SEED_VERSION = '1.15.0'; // Demo expansion: 20-30 professionals, 10-15 companies, 40-50 opportunities, more applications/matches
     }
     
     /**
@@ -45,7 +45,7 @@ class DataService {
             }
             
             // Load from JSON files
-            const domains = ['users', 'companies', 'opportunities', 'applications', 'matches', 'notifications', 'connections', 'messages', 'audit', 'sessions', 'contracts'];
+            const domains = ['users', 'companies', 'opportunities', 'applications', 'matches', 'notifications', 'connections', 'messages', 'audit', 'sessions', 'contracts', 'reviews'];
             
             for (const domain of domains) {
                 try {
@@ -279,6 +279,7 @@ class DataService {
             'audit': CONFIG.STORAGE_KEYS.AUDIT,
             'sessions': CONFIG.STORAGE_KEYS.SESSIONS,
             'contracts': CONFIG.STORAGE_KEYS.CONTRACTS,
+            'reviews': CONFIG.STORAGE_KEYS.REVIEWS,
             'subscription_plans': CONFIG.STORAGE_KEYS.SUBSCRIPTION_PLANS,
             'subscriptions': CONFIG.STORAGE_KEYS.SUBSCRIPTIONS
         };
@@ -373,7 +374,18 @@ class DataService {
         const companies = await this.getCompanies();
         return companies.find(c => c.email === email) || null;
     }
-    
+
+    async getCompanyMembers(companyId) {
+        const users = await this.getUsers();
+        return users.filter(u => u.companyId === companyId);
+    }
+
+    async getUserCompany(userId) {
+        const user = await this.getUserById(userId);
+        if (!user || !user.companyId) return null;
+        return await this.getCompanyById(user.companyId);
+    }
+
     async createCompany(companyData) {
         const companies = await this.getCompanies();
         const newCompany = {
@@ -508,7 +520,16 @@ class DataService {
             updatedAt: new Date().toISOString()
         };
         this.storage.set(CONFIG.STORAGE_KEYS.OPPORTUNITIES, opportunities);
-        return opportunities[index];
+        const updated = opportunities[index];
+
+        // When publishing, trigger matching so match records are generated (any code path that sets status to published)
+        if (updates.status === 'published') {
+            const ms = window.matchingService || (typeof matchingService !== 'undefined' ? matchingService : null);
+            if (ms && typeof ms.findMatchesForOpportunity === 'function') {
+                ms.findMatchesForOpportunity(id).catch(err => console.warn('Matching after publish:', err));
+            }
+        }
+        return updated;
     }
     
     async deleteOpportunity(id) {
@@ -615,17 +636,67 @@ class DataService {
         return contracts[index];
     }
 
+    // Review Operations (post-completion reputation)
+    async getReviews() {
+        return this.storage.get(CONFIG.STORAGE_KEYS.REVIEWS) || [];
+    }
+
+    async getReviewById(id) {
+        const reviews = await this.getReviews();
+        return reviews.find(r => r.id === id) || null;
+    }
+
+    async getReviewsByContractId(contractId) {
+        const reviews = await this.getReviews();
+        return reviews.filter(r => r.contractId === contractId);
+    }
+
+    async getReviewsByRevieweeId(revieweeId) {
+        const reviews = await this.getReviews();
+        return reviews.filter(r => r.revieweeId === revieweeId);
+    }
+
+    async getReviewByContractAndReviewer(contractId, reviewerId) {
+        const reviews = await this.getReviews();
+        return reviews.find(r => r.contractId === contractId && r.reviewerId === reviewerId) || null;
+    }
+
+    async createReview(reviewData) {
+        const reviews = await this.getReviews();
+        const newReview = {
+            id: this.generateId(),
+            ...reviewData,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        reviews.push(newReview);
+        this.storage.set(CONFIG.STORAGE_KEYS.REVIEWS, reviews);
+        return newReview;
+    }
+
     // Match Operations
     async getMatches() {
         return this.storage.get(CONFIG.STORAGE_KEYS.MATCHES) || [];
     }
+
+    async getMatchesByOpportunityId(opportunityId) {
+        const matches = await this.getMatches();
+        return matches.filter(m => m.opportunityId === opportunityId);
+    }
     
     async createMatch(matchData) {
         const matches = await this.getMatches();
+        // Single canonical field for candidate: candidateId (prefer over userId)
+        const candidateId = matchData.candidateId != null ? matchData.candidateId : matchData.userId;
+        // Single canonical field for breakdown: criteria (prefer over matchReasons)
+        const criteria = matchData.criteria != null ? matchData.criteria : matchData.matchReasons;
         const newMatch = {
             id: this.generateId(),
-            ...matchData,
-            notified: false,
+            opportunityId: matchData.opportunityId,
+            candidateId,
+            matchScore: matchData.matchScore,
+            criteria: criteria || undefined,
+            notified: matchData.notified === true,
             createdAt: new Date().toISOString()
         };
         matches.push(newMatch);

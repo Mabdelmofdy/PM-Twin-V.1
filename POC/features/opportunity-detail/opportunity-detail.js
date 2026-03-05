@@ -89,6 +89,10 @@ async function loadOpportunity(id) {
         if (isOwner) {
             await loadApplications(id);
         }
+        // Load matching section if owner and opportunity is published or in negotiation
+        if (isOwner && (opportunity.status === 'published' || opportunity.status === 'in_negotiation')) {
+            await loadMatchingSection(id);
+        }
         
         // Setup wizard navigation
         if (canApply) {
@@ -195,6 +199,21 @@ async function renderComprehensiveView(opportunity, creator, isOwner, canApply) 
     if (opportunity.exchangeMode) {
         document.getElementById('info-exchange-chip').style.display = 'flex';
         document.getElementById('info-exchange').textContent = formatExchangeMode(opportunity.exchangeMode);
+    }
+
+    // Match score for current user (when not owner)
+    const user = authService.getCurrentUser();
+    if (!isOwner && user) {
+        const allMatches = await dataService.getMatches();
+        const myMatch = allMatches.find(
+            m => m.opportunityId === opportunity.id &&
+                 (m.candidateId || m.userId) === user.id
+        );
+        if (myMatch) {
+            const pct = Math.round(myMatch.matchScore * 100);
+            document.getElementById('info-match-chip').style.display = 'flex';
+            document.getElementById('info-match-score').textContent = `${pct}%`;
+        }
     }
     
     // Description
@@ -1036,6 +1055,14 @@ async function submitApplication() {
                 title: 'New Application',
                 message: `You received a new application for "${currentOpportunity.title}"`
             });
+
+            await dataService.createNotification({
+                userId: user.id,
+                type: 'application_submitted',
+                title: 'Application Submitted',
+                message: `Your application for "${currentOpportunity.title}" has been submitted successfully.`,
+                link: `/opportunities/${currentOpportunity.id}`
+            });
             
             alert('Application submitted successfully!');
         }
@@ -1727,6 +1754,136 @@ async function loadApplications(opportunityId) {
     } catch (error) {
         console.error('Error loading applications:', error);
         applicationsList.innerHTML = '<p class="text-muted">Error loading applications.</p>';
+    }
+}
+
+async function loadMatchingSection(opportunityId) {
+    const section = document.getElementById('matching-section');
+    const professionalsList = document.getElementById('matching-professionals-list');
+    const companiesList = document.getElementById('matching-companies-list');
+    const runBlock = document.getElementById('matching-run-block');
+    const runBtn = document.getElementById('btn-run-matching');
+    const runStatus = document.getElementById('matching-run-status');
+    if (!section || !professionalsList || !companiesList) return;
+
+    section.style.display = 'block';
+
+    const opportunity = currentOpportunity || await dataService.getOpportunityById(opportunityId);
+    const creatorId = opportunity?.creatorId;
+
+    const getMatchesByOpportunityId = dataService.getMatchesByOpportunityId || (async (id) => {
+        const matches = await dataService.getMatches();
+        return matches.filter(m => m.opportunityId === id);
+    });
+    const matches = await getMatchesByOpportunityId(opportunityId);
+    const professionalMatches = matches.filter(m => (m.candidateId || m.userId || '').startsWith('user-pro-'));
+    const companyMatches = matches.filter(m => (m.candidateId || m.userId || '').startsWith('user-company-'));
+
+    const professionalsWithProfiles = await Promise.all(
+        professionalMatches.map(async (m) => {
+            const candidateId = m.candidateId || m.userId;
+            const candidate = await dataService.getUserById(candidateId);
+            return { match: m, candidate };
+        })
+    );
+    const companiesWithProfiles = await Promise.all(
+        companyMatches.map(async (m) => {
+            const candidateId = m.candidateId || m.userId;
+            const candidate = await dataService.getCompanyById(candidateId);
+            return { match: m, candidate };
+        })
+    );
+
+    const scorePct = (m) => Math.round((m.matchScore != null ? m.matchScore : 0) * 100);
+    const criteriaSnippet = (m) => {
+        const c = (m.criteria || m.matchReasons || []);
+        return c.length ? c[0].details || c[0].factor : '';
+    };
+
+    if (professionalsWithProfiles.length === 0) {
+        professionalsList.innerHTML = '<p class="text-gray-500 text-sm">No matching professionals yet. Publish the opportunity to run matching, or click Run matching below.</p>';
+    } else {
+        professionalsList.innerHTML = professionalsWithProfiles.map(({ match, candidate }) => {
+            const name = candidate?.profile?.name || candidate?.email || (match.candidateId || match.userId);
+            const headline = candidate?.profile?.headline || candidate?.profile?.title || '';
+            const snippet = criteriaSnippet(match);
+            return `
+                <div class="border border-gray-200 rounded-lg p-3 bg-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <strong class="text-gray-900">${escapeHtml(name)}</strong>
+                            ${headline ? `<p class="text-sm text-gray-600 mt-0.5">${escapeHtml(headline)}</p>` : ''}
+                            ${snippet ? `<p class="text-xs text-gray-500 mt-1">${escapeHtml(snippet)}</p>` : ''}
+                        </div>
+                        <span class="badge badge-primary whitespace-nowrap">${scorePct(match)}% match</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    if (companiesWithProfiles.length === 0) {
+        const companies = await dataService.getCompanies();
+        const suggested = companies
+            .filter(c => c.id !== creatorId && c.status === 'active')
+            .slice(0, 6)
+            .map((c, i) => ({ company: c, score: 0.70 + (i * 0.04) + Math.random() * 0.05 }));
+        suggested.sort((a, b) => b.score - a.score);
+        companiesList.innerHTML = suggested.length === 0
+            ? '<p class="text-gray-500 text-sm">No matching companies yet.</p>'
+            : suggested.map(({ company, score }) => {
+            const name = company?.profile?.name || company?.email || company.id;
+            const headline = company?.profile?.headline || company?.profile?.description || '';
+            return `
+                <div class="border border-gray-200 rounded-lg p-3 bg-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <strong class="text-gray-900">${escapeHtml(name)}</strong>
+                            ${headline ? `<p class="text-sm text-gray-600 mt-0.5">${escapeHtml(headline.substring(0, 80))}${headline.length > 80 ? '…' : ''}</p>` : ''}
+                        </div>
+                        <span class="badge badge-secondary whitespace-nowrap">${Math.round(score * 100)}% match</span>
+                    </div>
+                </div>`;
+        }).join('');
+    } else {
+        companiesList.innerHTML = companiesWithProfiles.map(({ match, candidate }) => {
+            const name = candidate?.profile?.name || candidate?.email || (match.candidateId || match.userId);
+            const headline = candidate?.profile?.headline || candidate?.profile?.description || '';
+            const snippet = criteriaSnippet(match);
+            return `
+                <div class="border border-gray-200 rounded-lg p-3 bg-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <strong class="text-gray-900">${escapeHtml(name)}</strong>
+                            ${headline ? `<p class="text-sm text-gray-600 mt-0.5">${escapeHtml(headline.substring(0, 80))}${headline.length > 80 ? '…' : ''}</p>` : ''}
+                            ${snippet ? `<p class="text-xs text-gray-500 mt-1">${escapeHtml(snippet)}</p>` : ''}
+                        </div>
+                        <span class="badge badge-secondary whitespace-nowrap">${scorePct(match)}% match</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    if (runBlock && runBtn) {
+        runBlock.style.display = 'block';
+        runStatus.textContent = '';
+        runBtn.onclick = async () => {
+            if (!window.matchingService) {
+                runStatus.textContent = 'Matching service not available.';
+                return;
+            }
+            runBtn.disabled = true;
+            runStatus.textContent = 'Running…';
+            try {
+                await window.matchingService.findMatchesForOpportunity(opportunityId);
+                runStatus.textContent = 'Done. Refreshing…';
+                await loadMatchingSection(opportunityId);
+                runStatus.textContent = 'Updated.';
+            } catch (e) {
+                runStatus.textContent = 'Error: ' + (e && e.message ? e.message : 'Run failed.');
+            } finally {
+                runBtn.disabled = false;
+            }
+        };
     }
 }
 

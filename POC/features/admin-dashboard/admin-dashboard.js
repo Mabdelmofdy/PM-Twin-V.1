@@ -44,18 +44,73 @@ function formatActivityDescription(log) {
 }
 
 async function initAdminDashboard() {
-    if (!authService.isAdmin()) {
-        router.navigate(CONFIG.ROUTES.DASHBOARD);
+    const auth = window.authService || (typeof authService !== 'undefined' ? authService : null);
+    const r = window.router || (typeof router !== 'undefined' ? router : null);
+    if (!auth || !auth.isAdmin()) {
+        if (r && typeof r.navigate === 'function') r.navigate(CONFIG.ROUTES.DASHBOARD);
         return;
     }
 
     await loadKpis();
     await loadHealth();
     await loadOffersByTopSites();
+    await loadAnalyticsSummary();
     await loadCollaborationModelsActivity();
     loadPendingApprovalsQueue();
     await loadRecentActivity();
     updateQuickActionBadges();
+}
+
+async function loadAnalyticsSummary() {
+    const byModelEl = document.getElementById('analytics-by-model');
+    const topOppsEl = document.getElementById('analytics-top-opps');
+    if (!byModelEl && !topOppsEl) return;
+    try {
+        const opportunities = await dataService.getOpportunities();
+        const applications = await dataService.getApplications();
+        const byModel = {};
+        opportunities.forEach(o => {
+            const key = o.modelType || 'other';
+            byModel[key] = (byModel[key] || 0) + 1;
+        });
+        const modelLabels = {
+            project_based: 'Project-Based',
+            strategic_partnership: 'Strategic Partnership',
+            resource_pooling: 'Resource Pooling',
+            hiring: 'Hiring',
+            competition: 'Competition',
+            other: 'Other'
+        };
+        if (byModelEl) {
+            byModelEl.innerHTML = Object.entries(byModel)
+                .map(([key, count]) => `<div class="analytics-row"><span>${escapeHtml(modelLabels[key] || key)}</span><strong>${count}</strong></div>`)
+                .join('') || '<p class="text-muted">No data</p>';
+        }
+        const appCountByOpp = {};
+        applications.forEach(a => {
+            appCountByOpp[a.opportunityId] = (appCountByOpp[a.opportunityId] || 0) + 1;
+        });
+        const topOppIds = Object.entries(appCountByOpp)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([id]) => id);
+        if (topOppsEl) {
+            if (topOppIds.length === 0) {
+                topOppsEl.innerHTML = '<p class="text-muted">No applications yet</p>';
+            } else {
+                const opps = topOppIds.map(id => opportunities.find(o => o.id === id)).filter(Boolean);
+                topOppsEl.innerHTML = opps.map(o => {
+                    const count = appCountByOpp[o.id] || 0;
+                    const title = (o.title || 'Untitled').substring(0, 45) + ((o.title || '').length > 45 ? '…' : '');
+                    return `<div class="analytics-row"><a href="#" data-route="/opportunities/${o.id}" class="text-primary">${escapeHtml(title)}</a><strong>${count}</strong></div>`;
+                }).join('');
+            }
+        }
+    } catch (e) {
+        console.error('Error loading analytics summary:', e);
+        if (byModelEl) byModelEl.innerHTML = '<p class="text-muted">Error loading</p>';
+        if (topOppsEl) topOppsEl.innerHTML = '<p class="text-muted">Error loading</p>';
+    }
 }
 
 async function loadOffersByTopSites() {

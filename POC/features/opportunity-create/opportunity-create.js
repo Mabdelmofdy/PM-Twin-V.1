@@ -223,6 +223,114 @@ const DEMO_DATASETS = [
             agreement: true
         },
         step6: { status: 'draft' }
+    },
+    {
+        step1: {
+            title: 'Bulk Steel Purchase – Consortium for Riyadh Projects',
+            description: 'Organizing a bulk purchase of structural steel for multiple construction projects in Riyadh. Seeking 4–6 participants to achieve volume discount. Lead organizer; delivery to central depot.',
+            locationKey: 'riyadh'
+        },
+        step2: { intent: 'request' },
+        step3: {
+            skills: ['Procurement', 'Construction Materials', 'Supply Chain'],
+            sectors: ['Construction', 'Industrial', 'Infrastructure'],
+            interests: ['Bulk Purchasing', 'Cost Savings'],
+            certifications: []
+        },
+        step4: {
+            category: 'resource_pooling',
+            subModel: 'bulk_purchasing',
+            modelFields: {
+                productService: 'Structural Steel (I-beams, H-beams)',
+                category: 'Materials',
+                quantityNeeded: '2000',
+                unitOfMeasure: 'tons',
+                targetPrice: '3200',
+                currentMarketPrice: '3500',
+                expectedSavings: '8',
+                deliveryTimeline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                deliveryLocation: 'Riyadh Industrial Area – Central Depot',
+                paymentStructure: 'Escrow',
+                participantsNeeded: '5',
+                minimumOrder: '200',
+                leadOrganizer: true,
+                distributionMethod: 'Centralized Pickup',
+                requiredSkills: 'Construction, Procurement'
+            }
+        },
+        step5: {
+            budgetMin: '6000000',
+            budgetMax: '7000000',
+            exchangeMode: 'cash',
+            currency: 'SAR',
+            modeFields: {
+                cashAmount: '6400000',
+                cashPaymentTerms: '30% deposit, 70% on delivery',
+                cashMilestones: '30% upon order placement, 70% on delivery to depot.',
+                exchangeTermsSummary: 'Payment in SAR. Escrow through platform. Centralized pickup within 14 days of delivery.'
+            },
+            agreement: true
+        },
+        step6: { status: 'draft' }
+    },
+    {
+        step1: {
+            title: 'Innovation Contest – Sustainable Construction Solutions',
+            description: 'Open innovation contest for sustainable construction solutions. Winner receives 500K SAR and pilot opportunity. Open to companies and professionals. Submission deadline 60 days.',
+            locationKey: 'riyadh'
+        },
+        step2: { intent: 'request' },
+        step3: {
+            skills: ['Sustainability', 'Innovation', 'Construction Technology', 'Green Building'],
+            sectors: ['Construction', 'Real Estate', 'Technology'],
+            interests: ['Sustainability', 'Innovation', 'Pilot Projects'],
+            certifications: ['LEED', 'BREEAM']
+        },
+        step4: {
+            category: 'competition',
+            subModel: 'competition_rfp',
+            modelFields: {
+                competitionTitle: 'Sustainable Construction Solutions – Innovation Contest',
+                competitionType: 'Innovation Contest',
+                competitionScope: 'Submit innovative solutions for reducing carbon footprint in construction: materials, processes, or digital tools. Solutions must be pilot-ready within 12 months.',
+                participantType: 'Both',
+                competitionFormat: 'Open to All',
+                eligibilityCriteria: [
+                    { criteria: 'Registered company or licensed professional' },
+                    { criteria: 'Relevant experience in construction or sustainability' }
+                ],
+                submissionRequirements: 'Concept Note, Technical Proposal, Cost Estimate, Team CVs',
+                evaluationCriteria: [
+                    { criteria: 'Innovation', weight: 35 },
+                    { criteria: 'Feasibility', weight: 30 },
+                    { criteria: 'Sustainability Impact', weight: 25 },
+                    { criteria: 'Cost', weight: 10 }
+                ],
+                evaluationWeights: [35, 30, 25, 10],
+                prizeContractValue: '500000',
+                numberOfWinners: '3',
+                submissionDeadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                announcementDate: new Date(Date.now() + 75 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                competitionRules: 'Original work only. Shortlisted teams may be invited to pitch. Winner receives pilot contract.',
+                intellectualProperty: 'Winner Transfers',
+                submissionFee: '0',
+                requiredSkills: 'Sustainability, Innovation, Construction'
+            }
+        },
+        step5: {
+            budgetMin: '400000',
+            budgetMax: '600000',
+            exchangeMode: 'cash',
+            currency: 'SAR',
+            modeFields: {
+                cashAmount: '500000',
+                cashPaymentTerms: 'Upon Completion',
+                cashMilestones: 'Prize: 1st 300K, 2nd 150K, 3rd 50K SAR.',
+                exchangeTermsSummary: 'Winners receive cash prizes. First place also receives pilot contract opportunity.'
+            },
+            agreement: true
+        },
+        step6: { status: 'draft' }
     }
 ];
 
@@ -359,11 +467,77 @@ function setupScopeTags() {
                     tags.push(v);
                     el.value = '';
                     renderScopeTags(el, tags);
+                    hideScopeSkillSuggestions();
                 }
             }
         });
         el.dataset.tagsArray = JSON.stringify(tags);
+
+        if (id === 'scope-skills') {
+            setupScopeSkillAutocomplete(el, tags);
+        }
     });
+}
+
+function setupScopeSkillAutocomplete(el, tags) {
+    const wrapper = el.closest('.form-group');
+    if (!wrapper) return;
+    wrapper.style.position = 'relative';
+
+    let sugBox = wrapper.querySelector('.opp-skill-suggestions');
+    if (!sugBox) {
+        sugBox = document.createElement('div');
+        sugBox.className = 'opp-skill-suggestions';
+        sugBox.style.cssText = 'display:none;position:absolute;left:0;right:0;background:#fff;border:1px solid #d1d5db;border-radius:0.375rem;max-height:200px;overflow-y:auto;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.1);';
+        el.after(sugBox);
+    }
+
+    el.addEventListener('input', async () => {
+        const q = el.value.trim();
+        if (q.length < 1) { sugBox.style.display = 'none'; return; }
+        const svc = window.skillService || (typeof skillService !== 'undefined' ? skillService : null);
+        if (!svc) return;
+        const catalog = await svc.getCatalog();
+        const lq = q.toLowerCase();
+        let html = '';
+        for (const [cat, skills] of Object.entries(catalog)) {
+            const matching = skills.filter(s =>
+                s.toLowerCase().includes(lq) && !tags.includes(s)
+            );
+            if (matching.length > 0) {
+                html += `<div style="padding:0.25rem 0.75rem;font-size:0.7rem;text-transform:uppercase;font-weight:600;color:#6b7280;background:#f9fafb;letter-spacing:0.05em;">${escapeHtml(cat)}</div>`;
+                matching.forEach(s => {
+                    html += `<div class="opp-skill-item" data-skill="${escapeHtml(s)}" style="padding:0.5rem 0.75rem;cursor:pointer;font-size:0.875rem;">${escapeHtml(s)}</div>`;
+                });
+            }
+        }
+        if (!html) html = '<div style="padding:0.5rem 0.75rem;color:#9ca3af;font-size:0.875rem;">No matching skills</div>';
+        sugBox.innerHTML = html;
+        sugBox.style.display = 'block';
+
+        sugBox.querySelectorAll('.opp-skill-item').forEach(item => {
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                const skill = item.dataset.skill;
+                if (skill && !tags.includes(skill)) {
+                    tags.push(skill);
+                    renderScopeTags(el, tags);
+                }
+                el.value = '';
+                sugBox.style.display = 'none';
+            });
+            item.addEventListener('mouseenter', () => { item.style.background = '#2563eb'; item.style.color = '#fff'; });
+            item.addEventListener('mouseleave', () => { item.style.background = ''; item.style.color = ''; });
+        });
+    });
+
+    el.addEventListener('blur', () => {
+        setTimeout(() => { sugBox.style.display = 'none'; }, 200);
+    });
+}
+
+function hideScopeSkillSuggestions() {
+    document.querySelectorAll('.opp-skill-suggestions').forEach(el => { el.style.display = 'none'; });
 }
 
 function renderScopeTags(containerInput, tags) {

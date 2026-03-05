@@ -7,63 +7,105 @@
     </div>
     <div class="page-body">
 
-        <!-- Section 1: Workflow overview -->
-        <section class="matching-section workflow-overview">
+        <!-- Step 1: How matching works -->
+        <section class="dashboard-section workflow-overview">
             <h2 class="section-title">How matching works</h2>
-            <ul class="workflow-list">
-                <li><strong>One-way:</strong> For a Need post (request), the system finds Offer posts that match (skills, budget, timeline, location). Default when viewing a request.</li>
-                <li><strong>Two-way (barter):</strong> When a creator has both a Need and an Offer, the system finds other creators whose Offer satisfies this creator’s Need and whose Need is satisfied by this creator’s Offer.</li>
-                <li><strong>Consortium:</strong> A lead Need with defined roles (e.g. Financial partner, Construction expertise, Equipment fleet) gets one best Offer per role from distinct partners.</li>
-                <li><strong>Circular:</strong> The system finds cycles of length 3 or more (e.g. A→B→C→A) where each participant’s Offer satisfies the next participant’s Need.</li>
-            </ul>
+            <div class="workflow-cards">
+                <div class="workflow-card">
+                    <h3 class="workflow-card-title">One-way</h3>
+                    <p class="workflow-card-desc">For a Need post (request), the system finds Offer posts that match (skills, budget, timeline, location). Default when viewing a request.</p>
+                </div>
+                <div class="workflow-card">
+                    <h3 class="workflow-card-title">Two-way (barter)</h3>
+                    <p class="workflow-card-desc">When a creator has both a Need and an Offer, the system finds other creators whose Offer satisfies this creator’s Need and whose Need is satisfied by this creator’s Offer.</p>
+                </div>
+                <div class="workflow-card">
+                    <h3 class="workflow-card-title">Consortium</h3>
+                    <p class="workflow-card-desc">A lead Need with defined roles (e.g. Financial partner, Construction expertise, Equipment fleet) gets one best Offer per role from distinct partners.</p>
+                </div>
+                <div class="workflow-card">
+                    <h3 class="workflow-card-title">Circular</h3>
+                    <p class="workflow-card-desc">The system finds cycles of length 3 or more (e.g. A→B→C→A) where each participant’s Offer satisfies the next participant’s Need.</p>
+                </div>
+            </div>
         </section>
 
-        <!-- Section 2: Run on current platform data -->
-        <section class="matching-section run-section">
+        <!-- Step 2: Run on current platform data -->
+        <section class="dashboard-section run-section">
             <h2 class="section-title">Run matching on current platform data</h2>
-            <p class="section-desc">Uses the same opportunities, users, and companies as the rest of the platform (Admin Dashboard).</p>
-            <button type="button" id="matching-run-btn" class="btn btn-primary">Run matching on current data</button>
-            <div id="matching-run-loading" class="matching-loading" hidden><span class="spinner"></span> Running matching…</div>
-            <div id="matching-report-block" class="report-block matching-report-block" hidden>
-                <h3 class="report-block-title">Report</h3>
-                <div class="stats-grid" id="matching-stats-grid"></div>
-                <div id="matching-report-details" class="matching-details"></div>
+            <div class="matching-action-card">
+                <p class="section-desc">Uses the same opportunities, users, and companies as the rest of the platform (Admin Dashboard). When an opportunity is published, matching runs automatically; opportunity owners see matches on the opportunity detail page.</p>
+                <div class="matching-action-row">
+                    <button type="button" id="matching-run-btn" class="btn btn-primary">Run matching on current data</button>
+                    <div id="matching-run-loading" class="matching-loading" hidden><span class="spinner"></span> Running matching…</div>
+                </div>
+                <div id="matching-report-block" class="report-block matching-report-block" hidden>
+                    <h3 class="report-block-title">Report</h3>
+                    <div class="stats-grid" id="matching-stats-grid"></div>
+                    <div id="matching-report-details" class="matching-details"></div>
+                </div>
+                <div id="matching-run-error" class="matching-error" hidden></div>
             </div>
-            <div id="matching-run-error" class="matching-error" hidden></div>
         </section>
 
-        <!-- Section 3: Last simulation report -->
-        <section class="matching-section simulation-section">
+        <!-- Step 3: Last simulation report -->
+        <section class="dashboard-section simulation-section">
             <h2 class="section-title">Last simulation report</h2>
-            <p class="section-desc">Report from the standalone simulation. Run locally: <code>node scripts/simulation/run-matching-simulation.js</code>. If the file is not served, this section will show a message.</p>
-            <button type="button" id="matching-load-simulation-btn" class="btn btn-secondary">Load simulation report</button>
-            <div id="matching-simulation-loading" class="matching-loading" hidden><span class="spinner"></span> Loading…</div>
-            <div id="matching-simulation-block" class="report-block matching-report-block" hidden>
-                <h3 class="report-block-title">Simulation report</h3>
-                <div class="stats-grid" id="matching-simulation-stats"></div>
+            <div class="matching-action-card">
+                <p class="section-desc">Report from the standalone simulation. Run locally: <code>node scripts/simulation/run-matching-simulation.js</code>. If the file is not served, this section will show a message.</p>
+                <div class="matching-action-row">
+                    <button type="button" id="matching-load-simulation-btn" class="btn btn-secondary">Load simulation report</button>
+                    <div id="matching-simulation-loading" class="matching-loading" hidden><span class="spinner"></span> Loading…</div>
+                </div>
+                <div id="matching-simulation-block" class="report-block matching-report-block" hidden>
+                    <h3 class="report-block-title">Simulation report</h3>
+                    <div class="stats-grid" id="matching-simulation-stats"></div>
+                </div>
+                <div id="matching-simulation-unavailable" class="matching-unavailable" hidden>Simulation report not available. Run the simulation script and ensure the app can read <code>data/simulation/matching-report.json</code>.</div>
             </div>
-            <div id="matching-simulation-unavailable" class="matching-unavailable" hidden>Simulation report not available. Run the simulation script and ensure the app can read <code>data/simulation/matching-report.json</code>.</div>
         </section>
     </div>
 </div>
 
 <style>
 .admin-matching-page { }
-.matching-section { margin-bottom: 2rem; }
-.matching-section .section-title { font-size: 1.25rem; margin-bottom: 0.75rem; }
-.matching-section .section-desc { color: var(--text-secondary, #6b7280); margin-bottom: 1rem; font-size: 0.9375rem; }
-.workflow-list { margin: 0; padding-left: 1.5rem; }
-.workflow-list li { margin-bottom: 0.5rem; }
-.matching-loading { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
-.matching-loading .spinner { width: 1rem; height: 1rem; border: 2px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+.dashboard-section { margin-bottom: var(--spacing-2xl); }
+.section-title { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); }
+
+.workflow-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--spacing-lg);
+}
+.workflow-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+.workflow-card-title { font-size: var(--font-size-base); font-weight: 600; margin: 0 0 var(--spacing-sm); color: var(--primary-color); }
+.workflow-card-desc { font-size: var(--font-size-sm); color: var(--text-secondary); margin: 0; line-height: 1.5; }
+
+.matching-action-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+.section-desc { color: var(--text-secondary); margin-bottom: var(--spacing-md); font-size: var(--font-size-sm); line-height: 1.5; }
+.matching-action-row { display: flex; align-items: center; gap: var(--spacing-md); flex-wrap: wrap; }
+.matching-loading { display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-sm); color: var(--text-secondary); }
+.matching-loading .spinner { width: 1rem; height: 1rem; border: 2px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.report-block { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1rem; }
-.report-block-title { font-size: 1rem; margin-bottom: 1rem; font-weight: 600; }
-.matching-report-block .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-.matching-report-block .stat-card { padding: 0.75rem; background: var(--bg-secondary, #f9fafb); border-radius: var(--radius-md); }
-.matching-report-block .stat-value { font-size: 1.5rem; font-weight: 700; }
-.matching-report-block .stat-label { font-size: 0.8125rem; color: var(--text-secondary); }
-.matching-details { font-size: 0.875rem; color: var(--text-secondary); }
-.matching-error { color: var(--danger-color, #dc2626); margin-top: 0.5rem; }
-.matching-unavailable { color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.875rem; }
+
+.report-block { background: var(--bg-secondary, #f9fafb); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--spacing-lg); margin-top: var(--spacing-lg); }
+.report-block-title { font-size: var(--font-size-base); margin-bottom: var(--spacing-md); font-weight: 600; }
+.matching-report-block .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.matching-report-block .stat-card { padding: var(--spacing-md); background: var(--bg-primary); border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+.matching-report-block .stat-value { font-size: var(--font-size-xl); font-weight: 700; color: var(--primary-color); }
+.matching-report-block .stat-label { font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: var(--spacing-xs); }
+.matching-details { font-size: var(--font-size-sm); color: var(--text-secondary); }
+.matching-error { color: var(--danger-color, #dc2626); margin-top: var(--spacing-sm); font-size: var(--font-size-sm); }
+.matching-unavailable { color: var(--text-secondary); margin-top: var(--spacing-sm); font-size: var(--font-size-sm); }
 </style>

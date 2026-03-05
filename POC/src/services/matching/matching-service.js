@@ -109,21 +109,39 @@ class MatchingService {
         let maxScore = 0;
         const scope = opportunity.scope || opportunity.attributes || {};
         const candidateProfile = candidate.profile || {};
-        
-        // Scope-based matching (unified workflow: requiredSkills/offeredSkills, sectors, interests, certifications)
+
         const skills = scope.requiredSkills || scope.offeredSkills || [];
         const skillsArr = Array.isArray(skills) ? skills : (skills ? [skills] : []);
         if (skillsArr.length > 0) {
-            const candidateSkills = [].concat(
+            const rawCandidateSkills = [].concat(
                 candidateProfile.specializations || [],
                 candidateProfile.skills || [],
+                candidateProfile.services || [],
                 (candidateProfile.classifications || []).map(c => typeof c === 'string' ? c : c.label)
             ).filter(Boolean);
-            const matchCount = skillsArr.filter(s =>
-                candidateSkills.some(cs => String(cs).toLowerCase().includes(String(s).toLowerCase()))
-            ).length;
+
+            const svc = window.skillService || (typeof skillService !== 'undefined' ? skillService : null);
+            let matchCount = 0;
+            if (svc) {
+                const normRequired = await svc.normalizeSkills(skillsArr);
+                const normCandidate = await svc.normalizeSkills(rawCandidateSkills);
+                const candidateSet = new Set(normCandidate.map(s => s.toLowerCase()));
+                matchCount = normRequired.filter(s => candidateSet.has(s.toLowerCase())).length;
+                this._lastSkillDetail = {
+                    matched: normRequired.filter(s => candidateSet.has(s.toLowerCase())),
+                    unmatched: normRequired.filter(s => !candidateSet.has(s.toLowerCase())),
+                    score: normRequired.length > 0 ? matchCount / normRequired.length : 0
+                };
+            } else {
+                matchCount = skillsArr.filter(s =>
+                    rawCandidateSkills.some(cs => String(cs).toLowerCase().includes(String(s).toLowerCase()))
+                ).length;
+                this._lastSkillDetail = null;
+            }
             totalScore += (matchCount / skillsArr.length) * 50;
             maxScore += 50;
+        } else {
+            this._lastSkillDetail = null;
         }
         
         const sectors = scope.sectors || [];
@@ -212,20 +230,30 @@ class MatchingService {
         const candidateProfile = candidate.profile || {};
         
         switch (subModelType) {
-            case CONFIG.SUB_MODELS.TASK_BASED:
-                // Skill match (40 points)
+            case CONFIG.SUB_MODELS.TASK_BASED: {
                 if (attributes.requiredSkills) {
-                    const requiredSkills = Array.isArray(attributes.requiredSkills) 
-                        ? attributes.requiredSkills 
+                    const requiredSkills = Array.isArray(attributes.requiredSkills)
+                        ? attributes.requiredSkills
                         : [attributes.requiredSkills];
-                    const candidateSkills = Array.isArray(candidateProfile.specializations)
-                        ? candidateProfile.specializations
-                        : [];
-                    
-                    const matchingSkills = requiredSkills.filter(skill => 
-                        candidateSkills.some(cs => cs.toLowerCase().includes(skill.toLowerCase()))
-                    );
-                    score += (matchingSkills.length / requiredSkills.length) * 40;
+                    const candidateSkills = [].concat(
+                        candidateProfile.specializations || [],
+                        candidateProfile.skills || [],
+                        candidateProfile.services || []
+                    ).filter(Boolean);
+
+                    const svc = window.skillService || (typeof skillService !== 'undefined' ? skillService : null);
+                    if (svc) {
+                        const normReq = await svc.normalizeSkills(requiredSkills);
+                        const normCand = await svc.normalizeSkills(candidateSkills);
+                        const candSet = new Set(normCand.map(s => s.toLowerCase()));
+                        const matchingCount = normReq.filter(s => candSet.has(s.toLowerCase())).length;
+                        score += normReq.length > 0 ? (matchingCount / normReq.length) * 40 : 0;
+                    } else {
+                        const matchingSkills = requiredSkills.filter(skill =>
+                            candidateSkills.some(cs => cs.toLowerCase().includes(skill.toLowerCase()))
+                        );
+                        score += (matchingSkills.length / requiredSkills.length) * 40;
+                    }
                 }
                 
                 // Experience match (20 points)
@@ -254,10 +282,10 @@ class MatchingService {
                 
                 // Availability match (10 points)
                 if (attributes.startDate) {
-                    score += 10; // Simplified - would check candidate's availability
+                    score += 10;
                 }
                 break;
-                
+            }
             case CONFIG.SUB_MODELS.CONSORTIUM:
             case CONFIG.SUB_MODELS.PROJECT_JV:
                 // Scope match (30 points)
@@ -428,26 +456,35 @@ class MatchingService {
             }
         }
         
-        // Skill match (30 points): use both specializations and skills for matching
         if (attributes.requiredSkills) {
             const required = Array.isArray(attributes.requiredSkills)
                 ? attributes.requiredSkills
                 : [attributes.requiredSkills];
-            const specializations = Array.isArray(candidateProfile.specializations) ? candidateProfile.specializations : [];
-            const skills = Array.isArray(candidateProfile.skills) ? candidateProfile.skills : [];
-            const candidateSkills = [...specializations, ...skills];
-            
-            const matching = required.filter(req => 
-                candidateSkills.some(skill => String(skill).toLowerCase().includes(String(req).toLowerCase()))
-            );
-            score += (matching.length / required.length) * 30;
+            const candidateSkills = [].concat(
+                candidateProfile.specializations || [],
+                candidateProfile.skills || [],
+                candidateProfile.services || []
+            ).filter(Boolean);
+
+            const svc = window.skillService || (typeof skillService !== 'undefined' ? skillService : null);
+            if (svc) {
+                const normReq = await svc.normalizeSkills(required);
+                const normCand = await svc.normalizeSkills(candidateSkills);
+                const candSet = new Set(normCand.map(s => s.toLowerCase()));
+                const matchCount = normReq.filter(s => candSet.has(s.toLowerCase())).length;
+                score += normReq.length > 0 ? (matchCount / normReq.length) * 30 : 0;
+            } else {
+                const matching = required.filter(req =>
+                    candidateSkills.some(skill => String(skill).toLowerCase().includes(String(req).toLowerCase()))
+                );
+                score += (matching.length / required.length) * 30;
+            }
         }
-        
-        // Location compatibility (10 points)
+
         if (attributes.location || attributes.workMode) {
-            score += 10; // Simplified
+            score += 10;
         }
-        
+
         return score;
     }
     
@@ -497,9 +534,26 @@ class MatchingService {
      * Get match criteria breakdown
      */
     async getMatchCriteria(opportunity, candidate) {
+        const scope = opportunity.scope || opportunity.attributes || {};
+        const sectors = scope.sectors || [];
+        const candidateSectors = candidate.profile?.sectors || candidate.profile?.industry || [];
+        const sectorMatch = Array.isArray(sectors) && sectors.length > 0
+            ? sectors.some(s => (Array.isArray(candidateSectors) ? candidateSectors : []).some(c =>
+                String(c).toLowerCase().includes(String(s).toLowerCase())))
+            : false;
+
+        const paymentModes = opportunity.paymentModes || (opportunity.exchangeMode ? [opportunity.exchangeMode] : []);
+        const candidatePreferred = candidate.profile?.preferredPaymentModes || [];
+        const paymentCompatible = paymentModes.length > 0
+            ? paymentModes.some(pm => candidatePreferred.some(pp => String(pp).toLowerCase() === String(pm).toLowerCase()))
+            : true;
+
         return {
             modelType: opportunity.modelType,
             subModelType: opportunity.subModelType,
+            skillMatch: this._lastSkillDetail || null,
+            sectorMatch,
+            paymentCompatible,
             matchedAt: new Date().toISOString()
         };
     }
@@ -521,10 +575,13 @@ class MatchingService {
     
     /**
      * Find opportunities for a candidate
+     * @param {string} candidateId
+     * @param {{ minThreshold?: number }} options - optional minThreshold override (0-1) from profile matching preferences
      */
-    async findOpportunitiesForCandidate(candidateId) {
+    async findOpportunitiesForCandidate(candidateId, options = {}) {
         const allOpportunities = await this.dataService.getOpportunities();
         const publishedOpportunities = allOpportunities.filter(o => o.status === 'published');
+        const minThreshold = options.minThreshold != null ? options.minThreshold : this.minThreshold;
         // Try to find candidate as user first, then as company
         const candidate = await this.dataService.getUserById(candidateId) 
             || await this.dataService.getCompanyById(candidateId);
@@ -543,7 +600,7 @@ class MatchingService {
             
             const matchScore = await this.calculateMatchScore(opportunity, candidate);
             
-            if (matchScore >= this.minThreshold) {
+            if (matchScore >= minThreshold) {
                 matches.push({
                     opportunity,
                     matchScore,

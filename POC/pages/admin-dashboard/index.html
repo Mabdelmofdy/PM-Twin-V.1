@@ -42,6 +42,21 @@
         <a href="#" data-route="/admin/reports" class="btn btn-secondary btn-sm">View full reports</a>
     </section>
 
+    <!-- Analytics Summary -->
+    <section class="dashboard-section analytics-summary-section">
+        <h2 class="section-title">Analytics Summary</h2>
+        <div class="analytics-summary-grid">
+            <div class="analytics-card">
+                <h3 class="analytics-card-title">Opportunities by model</h3>
+                <div id="analytics-by-model" class="analytics-by-model"><p class="text-muted">Loading…</p></div>
+            </div>
+            <div class="analytics-card">
+                <h3 class="analytics-card-title">Top opportunities by applications</h3>
+                <div id="analytics-top-opps" class="analytics-top-opps"><p class="text-muted">Loading…</p></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Quick Actions -->
     <section class="dashboard-section quick-actions-section">
         <h2 class="section-title">Quick Actions</h2>
@@ -104,6 +119,13 @@
 
 .dashboard-section { margin-bottom: var(--spacing-2xl); }
 .section-title { font-size: var(--font-size-xl); margin-bottom: var(--spacing-lg); }
+
+.analytics-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--spacing-lg); }
+.analytics-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-lg); }
+.analytics-card-title { font-size: var(--font-size-base); font-weight: 600; margin-bottom: var(--spacing-md); }
+.analytics-row { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-xs) 0; border-bottom: 1px solid var(--border-color); font-size: var(--font-size-sm); }
+.analytics-row:last-child { border-bottom: none; }
+.analytics-row a { text-decoration: none; }
 
 /* KPIs */
 .kpi-grid {

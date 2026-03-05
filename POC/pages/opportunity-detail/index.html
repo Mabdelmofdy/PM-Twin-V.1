@@ -65,6 +65,10 @@
                         <i class="ph-duotone ph-currency-circle-dollar"></i>
                         <span>Exchange: <strong id="info-exchange"></strong></span>
                     </div>
+                    <div class="info-chip" id="info-match-chip" style="display: none;">
+                        <i class="ph-duotone ph-star"></i>
+                        <span>Match: <strong id="info-match-score"></strong></span>
+                    </div>
                 </div>
 
                 <!-- Location Map -->
@@ -102,6 +106,28 @@
                         <div id="contract-summary"></div>
                         <div id="contract-milestones" class="mt-4"></div>
                         <div id="contract-actions" class="mt-4 flex gap-2 flex-wrap"></div>
+                    </div>
+                </div>
+
+                <!-- Matching Section (for owners, when published) -->
+                <div class="detail-section" id="matching-section" style="display: none;">
+                    <h2><i class="ph-duotone ph-handshake"></i> Matching</h2>
+                    <p class="text-sm text-gray-500 mt-1 mb-4">Professionals and companies matched to this opportunity by the platform. Match scores indicate fit.</p>
+                    <div class="detail-content">
+                        <div id="matching-run-block" class="mb-4" style="display: none;">
+                            <button type="button" id="btn-run-matching" class="btn btn-secondary btn-sm">Run matching</button>
+                            <span id="matching-run-status" class="ml-2 text-sm text-gray-500"></span>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Matching professionals</h3>
+                                <div id="matching-professionals-list" class="space-y-3 min-h-[80px]"></div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Matching companies</h3>
+                                <div id="matching-companies-list" class="space-y-3 min-h-[80px]"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

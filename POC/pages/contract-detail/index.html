@@ -47,6 +47,12 @@
                 <h2><i class="ph-duotone ph-briefcase"></i> Linked opportunity</h2>
                 <div id="contract-opportunity-link" class="detail-content"></div>
             </section>
+
+            <section class="detail-section" id="contract-reviews-section" style="display: none;">
+                <h2><i class="ph-duotone ph-star"></i> Reviews</h2>
+                <div id="contract-reviews-list" class="detail-content"></div>
+                <div id="contract-leave-review" class="no-print" style="display: none;"></div>
+            </section>
         </div>
         </div>
     </div>
@@ -117,6 +123,13 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 1rem;
+}
+.contract-detail-page .review-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.contract-detail-page .review-item:last-child {
+    border-bottom: none;
 }
 
 @media print {

@@ -163,12 +163,12 @@
                                 <div id="company-references-list" class="space-y-3 mb-3"></div>
                                 <button type="button" id="company-add-reference" class="btn btn-secondary btn-sm">Add reference</button>
                             </div>
-                            <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting: case study (optional)</h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                                <div class="form-group"><label for="company-vettingCaseStudy-title" class="form-label">Case study title</label><input type="text" id="company-vettingCaseStudy-title" class="form-input" placeholder="Title"></div>
-                                <div class="form-group"><label for="company-vettingCaseStudy-url" class="form-label">URL or document link</label><input type="url" id="company-vettingCaseStudy-url" class="form-input" placeholder="https://"></div>
-                                <div class="form-group sm:col-span-2"><label for="company-vettingCaseStudy-description" class="form-label">Description</label><textarea id="company-vettingCaseStudy-description" class="form-input" rows="2" placeholder="Brief case study summary"></textarea></div>
-                            </div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting: case study (optional)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="company-vettingCaseStudy-title" class="form-label">Case study title</label><input type="text" id="company-vettingCaseStudy-title" class="form-input" placeholder="Title"></div>
+                            <div class="form-group"><label for="company-vettingCaseStudy-url" class="form-label">URL or document link</label><input type="url" id="company-vettingCaseStudy-url" class="form-input" placeholder="https://"></div>
+                            <div class="form-group sm:col-span-2"><label for="company-vettingCaseStudy-description" class="form-label">Description</label><textarea id="company-vettingCaseStudy-description" class="form-input" rows="2" placeholder="Brief case study summary"></textarea></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -183,6 +183,9 @@
                 </div>
                 <div class="card-body">
                     <div id="professional-profile-view" class="profile-view">
+                        <div id="prof-company-affiliation" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg" style="display:none;">
+                            <span class="text-sm text-blue-800">Affiliated with <strong id="prof-company-name-link"></strong></span>
+                        </div>
                         <h4 class="font-medium text-gray-700 mb-2">Basic info</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="profile-view-item"><span class="text-gray-600">Full Name</span><span id="view-full-name">—</span></div>
@@ -190,6 +193,7 @@
                             <div class="profile-view-item"><span class="text-gray-600">Title</span><span id="view-prof-title">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Phone</span><span id="view-prof-phone">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Location</span><span id="view-prof-location">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Experience Level</span><span id="view-prof-experienceLevel">—</span></div>
                             <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Bio</span><span id="view-prof-bio">—</span></div>
                         </div>
                         <h4 class="font-medium text-gray-700 mb-2">Social media</h4>
@@ -197,17 +201,17 @@
                         <h4 class="font-medium text-gray-700 mb-2">Experience & skills</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="profile-view-item"><span class="text-gray-600">Specializations</span><span id="view-specializations">—</span></div>
-                            <div class="profile-view-item"><span class="text-gray-600">Skills</span><span id="view-skills">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Skills</span><div id="view-skills" class="flex flex-wrap gap-1 mt-1">—</div></div>
                             <div class="profile-view-item"><span class="text-gray-600">Sectors / Industry</span><span id="view-prof-sectors">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Education</span><span id="view-prof-education">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Certifications</span><span id="view-certifications">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Years of Experience</span><span id="view-years-experience">—</span></div>
-                            <div class="profile-view-item"><span class="text-gray-600">Services</span><span id="view-prof-services">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Services Offered</span><span id="view-prof-services">—</span></div>
                             <div class="profile-view-item sm:col-span-2"><span class="text-gray-600">Interests</span><span id="view-prof-interests">—</span></div>
                         </div>
                         <h4 class="font-medium text-gray-700 mb-2">Preferences</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="profile-view-item"><span class="text-gray-600">Availability</span><span id="view-prof-availability">—</span></div>
+                            <div class="profile-view-item"><span class="text-gray-600">Availability</span><span id="view-prof-availability" class="inline-flex items-center">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Preferred Work Mode</span><span id="view-prof-workMode">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Preferred Payment Modes</span><span id="view-prof-paymentModes">—</span></div>
                             <div class="profile-view-item"><span class="text-gray-600">Hourly Rate</span><span id="view-prof-hourlyRate">—</span></div>
@@ -244,7 +248,14 @@
                         <h4 class="font-medium text-gray-700 mb-2">Experience & skills</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div class="form-group"><label for="specializations" class="form-label">Specializations</label><input type="text" id="specializations" name="specializations" class="form-input" placeholder="Comma-separated"></div>
-                            <div class="form-group"><label for="skills" class="form-label">Skills</label><input type="text" id="skills" name="skills" class="form-input" placeholder="Comma-separated (e.g., BIM, AutoCAD)"></div>
+                            <div class="form-group sm:col-span-2">
+                                <label for="skills" class="form-label">Skills</label>
+                                <div class="skill-autocomplete-wrap" style="position:relative;">
+                                    <input type="text" id="skills" name="skills" class="form-input" placeholder="Type to search skills..." autocomplete="off">
+                                    <div id="skills-suggestions" class="skill-suggestions" style="display:none;"></div>
+                                    <div id="skills-tags" class="flex flex-wrap gap-1 mt-2"></div>
+                                </div>
+                            </div>
                             <div class="form-group"><label for="prof-sectors" class="form-label">Sectors / Industry</label><input type="text" id="prof-sectors" name="sectors" class="form-input" placeholder="Comma-separated (e.g. Construction, Energy)"></div>
                             <div class="form-group"><label for="prof-education" class="form-label">Education</label><input type="text" id="prof-education" name="education" class="form-input"></div>
                             <div class="form-group"><label for="certifications" class="form-label">Certifications</label><input type="text" id="certifications" name="certifications" class="form-input" placeholder="Comma-separated"></div>
@@ -277,13 +288,13 @@
                                 <div id="prof-references-list" class="space-y-3 mb-3"></div>
                                 <button type="button" id="prof-add-reference" class="btn btn-secondary btn-sm">Add reference</button>
                             </div>
-                            <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting: case study</h4>
-                            <p id="prof-vetting-case-study-hint" class="text-sm text-gray-600 mb-2">Optional for Professionals; required for Consultants.</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                                <div class="form-group"><label for="prof-vettingCaseStudy-title" class="form-label">Case study title</label><input type="text" id="prof-vettingCaseStudy-title" class="form-input" placeholder="Title"></div>
-                                <div class="form-group"><label for="prof-vettingCaseStudy-url" class="form-label">URL or document link</label><input type="url" id="prof-vettingCaseStudy-url" class="form-input" placeholder="https://"></div>
-                                <div class="form-group sm:col-span-2"><label for="prof-vettingCaseStudy-description" class="form-label">Description</label><textarea id="prof-vettingCaseStudy-description" class="form-input" rows="2" placeholder="Brief case study summary"></textarea></div>
-                            </div>
+                        </div>
+                        <h4 class="font-medium text-gray-700 mb-2 mt-4">Vetting: case study</h4>
+                        <p id="prof-vetting-case-study-hint" class="text-sm text-gray-600 mb-2">Optional for Professionals; required for Consultants.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group"><label for="prof-vettingCaseStudy-title" class="form-label">Case study title</label><input type="text" id="prof-vettingCaseStudy-title" class="form-input" placeholder="Title"></div>
+                            <div class="form-group"><label for="prof-vettingCaseStudy-url" class="form-label">URL or document link</label><input type="url" id="prof-vettingCaseStudy-url" class="form-input" placeholder="https://"></div>
+                            <div class="form-group sm:col-span-2"><label for="prof-vettingCaseStudy-description" class="form-label">Description</label><textarea id="prof-vettingCaseStudy-description" class="form-input" rows="2" placeholder="Brief case study summary"></textarea></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -318,6 +329,56 @@
                         <strong>Matches Received</strong>
                         <span id="stat-matches-received">0</span>
                     </div>
+                    <div class="stat-item">
+                        <strong>Completed Collaborations</strong>
+                        <span id="stat-collaborations">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card" id="reputation-card">
+                <div class="card-header">
+                    <h3>Reputation</h3>
+                </div>
+                <div class="card-body">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span id="reputation-score" class="text-3xl font-bold text-primary">—</span>
+                        <span class="text-sm text-gray-500">/ 5.0</span>
+                    </div>
+                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="reputation-bar" class="h-full bg-primary rounded-full transition-all" style="width: 0%;"></div>
+                    </div>
+                    <p id="reputation-label" class="text-xs text-gray-500 mt-1">Based on completed collaborations</p>
+                </div>
+            </div>
+            <div class="card" id="matching-preferences-card">
+                <div class="card-header">
+                    <h3>Matching preferences</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="matching-min-score" class="block text-sm font-medium text-gray-700 mb-1">Minimum match score (%)</label>
+                        <input type="number" id="matching-min-score" class="form-input w-20" min="70" max="100" value="70" placeholder="70">
+                        <p class="text-xs text-gray-500 mt-1">Only show recommendations at or above this score (70–100).</p>
+                    </div>
+                    <button type="button" id="matching-preferences-save" class="btn btn-primary btn-sm">Save preferences</button>
+                </div>
+            </div>
+            <div class="card" id="reviews-received-card">
+                <div class="card-header">
+                    <h3>Reviews received</h3>
+                </div>
+                <div class="card-body">
+                    <div id="reviews-received-list" class="space-y-2 text-sm"></div>
+                    <p id="reviews-received-empty" class="text-gray-500 text-sm" style="display: none;">No reviews yet.</p>
+                </div>
+            </div>
+            <div class="card" id="team-members-card" style="display:none;">
+                <div class="card-header flex items-center justify-between">
+                    <h3>Team Members</h3>
+                    <button type="button" id="team-add-member-btn" class="btn btn-primary btn-sm" style="display: none;">Add team member</button>
+                </div>
+                <div class="card-body">
+                    <div id="team-members-list" class="space-y-2"></div>
                 </div>
             </div>
         </div>
@@ -382,6 +443,66 @@
     color: var(--text-primary, #111);
 }
 
+.skill-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--border-color, #d1d5db);
+    border-radius: 0.375rem;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.skill-suggestions .skill-suggestion-item {
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+.skill-suggestions .skill-suggestion-item:hover,
+.skill-suggestions .skill-suggestion-item.active {
+    background: var(--primary-color, #2563eb);
+    color: #fff;
+}
+.skill-suggestions .skill-suggestion-category {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #6b7280;
+    background: #f9fafb;
+    letter-spacing: 0.05em;
+}
+.skill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--primary-color, #2563eb);
+    color: #fff;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.skill-tag-remove {
+    cursor: pointer;
+    opacity: 0.7;
+    font-size: 0.875rem;
+    line-height: 1;
+}
+.skill-tag-remove:hover { opacity: 1; }
+.availability-badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.availability-badge.available { background: #dcfce7; color: #166534; }
+.availability-badge.limited { background: #fef9c3; color: #854d0e; }
+.availability-badge.unavailable { background: #fee2e2; color: #991b1b; }
 @media (max-width: 968px) {
     .profile-content {
         grid-template-columns: 1fr;

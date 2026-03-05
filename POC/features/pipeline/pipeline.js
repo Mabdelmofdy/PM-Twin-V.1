@@ -17,12 +17,18 @@ const APP_COLUMN_TO_STATUS = {
     'kanban-app-rejected': 'rejected'
 };
 
-async function initPipeline() {
+async function initPipeline(params = {}) {
     setupTabs();
     setupOpportunitiesIntentFilter();
     setupApplicationsIntentFilter();
     setupDropZones();
-    await loadPipelineData();
+    const tab = params.tab;
+    if (tab === 'matches' || tab === 'applications' || tab === 'opportunities') {
+        const tabBtn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+        if (tabBtn) tabBtn.click();
+    } else {
+        await loadPipelineData();
+    }
 }
 
 function setupDropZones() {
@@ -200,25 +206,39 @@ async function loadMatchesPipeline() {
     container.innerHTML = '<div class="spinner"></div>';
     
     try {
-        const matches = await matchingService.findOpportunitiesForCandidate(user.id);
+        // Use stored matches (same source as dashboard count) so the list matches the dashboard
+        const allMatches = await dataService.getMatches();
+        const userMatches = allMatches.filter(m => (m.candidateId || m.userId) === user.id);
         
-        if (matches.length === 0) {
+        if (userMatches.length === 0) {
             container.innerHTML = '<div class="empty-state">No matches found. Keep your profile updated to receive matches! <a href="#" data-route="' + CONFIG.ROUTES.PROFILE + '" class="text-primary font-medium">Update your profile</a></div>';
             return;
         }
         
-        // Load template
-        const template = await templateLoader.load('match-card');
+        // Load opportunity for each match
+        const matchesWithOpps = await Promise.all(
+            userMatches.map(async (m) => {
+                const opportunity = await dataService.getOpportunityById(m.opportunityId);
+                return {
+                    opportunity: opportunity || { id: m.opportunityId, title: 'Unknown', description: 'No description', modelType: '—', status: '—' },
+                    matchScore: m.matchScore != null ? m.matchScore : 0,
+                    criteria: m.criteria || m.matchReasons
+                };
+            })
+        );
         
-        // Render matches
-        const html = matches.map(match => {
+        // Sort by match score descending
+        matchesWithOpps.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+        
+        const template = await templateLoader.load('match-card');
+        const html = matchesWithOpps.map(match => {
             const data = {
                 ...match,
                 opportunity: {
                     ...match.opportunity,
                     description: match.opportunity.description || 'No description'
                 },
-                matchScorePercent: Math.round(match.matchScore * 100)
+                matchScorePercent: Math.round((match.matchScore || 0) * 100)
             };
             return templateRenderer.render(template, data);
         }).join('');
@@ -297,7 +317,12 @@ async function renderKanbanColumn(containerId, items) {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const id = btn.dataset.id;
-            await dataService.updateOpportunity(id, { status: 'published' });
+            const oppService = window.opportunityService || (typeof opportunityService !== 'undefined' ? opportunityService : null);
+            if (oppService && typeof oppService.updateOpportunityStatus === 'function') {
+                await oppService.updateOpportunityStatus(id, 'published');
+            } else {
+                await dataService.updateOpportunity(id, { status: 'published' });
+            }
             await loadOpportunitiesPipeline();
         });
     });

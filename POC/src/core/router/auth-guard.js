@@ -26,18 +26,10 @@ class AuthGuard {
      * Check if route requires specific role
      */
     requiresRole(route, roles) {
-        const adminRoutes = [
-            CONFIG.ROUTES.ADMIN,
-            CONFIG.ROUTES.ADMIN_USERS,
-            CONFIG.ROUTES.ADMIN_OPPORTUNITIES,
-            CONFIG.ROUTES.ADMIN_AUDIT,
-            CONFIG.ROUTES.ADMIN_SETTINGS
-        ];
-        
-        if (adminRoutes.includes(route)) {
+        const isAdminRoute = route === CONFIG.ROUTES.ADMIN || (route && route.startsWith(CONFIG.ROUTES.ADMIN + '/'));
+        if (isAdminRoute) {
             return this.authService.hasAnyRole(roles || [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR]);
         }
-        
         return true;
     }
     
@@ -84,7 +76,13 @@ class AuthGuard {
                     this.router.navigate(CONFIG.ROUTES.DASHBOARD);
                     return;
                 }
-                
+
+                if (guardResult.redirect === CONFIG.ROUTES.LOGIN) {
+                    sessionStorage.setItem('pmtwin_flash', JSON.stringify({
+                        type: 'warning',
+                        message: 'Your session has expired. Please login again.'
+                    }));
+                }
                 this.router.navigate(guardResult.redirect);
                 return;
             }

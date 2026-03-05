@@ -31,7 +31,10 @@ const CONFIG = {
         CONNECTIONS: 'pmtwin_connections',
         MESSAGES: 'pmtwin_messages',
         CONTRACTS: 'pmtwin_contracts',
+        REVIEWS: 'pmtwin_reviews',
         SYSTEM_SETTINGS: 'pmtwin_system_settings',
+        LOOKUPS_OVERRIDE: 'pmtwin_lookups_override',
+        SKILL_CANONICAL_OVERRIDE: 'pmtwin_skill_canonical_override',
         SUBSCRIPTION_PLANS: 'pmtwin_subscription_plans',
         SUBSCRIPTIONS: 'pmtwin_subscriptions',
         RESET_TOKENS: 'pmtwin_reset_tokens'
@@ -141,6 +144,10 @@ const CONFIG = {
         COMPLETED: 'completed',
         TERMINATED: 'terminated'
     },
+
+    // Review rating scale (1-5)
+    REVIEW_RATING_MIN: 1,
+    REVIEW_RATING_MAX: 5,
     
     // Application Status
     APPLICATION_STATUS: {
@@ -194,6 +201,7 @@ const CONFIG = {
         FORGOT_PASSWORD: '/forgot-password',
         RESET_PASSWORD: '/reset-password',
         DASHBOARD: '/dashboard',
+        COMPANY_DASHBOARD: '/company-dashboard',
         OPPORTUNITIES: '/opportunities',
         CONTRACTS: '/contracts',
         OPPORTUNITY_CREATE: '/opportunities/create',
@@ -215,11 +223,13 @@ const CONFIG = {
         ADMIN_PEOPLE: '/admin/people',
         ADMIN_SUBSCRIPTIONS: '/admin/subscriptions',
         ADMIN_COLLABORATION_MODELS: '/admin/collaboration-models',
+        ADMIN_SKILLS: '/admin/skills',
         NOTIFICATIONS: '/notifications',
         COLLABORATION_WIZARD: '/collaboration-wizard',
         KNOWLEDGE_BASE: '/knowledge-base',
         COLLABORATION_MODELS: '/collaboration-models',
-        FIND: '/find'
+        FIND: '/find',
+        CONTRACT_DETAIL: '/contracts/:id'
     },
     
     // API Endpoints (for future backend integration)

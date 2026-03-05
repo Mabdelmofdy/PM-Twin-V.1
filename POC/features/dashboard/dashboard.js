@@ -2,21 +2,32 @@
  * Dashboard Component
  */
 
-async function initDashboard() {
+async function initDashboard(params) {
     const user = authService.getCurrentUser();
     if (!user) {
         router.navigate(CONFIG.ROUTES.LOGIN);
         return;
     }
-    
-    // Set user name
+
+    const isCompanyView = params?.view === 'company';
     const userNameElement = document.getElementById('user-name');
     if (userNameElement) {
         userNameElement.textContent = user.profile?.name || user.email;
     }
-    
-    // Load dashboard data
+    const pageTitle = document.querySelector('#main-content .page-title');
+    if (pageTitle && isCompanyView) {
+        pageTitle.textContent = 'Company dashboard';
+    }
+
     await loadDashboardData(user.id);
+
+    const isCompany = authService.isCompanyUser && authService.isCompanyUser();
+    if (isCompany) {
+        loadCompanyRecommendations(user.id);
+        loadApplicationsReceived(user.id);
+    } else {
+        loadRecommendedOpportunities(user.id);
+    }
 }
 
 async function loadDashboardData(userId) {
@@ -33,7 +44,7 @@ async function loadDashboardData(userId) {
         
         // Load matches
         const allMatches = await dataService.getMatches();
-        const userMatches = allMatches.filter(m => m.candidateId === userId);
+        const userMatches = allMatches.filter(m => (m.candidateId || m.userId) === userId);
         document.getElementById('stat-matches').textContent = userMatches.length;
         
         // Load notifications
@@ -176,4 +187,193 @@ function getStatusBadgeClass(status) {
         'withdrawn': 'secondary'
     };
     return statusMap[status] || 'secondary';
+}
+
+function escDash(str) {
+    if (str == null) return '';
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
+
+async function loadRecommendedOpportunities(userId) {
+    const section = document.getElementById('recommended-opportunities-section');
+    const list = document.getElementById('recommended-opportunities-list');
+    const loadingEl = document.getElementById('recommended-loading');
+    const emptyEl = document.getElementById('recommended-empty');
+    if (!section || !list) return;
+
+    section.style.display = 'block';
+    if (loadingEl) loadingEl.style.display = 'block';
+
+    try {
+        const ms = window.matchingService || (typeof matchingService !== 'undefined' ? matchingService : null);
+        if (!ms) { section.style.display = 'none'; return; }
+
+        const user = authService.getCurrentUser();
+        const minScore = user?.profile?.matchingPreferences?.minScore;
+        const matches = await ms.findOpportunitiesForCandidate(userId, minScore != null ? { minThreshold: minScore } : {});
+        if (loadingEl) loadingEl.style.display = 'none';
+        const top = matches.slice(0, 5);
+
+        if (top.length === 0) {
+            if (emptyEl) emptyEl.style.display = 'block';
+            return;
+        }
+
+        const items = await Promise.all(top.map(async (m) => {
+            const opp = m.opportunity;
+            const owner = await dataService.getUserOrCompanyById(opp.creatorId);
+            const ownerName = owner?.profile?.name || opp.creatorId;
+            const scorePercent = Math.round((m.matchScore || 0) * 100);
+            const skillDetail = m.criteria?.skillMatch;
+            const matchedSkills = skillDetail?.matched || [];
+            const unmatchedSkills = skillDetail?.unmatched || [];
+
+            return `<div class="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:border-primary/40 transition-colors">
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="text-lg font-bold text-primary">${scorePercent}%</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <a href="#" data-route="/opportunities/${opp.id}" class="text-base font-semibold text-gray-900 hover:text-primary no-underline block truncate">${escDash(opp.title)}</a>
+                    <p class="text-sm text-gray-500 mt-0.5">by ${escDash(ownerName)}</p>
+                    ${matchedSkills.length > 0 ? `<div class="flex flex-wrap gap-1 mt-2">
+                        ${matchedSkills.map(s => `<span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs font-medium">${escDash(s)}</span>`).join('')}
+                        ${unmatchedSkills.map(s => `<span class="inline-block px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full text-xs">${escDash(s)}</span>`).join('')}
+                    </div>` : ''}
+                </div>
+                <a href="#" data-route="/opportunities/${opp.id}" class="flex-shrink-0 px-3 py-1.5 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary-dark no-underline">View</a>
+            </div>`;
+        }));
+
+        list.innerHTML = items.join('');
+    } catch (e) {
+        console.error('Error loading recommended opportunities:', e);
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (emptyEl) emptyEl.style.display = 'block';
+    }
+}
+
+async function loadCompanyRecommendations(companyId) {
+    const section = document.getElementById('company-recommendations-section');
+    const list = document.getElementById('company-recommendations-list');
+    const emptyEl = document.getElementById('company-recommendations-empty');
+    if (!section || !list) return;
+
+    section.style.display = 'block';
+
+    try {
+        const ms = window.matchingService || (typeof matchingService !== 'undefined' ? matchingService : null);
+        if (!ms) { section.style.display = 'none'; return; }
+
+        const allOpps = await dataService.getOpportunities();
+        const myPublished = allOpps.filter(o => o.creatorId === companyId && o.status === 'published');
+
+        if (myPublished.length === 0) {
+            if (emptyEl) emptyEl.style.display = 'block';
+            return;
+        }
+
+        const candidateMap = new Map();
+        for (const opp of myPublished.slice(0, 3)) {
+            try {
+                const allUsers = await dataService.getUsers();
+                const active = allUsers.filter(u => u.status === 'active' && u.id !== companyId);
+                for (const user of active) {
+                    const score = await ms.calculateMatchScore(opp, user);
+                    if (score >= (ms.minThreshold || 0.3)) {
+                        const existing = candidateMap.get(user.id);
+                        if (!existing || existing.score < score) {
+                            candidateMap.set(user.id, {
+                                user,
+                                score,
+                                opportunity: opp,
+                                criteria: ms._lastSkillDetail
+                            });
+                        }
+                    }
+                }
+            } catch (e) { /* skip */ }
+        }
+
+        const sorted = Array.from(candidateMap.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 5);
+
+        if (sorted.length === 0) {
+            if (emptyEl) emptyEl.style.display = 'block';
+            return;
+        }
+
+        list.innerHTML = sorted.map(item => {
+            const u = item.user;
+            const prof = u.profile || {};
+            const scorePercent = Math.round(item.score * 100);
+            const matchedSkills = item.criteria?.matched || [];
+            return `<div class="flex items-start gap-4 p-4 border border-gray-200 rounded-lg">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">${escDash((prof.name || '?')[0])}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-gray-900 truncate">${escDash(prof.name || u.email)}</div>
+                    <div class="text-sm text-gray-500">${escDash(prof.title || u.role)} &middot; ${scorePercent}% match</div>
+                    ${matchedSkills.length > 0 ? `<div class="flex flex-wrap gap-1 mt-1">
+                        ${matchedSkills.slice(0, 5).map(s => `<span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">${escDash(s)}</span>`).join('')}
+                    </div>` : ''}
+                    <div class="text-xs text-gray-400 mt-1">For: ${escDash(item.opportunity.title)}</div>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        console.error('Error loading company recommendations:', e);
+        if (emptyEl) emptyEl.style.display = 'block';
+    }
+}
+
+async function loadApplicationsReceived(userId) {
+    const section = document.getElementById('applications-received-section');
+    const list = document.getElementById('applications-received-list');
+    const emptyEl = document.getElementById('applications-received-empty');
+    if (!section || !list) return;
+
+    section.style.display = 'block';
+
+    try {
+        const allOpps = await dataService.getOpportunities();
+        const myOppIds = new Set(allOpps.filter(o => o.creatorId === userId).map(o => o.id));
+        if (myOppIds.size === 0) {
+            if (emptyEl) emptyEl.style.display = 'block';
+            return;
+        }
+
+        const allApps = await dataService.getApplications();
+        const received = allApps
+            .filter(a => myOppIds.has(a.opportunityId))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 5);
+
+        if (received.length === 0) {
+            if (emptyEl) emptyEl.style.display = 'block';
+            return;
+        }
+
+        const items = await Promise.all(received.map(async (app) => {
+            const applicant = await dataService.getUserOrCompanyById(app.applicantId);
+            const opp = allOpps.find(o => o.id === app.opportunityId);
+            const applicantName = applicant?.profile?.name || app.applicantId;
+            return `<div class="flex items-start gap-4 p-3 border border-gray-200 rounded-lg">
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-gray-900">${escDash(applicantName)}</div>
+                    <div class="text-sm text-gray-500">Applied to: ${escDash(opp?.title || app.opportunityId)}</div>
+                    <div class="text-xs text-gray-400 mt-1">${new Date(app.createdAt).toLocaleDateString()} &middot;
+                        <span class="inline-block px-1.5 py-0.5 rounded text-xs font-medium ${app.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : app.status === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}">${app.status}</span>
+                    </div>
+                </div>
+                <a href="#" data-route="/pipeline" class="text-sm text-primary hover:underline no-underline">Review</a>
+            </div>`;
+        }));
+
+        list.innerHTML = items.join('');
+    } catch (e) {
+        console.error('Error loading applications received:', e);
+        if (emptyEl) emptyEl.style.display = 'block';
+    }
 }

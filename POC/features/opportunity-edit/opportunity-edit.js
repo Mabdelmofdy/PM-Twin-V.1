@@ -1282,6 +1282,9 @@ function editSetupFormHandlers() {
             if (!updated) {
                 throw new Error('Failed to update opportunity');
             }
+
+            // When saving as published, matching is triggered inside dataService.updateOpportunity
+            // (opportunity-edit sends full updates including status, so we rely on that hook)
             
             // Create audit log
             await dataService.createAuditLog({

@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-03-05T13:32:03.799Z",
+  "duplicates": {
+    "users": {
+      "byId": [],
+      "byEmail": []
+    },
+    "companies": {
+      "byId": [],
+      "byEmail": []
+    },
+    "opportunities": {
+      "byId": [],
+      "byEmail": []
+    },
+    "applications": {
+      "byId": [],
+      "byEmail": []
+    },
+    "matches": {
+      "byId": [],
+      "byEmail": []
+    },
+    "notifications": {
+      "byId": [],
+      "byEmail": []
+    },
+    "connections": {
+      "byId": [],
+      "byEmail": []
+    },
+    "messages": {
+      "byId": [],
+      "byEmail": []
+    },
+    "audit": {
+      "byId": [],
+      "byEmail": []
+    },
+    "sessions": {
+      "byId": [],
+      "byEmail": []
+    },
+    "contracts": {
+      "byId": [],
+      "byEmail": []
+    }
+  },
+  "incompleteProfiles": {
+    "users": [],
+    "companies": []
+  },
+  "orphans": {
+    "applications": [],
+    "matches": [],
+    "notifications": [],
+    "connections": [],
+    "messages": [],
+    "contracts": [],
+    "opportunities": []
+  },
+  "inconsistentSectors": [],
+  "inconsistentSkills": [
+    {
+      "value": "Platform Administration"
+    },
+    {
+      "value": "Engineering Consulting"
+    },
+    {
+      "value": "Design Review"
+    }
+  ],
+  "inconsistentLocations": [
+    {
+      "value": "Saudi Arabia > Tabuk > NEOM > The Line"
+    },
+    {
+      "value": "Saudi Arabia > Riyadh > Riyadh City > King Fahd District"
+    },
+    {
+      "value": "Saudi Arabia > Eastern Province > Jubail"
+    },
+    {
+      "value": "United Arab Emirates > Dubai > Dubai > Business Bay"
+    },
+    {
+      "value": "Saudi Arabia > Eastern Province > Al Khobar"
+    },
+    {
+      "value": "Saudi Arabia > Makkah > Makkah City"
+    },
+    {
+      "value": "Saudi Arabia > Asir > Abha"
+    },
+    {
+      "value": "Saudi Arabia > Makkah > Jeddah > Al Balad"
+    },
+    {
+      "value": "Qatar > Doha > Doha > West Bay"
+    },
+    {
+      "value": "Saudi Arabia > Eastern Province > Dammam"
+    },
+    {
+      "value": "Saudi Arabia > Tabuk > Tabuk City"
+    },
+    {
+      "value": "Kuwait > Al Asimah > Kuwait City"
+    }
+  ],
+  "unusedTables": [
+    {
+      "key": "subscription_plans",
+      "note": "No seed file"
+    },
+    {
+      "key": "subscriptions",
+      "note": "No seed file"
+    }
+  ],
+  "domainCounts": {
+    "users": 9,
+    "companies": 4,
+    "opportunities": 24,
+    "applications": 7,
+    "matches": 7,
+    "notifications": 11,
+    "connections": 16,
+    "messages": 0,
+    "audit": 12,
+    "sessions": 0,
+    "contracts": 3
+  }
+}

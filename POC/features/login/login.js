@@ -4,6 +4,8 @@
 
 const DEMO_CREDENTIALS = [
     { type: 'Admin', email: 'admin@pmtwin.com', password: 'admin123' },
+    { type: 'Professional (pending)', email: 'youssef.rashid@email.com', password: 'password123' },
+    { type: 'Professional (pending)', email: 'maha.otaibi@email.com', password: 'password123' },
     { type: 'Company', email: 'info@alkhorayef.com', password: 'password123' },
     { type: 'Company', email: 'contact@saudibinladin.com', password: 'password123' },
     { type: 'Company', email: 'info@almabani.com', password: 'password123' },
@@ -12,7 +14,10 @@ const DEMO_CREDENTIALS = [
     { type: 'Professional', email: 'fatima.almutairi@email.com', password: 'password123' },
     { type: 'Professional', email: 'mohammed.alqahtani@email.com', password: 'password123' },
     { type: 'Consultant', email: 'sara.alzahrani@email.com', password: 'password123' },
-    { type: 'Professional', email: 'khalid.alharbi@email.com', password: 'password123' }
+    { type: 'Professional', email: 'khalid.alharbi@email.com', password: 'password123' },
+    { type: 'Professional', email: 'noura.alsaud@email.com', password: 'password123' },
+    { type: 'Professional', email: 'omar.almansour@email.com', password: 'password123' },
+    { type: 'Professional', email: 'layla.ibrahim@email.com', password: 'password123' }
 ];
 
 function initLogin() {
@@ -20,6 +25,18 @@ function initLogin() {
     const errorDiv = document.getElementById('login-error');
     
     if (!loginForm) return;
+
+    const flash = sessionStorage.getItem('pmtwin_flash');
+    if (flash) {
+        try {
+            const { type, message } = JSON.parse(flash);
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+        } catch (_) {}
+        sessionStorage.removeItem('pmtwin_flash');
+    }
     
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -37,9 +54,18 @@ function initLogin() {
             if (result) {
                 // Update navigation
                 await layoutService.updateNavigation();
-                
-                // Redirect to dashboard
-                router.navigate(CONFIG.ROUTES.DASHBOARD);
+                // Redirect to profile if incomplete (demo flow: Profile setup then Dashboard)
+                const user = authService.getCurrentUser();
+                const profile = user?.profile || {};
+                const isCompany = (user?.profile?.type === 'company') || (authService.isCompanyUser && authService.isCompanyUser());
+                const hasSkills = Array.isArray(profile.skills) ? profile.skills.length > 0 : !!(profile.skills || '').toString().trim();
+                const hasSectors = Array.isArray(profile.sectors) ? profile.sectors.length > 0 : !!(profile.sectors || profile.industry || '').toString().trim();
+                const profileIncomplete = isCompany ? !hasSectors : !hasSkills;
+                if (profileIncomplete && CONFIG.ROUTES.PROFILE) {
+                    router.navigate(CONFIG.ROUTES.PROFILE);
+                } else {
+                    router.navigate(CONFIG.ROUTES.DASHBOARD);
+                }
             }
         } catch (error) {
             // Show error

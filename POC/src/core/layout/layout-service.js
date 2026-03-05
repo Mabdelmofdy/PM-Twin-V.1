@@ -159,6 +159,7 @@ class LayoutService {
 
         const links = [
             { route: CONFIG.ROUTES.DASHBOARD, label: 'Dashboard', icon: 'ph-duotone ph-house' },
+            ...(this.authService.isCompanyUser && this.authService.isCompanyUser() ? [{ route: CONFIG.ROUTES.COMPANY_DASHBOARD, label: 'Company dashboard', icon: 'ph-duotone ph-buildings' }] : []),
             { route: CONFIG.ROUTES.OPPORTUNITIES, label: 'Opportunities', icon: 'ph-duotone ph-briefcase' },
             { route: '/pipeline', label: 'Pipeline', icon: 'ph-duotone ph-git-branch' },
             { route: CONFIG.ROUTES.CONTRACTS, label: 'Contracts', icon: 'ph-duotone ph-file-text' },
@@ -231,6 +232,7 @@ class LayoutService {
         adminLinks.push({ route: CONFIG.ROUTES.ADMIN_REPORTS, label: 'Reports', icon: 'ph-duotone ph-chart-bar' });
         adminLinks.push({ route: CONFIG.ROUTES.ADMIN_MATCHING, label: 'Matching', icon: 'ph-duotone ph-graph' });
         if (isFullAdmin) {
+            adminLinks.push({ route: CONFIG.ROUTES.ADMIN_SKILLS, label: 'Skills & Categories', icon: 'ph-duotone ph-tag' });
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_SETTINGS, label: 'Settings', icon: 'ph-duotone ph-gear' });
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_SUBSCRIPTIONS, label: 'Subscriptions', icon: 'ph-duotone ph-credit-card' });
             adminLinks.push({ route: CONFIG.ROUTES.ADMIN_COLLABORATION_MODELS, label: 'Collaboration Models', icon: 'ph-duotone ph-stack' });

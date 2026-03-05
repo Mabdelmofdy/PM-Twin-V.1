@@ -573,6 +573,26 @@ function renderReviewIndividual() {
     `;
 }
 
+async function notifyAdminsOfNewRegistration(entityName) {
+    try {
+        const allUsers = await dataService.getUsers();
+        const adminRoles = [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR];
+        const admins = allUsers.filter(u => adminRoles.includes(u.role));
+        const vettingRoute = (CONFIG.ROUTES && CONFIG.ROUTES.ADMIN_VETTING) || '/admin/vetting';
+        await Promise.all(admins.map(admin =>
+            dataService.createNotification({
+                userId: admin.id,
+                type: 'new_registration_pending',
+                title: 'New Registration Pending',
+                message: `${entityName} has registered and requires approval.`,
+                link: vettingRoute
+            })
+        ));
+    } catch (e) {
+        console.warn('Could not send admin registration notifications', e);
+    }
+}
+
 async function submitCompany() {
     syncRegStateFromForm();
     const companyPrefEl = document.getElementById('reg-company-preferred-models');
@@ -600,6 +620,7 @@ async function submitCompany() {
             primaryDomain: regState.primaryDomain || null,
             expertiseAreas: regState.expertiseAreas || []
         });
+        await notifyAdminsOfNewRegistration('Company: ' + (regState.companyName || regState.email));
         showRegSuccess('Account created successfully. Your account is pending admin approval. You will receive an email once approved. Redirecting to login...');
         setTimeout(() => router.navigate(CONFIG.ROUTES.LOGIN), 3000);
     } catch (err) {
@@ -641,6 +662,7 @@ async function submitIndividual() {
             mobileVerified: true,
             preferredCollaborationModels: regState.preferredCollaborationModels || []
         });
+        await notifyAdminsOfNewRegistration((regState.fullName || regState.email) + (regState.fullName && regState.email ? ' (' + regState.email + ')' : ''));
         showRegSuccess('Account created successfully. Your account is pending admin approval. You will receive an email once approved. Redirecting to login...');
         setTimeout(() => router.navigate(CONFIG.ROUTES.LOGIN), 3000);
     } catch (err) {

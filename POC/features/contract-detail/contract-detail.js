@@ -151,11 +151,17 @@ async function initContractDetail(params) {
         const canEditContract = isCreator && (contract.status === 'pending' || contract.status === 'active');
         const oppStatus = opportunity ? opportunity.status : '';
         const showManageExecution = ['contracted', 'in_execution', 'completed'].indexOf(oppStatus) !== -1;
+        const milestones = contract.milestones || [];
+        const allMilestonesDone = milestones.length === 0 || milestones.every(m => m.status === 'completed');
+        const canCloseContract = isCreator && contract.status === 'active' && allMilestonesDone;
         const actionsEl = document.getElementById('contract-detail-actions');
         if (actionsEl) {
             let actionsHtml = '';
             if (canEditContract) {
                 actionsHtml += `<button type="button" id="contract-edit-btn" class="btn btn-secondary no-print" data-contract-id="${escapeHtml(contract.id)}">Edit contract</button>`;
+            }
+            if (canCloseContract) {
+                actionsHtml += `<button type="button" id="contract-close-btn" class="btn btn-primary no-print">Close contract</button>`;
             }
             if (showManageExecution && oppId) {
                 actionsHtml += `<a href="#" data-route="/opportunities/${escapeHtml(oppId)}" class="btn btn-primary">Manage execution</a>`;
@@ -164,6 +170,8 @@ async function initContractDetail(params) {
             actionsEl.innerHTML = actionsHtml;
         }
 
+        document.getElementById('contract-close-btn')?.addEventListener('click', () => closeContract(contractId, contract.opportunityId, oppStatus));
+
         document.getElementById('contract-edit-btn')?.addEventListener('click', () => {
             showEditContractModal(contractId, contract.scope || '', contract.duration || '');
         });
@@ -171,6 +179,42 @@ async function initContractDetail(params) {
         document.getElementById('contract-print-btn')?.addEventListener('click', () => {
             window.print();
         });
+
+        // Reviews section: show when contract/opportunity is completed
+        const contractCompleted = contract.status === 'completed' || oppStatus === 'completed';
+        const reviewsSection = document.getElementById('contract-reviews-section');
+        const reviewsListEl = document.getElementById('contract-reviews-list');
+        const leaveReviewEl = document.getElementById('contract-leave-review');
+        if (reviewsSection && reviewsListEl && leaveReviewEl) {
+            const contractReviews = await dataService.getReviewsByContractId(contractId);
+            const minRating = (typeof CONFIG !== 'undefined' && CONFIG.REVIEW_RATING_MIN) ? CONFIG.REVIEW_RATING_MIN : 1;
+            const maxRating = (typeof CONFIG !== 'undefined' && CONFIG.REVIEW_RATING_MAX) ? CONFIG.REVIEW_RATING_MAX : 5;
+
+            if (contractCompleted || contractReviews.length > 0) {
+                reviewsSection.style.display = 'block';
+                const reviewRows = await Promise.all(contractReviews.map(async (r) => {
+                    const reviewer = await dataService.getUserOrCompanyById(r.reviewerId);
+                    const reviewerName = reviewer?.profile?.name || reviewer?.email || r.reviewerId;
+                    return `<div class="review-item"><strong>${escapeHtml(reviewerName)}</strong> — ${r.rating}/${maxRating}${r.comment ? '<br/><span class="text-muted">' + escapeHtml(r.comment) + '</span>' : ''}<br/><span class="text-muted small">${formatDate(r.createdAt)}</span></div>`;
+                }));
+                reviewsListEl.innerHTML = reviewRows.length ? reviewRows.join('') : '<p class="text-muted">No reviews yet.</p>';
+
+                const otherPartyId = contract.creatorId === user.id ? contract.contractorId : contract.creatorId;
+                const otherPartyName = contract.creatorId === user.id ? contractorName : creatorName;
+                const myReview = await dataService.getReviewByContractAndReviewer(contractId, user.id);
+                if (contractCompleted && otherPartyId && !myReview) {
+                    leaveReviewEl.style.display = 'block';
+                    leaveReviewEl.innerHTML = `<button type="button" id="contract-leave-review-btn" class="btn btn-primary">Leave a review</button>`;
+                    document.getElementById('contract-leave-review-btn')?.addEventListener('click', () => {
+                        showLeaveReviewModal(contractId, contract.opportunityId, user.id, otherPartyId, otherPartyName, minRating, maxRating);
+                    });
+                } else {
+                    leaveReviewEl.style.display = 'none';
+                }
+            } else {
+                reviewsSection.style.display = 'none';
+            }
+        }
 
         wireBackLink(contentEl);
         contentEl.querySelectorAll('a[data-route]').forEach((link) => {
@@ -256,6 +300,106 @@ async function saveContractEdit(contractId, scope, duration) {
     } catch (err) {
         console.error('Error updating contract:', err);
         alert('Failed to update contract. Please try again.');
+    }
+}
+
+function showLeaveReviewModal(contractId, opportunityId, reviewerId, revieweeId, revieweeName, minRating, maxRating) {
+    const ratingOptions = [];
+    for (let i = minRating; i <= maxRating; i++) {
+        ratingOptions.push(`<option value="${i}">${i} star${i > 1 ? 's' : ''}</option>`);
+    }
+    const contentHTML = `
+        <form id="review-form" class="space-y-3">
+            <p class="text-muted small">You are reviewing <strong>${escapeHtml(revieweeName || '')}</strong> for this completed collaboration.</p>
+            <div>
+                <label for="review-rating" class="block text-sm font-medium text-gray-700 mb-1">Rating (${minRating}-${maxRating}) <span class="text-red-500">*</span></label>
+                <select id="review-rating" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                    <option value="">Select rating</option>
+                    ${ratingOptions.join('')}
+                </select>
+            </div>
+            <div>
+                <label for="review-comment" class="block text-sm font-medium text-gray-700 mb-1">Comment (optional)</label>
+                <textarea id="review-comment" class="w-full px-3 py-2 border border-gray-300 rounded-md" rows="3" placeholder="Share your experience..."></textarea>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" id="review-submit" class="btn btn-primary">Submit review</button>
+                <button type="button" id="review-cancel" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    `;
+
+    if (typeof modalService === 'undefined') {
+        const ratingStr = prompt(`Rating (${minRating}-${maxRating}):`, String(maxRating));
+        if (ratingStr === null) return;
+        const rating = parseInt(ratingStr, 10);
+        if (isNaN(rating) || rating < minRating || rating > maxRating) {
+            alert(`Please enter a number between ${minRating} and ${maxRating}.`);
+            return;
+        }
+        submitReview(contractId, opportunityId, reviewerId, revieweeId, rating, '');
+        return;
+    }
+
+    modalService.showCustom(contentHTML, 'Leave a review', { confirmText: 'Close' }).then(() => {});
+
+    const modalEl = document.getElementById('modal-container');
+    if (!modalEl) return;
+
+    const submitBtn = modalEl.querySelector('#review-submit');
+    const cancelBtn = modalEl.querySelector('#review-cancel');
+    const ratingSelect = modalEl.querySelector('#review-rating');
+    const commentInput = modalEl.querySelector('#review-comment');
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', async () => {
+            const rating = ratingSelect?.value != null ? parseInt(ratingSelect.value, 10) : NaN;
+            const comment = commentInput?.value != null ? String(commentInput.value).trim() : '';
+            if (isNaN(rating) || rating < minRating || rating > maxRating) {
+                alert(`Please select a rating between ${minRating} and ${maxRating}.`);
+                return;
+            }
+            modalService.close();
+            await submitReview(contractId, opportunityId, reviewerId, revieweeId, rating, comment);
+        });
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => modalService.close());
+    }
+}
+
+async function submitReview(contractId, opportunityId, reviewerId, revieweeId, rating, comment) {
+    try {
+        await dataService.createReview({
+            contractId,
+            opportunityId: opportunityId || null,
+            reviewerId,
+            revieweeId,
+            rating,
+            comment: comment || undefined
+        });
+        if (typeof initContractDetail === 'function') {
+            await initContractDetail({ id: contractId });
+        }
+    } catch (err) {
+        console.error('Error submitting review:', err);
+        alert('Failed to submit review. Please try again.');
+    }
+}
+
+async function closeContract(contractId, opportunityId, oppStatus) {
+    if (!confirm('Close this contract? This marks the contract as completed. The linked opportunity will also be marked completed if it is in execution.')) return;
+    try {
+        await dataService.updateContract(contractId, { status: 'completed' });
+        if (opportunityId && oppStatus === 'in_execution') {
+            await dataService.updateOpportunity(opportunityId, { status: 'completed' });
+        }
+        if (typeof initContractDetail === 'function') {
+            await initContractDetail({ id: contractId });
+        }
+    } catch (err) {
+        console.error('Error closing contract:', err);
+        alert('Failed to close contract. Please try again.');
     }
 }
 

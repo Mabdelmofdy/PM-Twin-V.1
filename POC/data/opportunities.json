@@ -12,17 +12,35 @@
       "status": "published",
       "location": "Saudi Arabia > Tabuk > NEOM > The Line",
       "locationCountry": "sa",
-      "locationRegion": "tabuk",
-      "locationCity": "neom",
+      "locationRegion": "Tabuk",
+      "locationCity": "NEOM",
       "locationDistrict": "The Line",
-      "latitude": 27.9500,
-      "longitude": 35.3000,
+      "latitude": 27.95,
+      "longitude": 35.3,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Marine Construction", "Infrastructure Development", "Utilities Engineering", "Road Construction", "Project Management", "Mega Project Experience"],
-        "sectors": ["Infrastructure", "Construction", "Utilities"],
-        "certifications": ["ISO 9001", "ISO 14001", "ISO 45001", "PMP"]
+        "requiredSkills": [
+          "Marine Construction",
+          "Infrastructure Development",
+          "Utilities Engineering",
+          "Road Construction",
+          "Project Management",
+          "Mega Project Experience"
+        ],
+        "sectors": [
+          "Infrastructure",
+          "Construction",
+          "Utilities"
+        ],
+        "certifications": [
+          "ISO 9001",
+          "ISO 14001",
+          "ISO 45001",
+          "PMP"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -41,10 +59,22 @@
         "leadMember": true,
         "requiredMembers": 4,
         "memberRoles": [
-          {"role": "Marine Works Contractor", "scope": "Port and coastal infrastructure including breakwaters, quay walls, and dredging works"},
-          {"role": "Utilities Contractor", "scope": "Water supply networks, electrical distribution, telecommunications infrastructure, and wastewater systems"},
-          {"role": "Roads Contractor", "scope": "Primary and secondary road networks, bridges, tunnels, and associated drainage"},
-          {"role": "Landscaping Contractor", "scope": "Green spaces, environmental works, and public realm development"}
+          {
+            "role": "Marine Works Contractor",
+            "scope": "Port and coastal infrastructure including breakwaters, quay walls, and dredging works"
+          },
+          {
+            "role": "Utilities Contractor",
+            "scope": "Water supply networks, electrical distribution, telecommunications infrastructure, and wastewater systems"
+          },
+          {
+            "role": "Roads Contractor",
+            "scope": "Primary and secondary road networks, bridges, tunnels, and associated drainage"
+          },
+          {
+            "role": "Landscaping Contractor",
+            "scope": "Green spaces, environmental works, and public realm development"
+          }
         ],
         "scopeDivision": "By Trade",
         "liabilityStructure": "Joint & Several",
@@ -52,19 +82,38 @@
         "tenderDeadline": "2026-03-15",
         "prequalificationRequired": true,
         "minimumRequirements": [
-          {"requirement": "Contractor Grade 1 Classification from Saudi Contractors Authority"},
-          {"requirement": "Minimum 5 years experience in mega infrastructure projects valued at 100M+ SAR"},
-          {"requirement": "Financial capability demonstrating ability to handle 100M+ SAR project value"},
-          {"requirement": "ISO 9001, ISO 14001, and ISO 45001 certifications"},
-          {"requirement": "Proven track record in similar marine/utilities/road projects"}
+          {
+            "requirement": "Contractor Grade 1 Classification from Saudi Contractors Authority"
+          },
+          {
+            "requirement": "Minimum 5 years experience in mega infrastructure projects valued at 100M+ SAR"
+          },
+          {
+            "requirement": "Financial capability demonstrating ability to handle 100M+ SAR project value"
+          },
+          {
+            "requirement": "ISO 9001, ISO 14001, and ISO 45001 certifications"
+          },
+          {
+            "requirement": "Proven track record in similar marine/utilities/road projects"
+          }
         ],
         "consortiumAgreement": true,
         "paymentDistribution": "Per Scope",
-        "requiredSkills": ["Marine Construction", "Infrastructure Development", "Utilities Engineering", "Road Construction", "Project Management", "Mega Project Experience"]
+        "requiredSkills": [
+          "Marine Construction",
+          "Infrastructure Development",
+          "Utilities Engineering",
+          "Road Construction",
+          "Project Management",
+          "Mega Project Experience"
+        ]
       },
       "createdAt": "2026-01-10T08:00:00.000Z",
       "updatedAt": "2026-01-10T08:00:00.000Z",
-      "isSample": true
+      "isSample": true,
+      "intent": "request",
+      "collaborationModel": "consortium"
     },
     {
       "id": "opp-002",
@@ -77,17 +126,34 @@
       "status": "published",
       "location": "Saudi Arabia > Riyadh > Riyadh City > King Fahd District",
       "locationCountry": "sa",
-      "locationRegion": "riyadh",
-      "locationCity": "riyadh-city",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
       "locationDistrict": "King Fahd District",
       "latitude": 24.7136,
       "longitude": 46.6753,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Structural Analysis", "SAP2000", "ETABS", "Underground Structures", "Seismic Design", "Reinforced Concrete Design", "Steel Design"],
-        "sectors": ["Infrastructure", "Transportation", "Construction"],
-        "certifications": ["PE", "PMP"]
+        "requiredSkills": [
+          "Structural Analysis",
+          "SAP2000",
+          "ETABS",
+          "Underground Structures",
+          "Seismic Design",
+          "Reinforced Concrete Design",
+          "Steel Design"
+        ],
+        "sectors": [
+          "Infrastructure",
+          "Transportation",
+          "Construction"
+        ],
+        "certifications": [
+          "PE",
+          "PMP"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -103,21 +169,52 @@
         "employmentType": "Contract",
         "contractDuration": 24,
         "jobDescription": "Lead structural design and analysis for metro station structures including underground stations, elevated sections, and transition zones. Coordinate with MEP and architectural teams to ensure integrated design solutions. Review contractor submissions and provide technical oversight during construction. Prepare technical reports, calculations, and design documentation. Participate in design review meetings and client presentations.",
-        "requiredQualifications": ["BSc Civil/Structural Engineering", "PE or equivalent professional registration", "Master's degree preferred"],
+        "requiredQualifications": [
+          "BSc Civil/Structural Engineering",
+          "PE or equivalent professional registration",
+          "Master's degree preferred"
+        ],
         "requiredExperience": 10,
-        "requiredSkills": ["Structural Analysis", "SAP2000", "ETABS", "Underground Structures", "Seismic Design", "Reinforced Concrete Design", "Steel Design"],
-        "preferredSkills": ["Metro/Transit Experience", "Arabic Language", "BIM/Revit", "Tunnel Design"],
+        "requiredSkills": [
+          "Structural Analysis",
+          "SAP2000",
+          "ETABS",
+          "Underground Structures",
+          "Seismic Design",
+          "Reinforced Concrete Design",
+          "Steel Design"
+        ],
+        "preferredSkills": [
+          "Metro/Transit Experience",
+          "Arabic Language",
+          "BIM/Revit",
+          "Tunnel Design"
+        ],
         "location": "Riyadh, Saudi Arabia",
         "workMode": "On-Site",
-        "salaryRange": {"min": 35000, "max": 50000, "currency": "SAR", "period": "monthly"},
-        "benefits": ["Housing Allowance", "Transportation", "Medical Insurance", "Annual Tickets", "Professional Development", "Performance Bonus"],
+        "salaryRange": {
+          "min": 35000,
+          "max": 50000,
+          "currency": "SAR",
+          "period": "monthly"
+        },
+        "benefits": [
+          "Housing Allowance",
+          "Transportation",
+          "Medical Insurance",
+          "Annual Tickets",
+          "Professional Development",
+          "Performance Bonus"
+        ],
         "startDate": "2026-03-01",
         "reportingTo": "Project Director",
         "teamSize": 8,
         "applicationDeadline": "2026-02-15"
       },
       "createdAt": "2026-01-12T09:00:00.000Z",
-      "updatedAt": "2026-01-12T09:00:00.000Z"
+      "updatedAt": "2026-01-12T09:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-003",
@@ -129,17 +226,31 @@
       "status": "in_execution",
       "location": "Saudi Arabia > Eastern Province > Jubail",
       "locationCountry": "sa",
-      "locationRegion": "eastern-province",
-      "locationCity": "jubail",
+      "locationRegion": "Eastern Province",
+      "locationCity": "Jubail",
       "locationDistrict": "",
       "latitude": 27.0046,
       "longitude": 49.6225,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Procurement", "Steel Fabrication", "Supply Chain Management", "Quality Control", "Materials Management"],
-        "sectors": ["Construction", "Manufacturing", "Industrial"],
-        "certifications": ["ISO 9001"]
+        "requiredSkills": [
+          "Procurement",
+          "Steel Fabrication",
+          "Supply Chain Management",
+          "Quality Control",
+          "Materials Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Manufacturing",
+          "Industrial"
+        ],
+        "certifications": [
+          "ISO 9001"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -157,7 +268,10 @@
         "targetPrice": 3500,
         "currentMarketPrice": 4200,
         "expectedSavings": 17,
-        "deliveryTimeline": {"start": "2026-04-01", "end": "2026-06-30"},
+        "deliveryTimeline": {
+          "start": "2026-04-01",
+          "end": "2026-06-30"
+        },
         "deliveryLocation": "Central Warehouse, Jubail Industrial City",
         "paymentStructure": "Escrow",
         "participantsNeeded": 8,
@@ -165,10 +279,18 @@
         "leadOrganizer": true,
         "supplier": "SABIC / Rajhi Steel",
         "distributionMethod": "Centralized Pickup",
-        "requiredSkills": ["Procurement", "Steel Fabrication", "Supply Chain Management", "Quality Control", "Materials Management"]
+        "requiredSkills": [
+          "Procurement",
+          "Steel Fabrication",
+          "Supply Chain Management",
+          "Quality Control",
+          "Materials Management"
+        ]
       },
       "createdAt": "2026-01-14T10:00:00.000Z",
-      "updatedAt": "2026-01-14T10:00:00.000Z"
+      "updatedAt": "2026-01-14T10:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-004",
@@ -180,17 +302,34 @@
       "status": "published",
       "location": "Saudi Arabia > Riyadh > Riyadh City > King Fahd District",
       "locationCountry": "sa",
-      "locationRegion": "riyadh",
-      "locationCity": "riyadh-city",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
       "locationDistrict": "King Fahd District",
       "latitude": 24.7136,
       "longitude": 46.6753,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Architectural Design", "Sustainable Design", "LEED Certification", "High-Rise Design", "3D Visualization", "BIM", "Energy Modeling"],
-        "sectors": ["Real Estate", "Construction", "Architecture"],
-        "certifications": ["LEED AP", "LEED AP BD+C"]
+        "requiredSkills": [
+          "Architectural Design",
+          "Sustainable Design",
+          "LEED Certification",
+          "High-Rise Design",
+          "3D Visualization",
+          "BIM",
+          "Energy Modeling"
+        ],
+        "sectors": [
+          "Real Estate",
+          "Construction",
+          "Architecture"
+        ],
+        "certifications": [
+          "LEED AP",
+          "LEED AP BD+C"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -207,21 +346,59 @@
         "participantType": "Both",
         "competitionFormat": "Open to All",
         "eligibilityCriteria": [
-          {"criteria": "Licensed architectural firm or registered architect with valid professional license"},
-          {"criteria": "Portfolio demonstrating at least 3 completed high-rise projects (30+ stories)"},
-          {"criteria": "LEED or equivalent green building certification experience"},
-          {"criteria": "Minimum 5 years professional practice"},
-          {"criteria": "Financial capability to complete design work"}
+          {
+            "criteria": "Licensed architectural firm or registered architect with valid professional license"
+          },
+          {
+            "criteria": "Portfolio demonstrating at least 3 completed high-rise projects (30+ stories)"
+          },
+          {
+            "criteria": "LEED or equivalent green building certification experience"
+          },
+          {
+            "criteria": "Minimum 5 years professional practice"
+          },
+          {
+            "criteria": "Financial capability to complete design work"
+          }
         ],
-        "submissionRequirements": ["Concept Design", "3D Renderings", "Sustainability Report", "Cost Estimate", "Technical Drawings", "Presentation Materials"],
+        "submissionRequirements": [
+          "Concept Design",
+          "3D Renderings",
+          "Sustainability Report",
+          "Cost Estimate",
+          "Technical Drawings",
+          "Presentation Materials"
+        ],
         "evaluationCriteria": [
-          {"criteria": "Design Innovation", "weight": 30},
-          {"criteria": "Sustainability Features", "weight": 25},
-          {"criteria": "Functionality", "weight": 20},
-          {"criteria": "Cost Efficiency", "weight": 15},
-          {"criteria": "Cultural Integration", "weight": 10}
+          {
+            "criteria": "Design Innovation",
+            "weight": 30
+          },
+          {
+            "criteria": "Sustainability Features",
+            "weight": 25
+          },
+          {
+            "criteria": "Functionality",
+            "weight": 20
+          },
+          {
+            "criteria": "Cost Efficiency",
+            "weight": 15
+          },
+          {
+            "criteria": "Cultural Integration",
+            "weight": 10
+          }
         ],
-        "evaluationWeights": [30, 25, 20, 15, 10],
+        "evaluationWeights": [
+          30,
+          25,
+          20,
+          15,
+          10
+        ],
         "prizeContractValue": 5000000,
         "numberOfWinners": 3,
         "submissionDeadline": "2026-04-30",
@@ -229,10 +406,20 @@
         "competitionRules": "All submissions become property of the organizer. Winner will be awarded the full design contract. Top 3 finalists receive cash prizes. Submissions must be original work. No collaboration between participants allowed.",
         "intellectualProperty": "Winner Transfers",
         "submissionFee": 5000,
-        "requiredSkills": ["Architectural Design", "Sustainable Design", "LEED Certification", "High-Rise Design", "3D Visualization", "BIM", "Energy Modeling"]
+        "requiredSkills": [
+          "Architectural Design",
+          "Sustainable Design",
+          "LEED Certification",
+          "High-Rise Design",
+          "3D Visualization",
+          "BIM",
+          "Energy Modeling"
+        ]
       },
       "createdAt": "2026-01-15T11:00:00.000Z",
-      "updatedAt": "2026-01-15T11:00:00.000Z"
+      "updatedAt": "2026-01-15T11:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "project"
     },
     {
       "id": "opp-005",
@@ -250,11 +437,29 @@
       "latitude": 25.2048,
       "longitude": 55.2708,
       "exchangeMode": "hybrid",
-      "paymentModes": ["cash", "equity"],
+      "paymentModes": [
+        "cash",
+        "equity"
+      ],
       "scope": {
-        "requiredSkills": ["IoT Development", "Smart Building Systems", "AI/Machine Learning", "Software Development", "Cloud Computing", "Data Analytics", "Systems Integration"],
-        "sectors": ["Technology", "Construction", "Real Estate"],
-        "certifications": ["ISO 27001", "ISO 9001"]
+        "requiredSkills": [
+          "IoT Development",
+          "Smart Building Systems",
+          "AI/Machine Learning",
+          "Software Development",
+          "Cloud Computing",
+          "Data Analytics",
+          "Systems Integration"
+        ],
+        "sectors": [
+          "Technology",
+          "Construction",
+          "Real Estate"
+        ],
+        "certifications": [
+          "ISO 27001",
+          "ISO 9001"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "hybrid",
@@ -271,34 +476,74 @@
         "jvName": "Saudi Smart Infrastructure JV",
         "strategicObjective": "Establish market leadership in smart city infrastructure across Saudi giga-projects including NEOM, The Line, and Red Sea Project. Create a sustainable, long-term technology partnership that combines local market expertise with global technology innovation.",
         "businessScope": "IoT infrastructure, smart building systems, AI-powered facility management, and integrated city management platforms. Services include design, implementation, operation, and maintenance of smart city solutions.",
-        "targetSectors": ["Technology", "Construction", "Real Estate"],
-        "geographicScope": ["Saudi Arabia", "GCC"],
+        "targetSectors": [
+          "Technology",
+          "Construction",
+          "Real Estate"
+        ],
+        "geographicScope": [
+          "Saudi Arabia",
+          "GCC"
+        ],
         "duration": "15-20 years",
         "jvStructure": "Incorporated LLC",
-        "equitySplit": [60, 40],
+        "equitySplit": [
+          60,
+          40
+        ],
         "initialCapital": 50000000,
         "ongoingFunding": "Mixed",
         "partnerContributions": [
-          {"partner": "Lead Partner", "contribution": "Market access, local expertise, government relations, project management, local workforce"},
-          {"partner": "Technology Partner", "contribution": "Technology IP, R&D capabilities, global expertise, software platforms, technical support"}
+          {
+            "partner": "Lead Partner",
+            "contribution": "Market access, local expertise, government relations, project management, local workforce"
+          },
+          {
+            "partner": "Technology Partner",
+            "contribution": "Technology IP, R&D capabilities, global expertise, software platforms, technical support"
+          }
         ],
         "managementStructure": "Management Committee",
         "governance": "Board of Directors with equal representation. Major decisions require unanimous consent. Day-to-day operations managed by professional CEO. Strategic decisions require board approval.",
         "profitDistribution": "Proportional to Equity",
-        "exitOptions": ["Buyout", "IPO", "Sale to Third Party"],
+        "exitOptions": [
+          "Buyout",
+          "IPO",
+          "Sale to Third Party"
+        ],
         "nonCompete": true,
         "technologyTransfer": true,
         "partnerRequirements": [
-          {"requirement": "Proven smart city technology portfolio with at least 3 major implementations"},
-          {"requirement": "Annual revenue exceeding 100M USD"},
-          {"requirement": "R&D investment exceeding 10% of annual revenue"},
-          {"requirement": "International presence and proven track record"},
-          {"requirement": "Strong IP portfolio in IoT and smart building technologies"}
+          {
+            "requirement": "Proven smart city technology portfolio with at least 3 major implementations"
+          },
+          {
+            "requirement": "Annual revenue exceeding 100M USD"
+          },
+          {
+            "requirement": "R&D investment exceeding 10% of annual revenue"
+          },
+          {
+            "requirement": "International presence and proven track record"
+          },
+          {
+            "requirement": "Strong IP portfolio in IoT and smart building technologies"
+          }
         ],
-        "requiredSkills": ["IoT Development", "Smart Building Systems", "AI/Machine Learning", "Software Development", "Cloud Computing", "Data Analytics", "Systems Integration"]
+        "requiredSkills": [
+          "IoT Development",
+          "Smart Building Systems",
+          "AI/Machine Learning",
+          "Software Development",
+          "Cloud Computing",
+          "Data Analytics",
+          "Systems Integration"
+        ]
       },
       "createdAt": "2026-01-16T08:00:00.000Z",
-      "updatedAt": "2026-01-16T08:00:00.000Z"
+      "updatedAt": "2026-01-16T08:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "advisory"
     },
     {
       "id": "opp-006",
@@ -310,17 +555,30 @@
       "status": "published",
       "location": "Saudi Arabia > Eastern Province > Al Khobar",
       "locationCountry": "sa",
-      "locationRegion": "eastern-province",
+      "locationRegion": "Eastern Province",
       "locationCity": "khobar",
       "locationDistrict": "",
       "latitude": 26.2172,
       "longitude": 50.1971,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Heavy Equipment Operation", "Tower Crane Operation", "Equipment Maintenance", "Construction Site Management"],
-        "sectors": ["Construction", "Industrial"],
-        "certifications": ["OSHA", "ISO 45001"]
+        "requiredSkills": [
+          "Heavy Equipment Operation",
+          "Tower Crane Operation",
+          "Equipment Maintenance",
+          "Construction Site Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Industrial"
+        ],
+        "certifications": [
+          "OSHA",
+          "ISO 45001"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -339,10 +597,26 @@
         "equityPerOwner": 33.33,
         "initialInvestment": 3000000,
         "ongoingCosts": [
-          {"cost": "Maintenance", "amount": 50000, "frequency": "Annual per unit"},
-          {"cost": "Insurance", "amount": 30000, "frequency": "Annual per unit"},
-          {"cost": "Storage", "amount": 10000, "frequency": "Monthly when not in use"},
-          {"cost": "Operator", "amount": 15000, "frequency": "Monthly per unit when in use"}
+          {
+            "cost": "Maintenance",
+            "amount": 50000,
+            "frequency": "Annual per unit"
+          },
+          {
+            "cost": "Insurance",
+            "amount": 30000,
+            "frequency": "Annual per unit"
+          },
+          {
+            "cost": "Storage",
+            "amount": 10000,
+            "frequency": "Monthly when not in use"
+          },
+          {
+            "cost": "Operator",
+            "amount": 15000,
+            "frequency": "Monthly per unit when in use"
+          }
         ],
         "costSharing": "Proportional to Usage",
         "usageSchedule": "Booking System",
@@ -351,10 +625,17 @@
         "insurance": true,
         "exitStrategy": "Sell Share to Other Owners",
         "disputeResolution": "Arbitration",
-        "requiredSkills": ["Heavy Equipment Operation", "Tower Crane Operation", "Equipment Maintenance", "Construction Site Management"]
+        "requiredSkills": [
+          "Heavy Equipment Operation",
+          "Tower Crane Operation",
+          "Equipment Maintenance",
+          "Construction Site Management"
+        ]
       },
       "createdAt": "2026-01-17T09:00:00.000Z",
-      "updatedAt": "2026-01-17T09:00:00.000Z"
+      "updatedAt": "2026-01-17T09:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-007",
@@ -372,11 +653,28 @@
       "latitude": 21.4225,
       "longitude": 39.8262,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["LEED Certification", "Energy Modeling", "Sustainable Design", "Green Building", "Building Performance Analysis", "Documentation"],
-        "sectors": ["Construction", "Real Estate", "Energy"],
-        "certifications": ["LEED AP BD+C", "LEED AP", "WELL AP"]
+        "requiredSkills": [
+          "LEED Certification",
+          "Energy Modeling",
+          "Sustainable Design",
+          "Green Building",
+          "Building Performance Analysis",
+          "Documentation"
+        ],
+        "sectors": [
+          "Construction",
+          "Real Estate",
+          "Energy"
+        ],
+        "certifications": [
+          "LEED AP BD+C",
+          "LEED AP",
+          "WELL AP"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -390,21 +688,50 @@
         "consultationTitle": "LEED Platinum Certification Consultant",
         "consultationType": "Sustainability",
         "scopeOfWork": "Lead LEED certification process from design through construction. Coordinate with design team, review specifications, manage documentation, and interface with GBCI. Provide guidance on sustainable design strategies, energy modeling, material selection, and indoor environmental quality. Conduct site visits and prepare all required documentation for LEED submission.",
-        "deliverables": ["LEED Scorecard", "Credit Documentation", "Energy Model", "Commissioning Plan", "GBCI Submission", "Technical Reports", "Design Recommendations"],
+        "deliverables": [
+          "LEED Scorecard",
+          "Credit Documentation",
+          "Energy Model",
+          "Commissioning Plan",
+          "GBCI Submission",
+          "Technical Reports",
+          "Design Recommendations"
+        ],
         "duration": 18,
-        "requiredExpertise": ["LEED Certification", "Energy Modeling", "Green Building", "Sustainable Design", "Building Performance"],
-        "requiredCertifications": ["LEED AP BD+C"],
+        "requiredExpertise": [
+          "LEED Certification",
+          "Energy Modeling",
+          "Green Building",
+          "Sustainable Design",
+          "Building Performance"
+        ],
+        "requiredCertifications": [
+          "LEED AP BD+C"
+        ],
         "experienceLevel": "Expert",
         "locationRequirement": "Hybrid",
-        "budget": {"min": 300000, "max": 500000, "currency": "SAR"},
+        "budget": {
+          "min": 300000,
+          "max": 500000,
+          "currency": "SAR"
+        },
         "paymentTerms": "Milestone-Based",
         "startDate": "2026-02-15",
         "exchangeType": "Cash",
         "barterOffer": "",
-        "requiredSkills": ["LEED Certification", "Energy Modeling", "Sustainable Design", "Green Building", "Building Performance Analysis", "Documentation"]
+        "requiredSkills": [
+          "LEED Certification",
+          "Energy Modeling",
+          "Sustainable Design",
+          "Green Building",
+          "Building Performance Analysis",
+          "Documentation"
+        ]
       },
       "createdAt": "2026-01-18T10:00:00.000Z",
-      "updatedAt": "2026-01-18T10:00:00.000Z"
+      "updatedAt": "2026-01-18T10:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-008",
@@ -416,17 +743,32 @@
       "status": "published",
       "location": "Remote",
       "locationCountry": "remote",
-      "locationRegion": "remote",
+      "locationRegion": "Remote",
       "locationCity": "",
       "locationDistrict": "",
       "latitude": null,
       "longitude": null,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Bridge Design", "Cable Structures", "Seismic Analysis", "Structural Review", "Finite Element Analysis"],
-        "sectors": ["Infrastructure", "Transportation", "Engineering"],
-        "certifications": ["PE", "PMP"]
+        "requiredSkills": [
+          "Bridge Design",
+          "Cable Structures",
+          "Seismic Analysis",
+          "Structural Review",
+          "Finite Element Analysis"
+        ],
+        "sectors": [
+          "Infrastructure",
+          "Transportation",
+          "Engineering"
+        ],
+        "certifications": [
+          "PE",
+          "PMP"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -441,8 +783,18 @@
         "taskType": "Review",
         "detailedScope": "Comprehensive peer review of structural design calculations, drawings, and specifications for a 500m cable-stayed bridge. Review includes foundation design, deck structure, cable system, and seismic analysis. Provide detailed review report with recommendations and marked-up drawings.",
         "duration": 30,
-        "budgetRange": {"min": 150000, "max": 200000, "currency": "SAR"},
-        "requiredSkills": ["Bridge Design", "Cable Structures", "Seismic Analysis", "Structural Review", "Finite Element Analysis"],
+        "budgetRange": {
+          "min": 150000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "requiredSkills": [
+          "Bridge Design",
+          "Cable Structures",
+          "Seismic Analysis",
+          "Structural Review",
+          "Finite Element Analysis"
+        ],
         "experienceLevel": "Expert",
         "locationRequirement": "Remote",
         "startDate": "2026-02-01",
@@ -452,7 +804,9 @@
         "barterOffer": ""
       },
       "createdAt": "2026-01-19T11:00:00.000Z",
-      "updatedAt": "2026-01-19T11:00:00.000Z"
+      "updatedAt": "2026-01-19T11:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "project"
     },
     {
       "id": "opp-009",
@@ -470,11 +824,27 @@
       "latitude": 18.2164,
       "longitude": 42.5053,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "requiredSkills": ["Engineering Leadership", "Mentoring", "Technical Training", "Communication", "Project Management", "Professional Development"],
-        "sectors": ["Construction", "Engineering", "Education"],
-        "certifications": ["PE", "PMP"]
+        "requiredSkills": [
+          "Engineering Leadership",
+          "Mentoring",
+          "Technical Training",
+          "Communication",
+          "Project Management",
+          "Professional Development"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering",
+          "Education"
+        ],
+        "certifications": [
+          "PE",
+          "PMP"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -488,24 +858,54 @@
         "mentorshipTitle": "Vision 2030 Young Engineer Mentorship",
         "mentorshipType": "Career Development",
         "experienceLevel": "Entry-Level",
-        "targetSkills": ["Project Management", "Technical Writing", "Professional Development", "Industry Knowledge", "Communication Skills", "Problem Solving"],
+        "targetSkills": [
+          "Project Management",
+          "Technical Writing",
+          "Professional Development",
+          "Industry Knowledge",
+          "Communication Skills",
+          "Problem Solving"
+        ],
         "duration": 12,
         "frequency": "Bi-Weekly",
         "format": "Hybrid",
         "compensation": "Paid Monthly",
         "barterOffer": "",
         "mentorRequirements": [
-          {"requirement": "10+ years industry experience"},
-          {"requirement": "PE or equivalent certification"},
-          {"requirement": "Previous mentoring experience preferred"},
-          {"requirement": "Strong communication and teaching skills"}
+          {
+            "requirement": "10+ years industry experience"
+          },
+          {
+            "requirement": "PE or equivalent certification"
+          },
+          {
+            "requirement": "Previous mentoring experience preferred"
+          },
+          {
+            "requirement": "Strong communication and teaching skills"
+          }
         ],
         "menteeBackground": "Recent engineering graduates (0-2 years experience) from Saudi universities. Focus on civil, mechanical, and electrical engineering disciplines.",
-        "successMetrics": ["Mentee promotion/advancement", "Skill acquisition", "Professional network growth", "Certification achievement", "Job satisfaction"],
-        "requiredSkills": ["Engineering Leadership", "Mentoring", "Technical Training", "Communication", "Project Management", "Professional Development"]
+        "successMetrics": [
+          "Mentee promotion/advancement",
+          "Skill acquisition",
+          "Professional network growth",
+          "Certification achievement",
+          "Job satisfaction"
+        ],
+        "requiredSkills": [
+          "Engineering Leadership",
+          "Mentoring",
+          "Technical Training",
+          "Communication",
+          "Project Management",
+          "Professional Development"
+        ]
       },
       "createdAt": "2026-01-20T08:00:00.000Z",
-      "updatedAt": "2026-01-20T08:00:00.000Z"
+      "updatedAt": "2026-01-20T08:00:00.000Z",
+      "intent": "request",
+      "collaborationModel": "advisory"
     },
     {
       "id": "opp-010",
@@ -519,16 +919,34 @@
       "location": "Saudi Arabia > Makkah > Jeddah > Al Balad",
       "locationCountry": "sa",
       "locationRegion": "makkah",
-      "locationCity": "jeddah",
+      "locationCity": "Jeddah",
       "locationDistrict": "Al Balad",
       "latitude": 21.4858,
       "longitude": 39.1925,
       "exchangeMode": "barter",
-      "paymentModes": ["barter"],
+      "paymentModes": [
+        "barter"
+      ],
       "scope": {
-        "requiredSkills": ["Materials Management", "Inventory Control", "Logistics", "Construction Materials", "Procurement"],
-        "offeredSkills": ["Construction Materials", "Rebar", "Formwork", "Electrical Supplies", "MEP Materials"],
-        "sectors": ["Construction", "Manufacturing", "Industrial"],
+        "requiredSkills": [
+          "Materials Management",
+          "Inventory Control",
+          "Logistics",
+          "Construction Materials",
+          "Procurement"
+        ],
+        "offeredSkills": [
+          "Construction Materials",
+          "Rebar",
+          "Formwork",
+          "Electrical Supplies",
+          "MEP Materials"
+        ],
+        "sectors": [
+          "Construction",
+          "Manufacturing",
+          "Industrial"
+        ],
         "certifications": []
       },
       "exchangeData": {
@@ -548,17 +966,31 @@
         "unitOfMeasure": "Package",
         "condition": "Good",
         "location": "Jeddah, Saudi Arabia",
-        "availability": {"start": "2026-02-01", "end": "2026-04-30"},
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-04-30"
+        },
         "barterOffer": "Open to barter for: precast elements, ready-mix concrete credits, equipment rental credits, or professional services",
-        "barterPreferences": ["Materials", "Equipment", "Services"],
+        "barterPreferences": [
+          "Materials",
+          "Equipment",
+          "Services"
+        ],
         "delivery": "Buyer Pickup",
         "urgency": "Within 1 Month",
         "price": 0,
         "paymentTerms": "",
-        "requiredSkills": ["Materials Management", "Inventory Control", "Logistics", "Construction Materials", "Procurement"]
+        "requiredSkills": [
+          "Materials Management",
+          "Inventory Control",
+          "Logistics",
+          "Construction Materials",
+          "Procurement"
+        ]
       },
       "createdAt": "2026-01-21T09:00:00.000Z",
-      "updatedAt": "2026-01-21T09:00:00.000Z"
+      "updatedAt": "2026-01-21T09:00:00.000Z",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-011",
@@ -575,14 +1007,31 @@
       "locationCity": "doha",
       "locationDistrict": "West Bay",
       "latitude": 25.2854,
-      "longitude": 51.5310,
+      "longitude": 51.531,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "offeredSkills": ["Project Management", "Planning", "Scheduling", "Risk Management", "PMO", "Primavera P6", "MS Project"],
+        "offeredSkills": [
+          "Project Management",
+          "Planning",
+          "Scheduling",
+          "Risk Management",
+          "PMO",
+          "Primavera P6",
+          "MS Project"
+        ],
         "requiredSkills": [],
-        "sectors": ["Construction", "Infrastructure", "Engineering"],
-        "certifications": ["PMP", "PRINCE2"]
+        "sectors": [
+          "Construction",
+          "Infrastructure",
+          "Engineering"
+        ],
+        "certifications": [
+          "PMP",
+          "PRINCE2"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -596,20 +1045,40 @@
         "consultationTitle": "Project Management Consulting",
         "consultationType": "Advisory",
         "scopeOfWork": "Provide project management support including planning, scheduling, risk management, and PMO setup. On-site or remote. Flexible duration.",
-        "deliverables": ["Project Plans", "Schedules", "Risk Registers", "Status Reports", "PMO Documentation"],
+        "deliverables": [
+          "Project Plans",
+          "Schedules",
+          "Risk Registers",
+          "Status Reports",
+          "PMO Documentation"
+        ],
         "duration": 6,
-        "requiredExpertise": ["Project Management", "Construction", "Infrastructure"],
+        "requiredExpertise": [
+          "Project Management",
+          "Construction",
+          "Infrastructure"
+        ],
         "experienceLevel": "Expert",
         "locationRequirement": "Hybrid",
-        "budget": {"min": 150000, "max": 400000, "currency": "SAR"},
+        "budget": {
+          "min": 150000,
+          "max": 400000,
+          "currency": "SAR"
+        },
         "paymentTerms": "Monthly",
         "startDate": "2026-02-01",
         "exchangeType": "Cash",
         "barterOffer": "",
-        "requiredSkills": ["Project Management", "Planning", "Scheduling", "Risk Management"]
+        "requiredSkills": [
+          "Project Management",
+          "Planning",
+          "Scheduling",
+          "Risk Management"
+        ]
       },
       "createdAt": "2026-01-22T10:00:00.000Z",
-      "updatedAt": "2026-01-22T10:00:00.000Z"
+      "updatedAt": "2026-01-22T10:00:00.000Z",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-012",
@@ -623,17 +1092,32 @@
       "location": "Saudi Arabia > Eastern Province > Dammam",
       "locationCountry": "sa",
       "locationRegion": "eastern",
-      "locationCity": "dammam",
+      "locationCity": "Dammam",
       "locationDistrict": "",
       "latitude": 26.4207,
       "longitude": 50.0888,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "offeredSkills": ["Crane Operation", "Heavy Equipment", "Rigging", "Lifting", "Equipment Maintenance"],
+        "offeredSkills": [
+          "Crane Operation",
+          "Heavy Equipment",
+          "Rigging",
+          "Lifting",
+          "Equipment Maintenance"
+        ],
         "requiredSkills": [],
-        "sectors": ["Construction", "Industrial", "Oil and Gas"],
-        "certifications": ["OSHA", "Lifting Equipment"]
+        "sectors": [
+          "Construction",
+          "Industrial",
+          "Oil and Gas"
+        ],
+        "certifications": [
+          "OSHA",
+          "Lifting Equipment"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -651,10 +1135,15 @@
         "assetLocation": "Dammam Industrial Area",
         "maintenanceResponsibility": "Included",
         "insurance": true,
-        "requiredSkills": ["Crane Operation", "Heavy Equipment", "Rigging"]
+        "requiredSkills": [
+          "Crane Operation",
+          "Heavy Equipment",
+          "Rigging"
+        ]
       },
       "createdAt": "2026-01-22T11:00:00.000Z",
-      "updatedAt": "2026-01-22T11:00:00.000Z"
+      "updatedAt": "2026-01-22T11:00:00.000Z",
+      "collaborationModel": "service"
     },
     {
       "id": "opp-013",
@@ -667,18 +1156,34 @@
       "status": "published",
       "location": "Saudi Arabia > Tabuk > Tabuk City",
       "locationCountry": "sa",
-      "locationRegion": "tabuk",
+      "locationRegion": "Tabuk",
       "locationCity": "tabuk-city",
       "locationDistrict": "",
       "latitude": 28.3838,
-      "longitude": 36.5550,
+      "longitude": 36.555,
       "exchangeMode": "cash",
-      "paymentModes": ["cash"],
+      "paymentModes": [
+        "cash"
+      ],
       "scope": {
-        "offeredSkills": ["BIM", "Revit", "Navisworks", "3D Modeling", "Clash Detection", "4D/5D", "As-Built Documentation"],
+        "offeredSkills": [
+          "BIM",
+          "Revit",
+          "Navisworks",
+          "3D Modeling",
+          "Clash Detection",
+          "4D/5D",
+          "As-Built Documentation"
+        ],
         "requiredSkills": [],
-        "sectors": ["Construction", "Architecture", "Engineering"],
-        "certifications": ["Autodesk Certified"]
+        "sectors": [
+          "Construction",
+          "Architecture",
+          "Engineering"
+        ],
+        "certifications": [
+          "Autodesk Certified"
+        ]
       },
       "exchangeData": {
         "exchangeMode": "cash",
@@ -693,7 +1198,11 @@
         "taskType": "Design",
         "detailedScope": "BIM modeling, clash detection, 4D/5D simulation, and as-built documentation. Deliverables per agreed package.",
         "duration": 45,
-        "budgetRange": {"min": 50000, "max": 200000, "currency": "SAR"},
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
         "experienceLevel": "Expert",
         "locationRequirement": "Remote",
         "startDate": "2026-02-15",
@@ -701,10 +1210,16 @@
         "paymentTerms": "Upon Completion",
         "exchangeType": "Cash",
         "barterOffer": "",
-        "requiredSkills": ["BIM", "Revit", "Navisworks", "3D Modeling"]
+        "requiredSkills": [
+          "BIM",
+          "Revit",
+          "Navisworks",
+          "3D Modeling"
+        ]
       },
       "createdAt": "2026-01-22T12:00:00.000Z",
-      "updatedAt": "2026-01-22T12:00:00.000Z"
+      "updatedAt": "2026-01-22T12:00:00.000Z",
+      "collaborationModel": "project"
     },
     {
       "id": "opp-014",
@@ -723,11 +1238,25 @@
       "latitude": 29.3759,
       "longitude": 47.9774,
       "exchangeMode": "cash",
-      "paymentModes": ["cash", "equity"],
+      "paymentModes": [
+        "cash",
+        "equity"
+      ],
       "scope": {
-        "offeredSkills": ["Smart Building", "IoT", "AI/ML", "Software Platforms", "Systems Integration", "Data Analytics"],
+        "offeredSkills": [
+          "Smart Building",
+          "IoT",
+          "AI/ML",
+          "Software Platforms",
+          "Systems Integration",
+          "Data Analytics"
+        ],
         "requiredSkills": [],
-        "sectors": ["Technology", "Construction", "Real Estate"],
+        "sectors": [
+          "Technology",
+          "Construction",
+          "Real Estate"
+        ],
         "certifications": []
       },
       "exchangeData": {
@@ -741,13 +1270,1589 @@
       "attributes": {
         "strategicObjective": "Offer technology partnership for smart city and smart building solutions in Saudi and GCC.",
         "businessScope": "IoT platforms, smart building systems, AI-powered facility management.",
-        "targetSectors": ["Technology", "Construction", "Real Estate"],
-        "geographicScope": ["Saudi Arabia", "GCC"],
+        "targetSectors": [
+          "Technology",
+          "Construction",
+          "Real Estate"
+        ],
+        "geographicScope": [
+          "Saudi Arabia",
+          "GCC"
+        ],
         "duration": "5-10 years",
-        "requiredSkills": ["Smart Building", "IoT", "Software", "Systems Integration"]
+        "requiredSkills": [
+          "Smart Building",
+          "IoT",
+          "Software",
+          "Systems Integration"
+        ]
       },
       "createdAt": "2026-01-22T13:00:00.000Z",
-      "updatedAt": "2026-01-22T13:00:00.000Z"
+      "updatedAt": "2026-01-22T13:00:00.000Z",
+      "collaborationModel": "advisory"
+    },
+    {
+      "id": "opp-015",
+      "title": "Barter need: Engineering Consulting",
+      "description": "Barter need: Engineering Consulting",
+      "creatorId": "user-pro-005",
+      "intent": "request",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Engineering Consulting",
+          "Design Review"
+        ],
+        "offeredSkills": [],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "barterOffer": "Construction Materials",
+        "barterNeed": "Engineering Consulting",
+        "barterValue": "150000"
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-016",
+      "title": "Barter offer: Construction Materials",
+      "description": "Barter offer: Construction Materials",
+      "creatorId": "user-pro-005",
+      "intent": "offer",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [],
+        "offeredSkills": [
+          "Construction Materials",
+          "Procurement"
+        ],
+        "sectors": [
+          "Construction",
+          "Industrial"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "barterOffer": "Construction Materials",
+        "barterNeed": "Engineering Consulting",
+        "barterValue": "150000"
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-017",
+      "title": "Barter need: Construction Materials",
+      "description": "Barter need: Construction Materials",
+      "creatorId": "user-pro-006",
+      "intent": "request",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Construction Materials",
+          "Procurement"
+        ],
+        "offeredSkills": [],
+        "sectors": [
+          "Construction",
+          "Industrial"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "barterOffer": "Engineering Consulting",
+        "barterNeed": "Construction Materials",
+        "barterValue": "150000"
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-018",
+      "title": "Barter offer: Engineering Consulting",
+      "description": "Barter offer: Engineering Consulting",
+      "creatorId": "user-pro-006",
+      "intent": "offer",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [],
+        "offeredSkills": [
+          "Engineering Consulting",
+          "Design Review"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "barterOffer": "Engineering Consulting",
+        "barterNeed": "Construction Materials",
+        "barterValue": "150000"
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-019",
+      "title": "Circular A need: Project Management",
+      "description": "Circular A need: Project Management",
+      "creatorId": "user-pro-002",
+      "intent": "request",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management"
+        ],
+        "offeredSkills": [],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-020",
+      "title": "Circular A offer: Structural Analysis",
+      "description": "Circular A offer: Structural Analysis",
+      "creatorId": "user-pro-002",
+      "intent": "offer",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [],
+        "offeredSkills": [
+          "Structural Analysis",
+          "Structural Engineering"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-021",
+      "title": "Circular B need: Structural Analysis",
+      "description": "Circular B need: Structural Analysis",
+      "creatorId": "user-pro-003",
+      "intent": "request",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Structural Analysis",
+          "Structural Engineering"
+        ],
+        "offeredSkills": [],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-022",
+      "title": "Circular B offer: Project Management",
+      "description": "Circular B offer: Project Management",
+      "creatorId": "user-pro-003",
+      "intent": "offer",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [],
+        "offeredSkills": [
+          "Project Management",
+          "PMP"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-023",
+      "title": "Circular C need: Project Management",
+      "description": "Circular C need: Project Management",
+      "creatorId": "user-pro-004",
+      "intent": "request",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management"
+        ],
+        "offeredSkills": [],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-024",
+      "title": "Circular C offer: Structural Analysis",
+      "description": "Circular C offer: Structural Analysis",
+      "creatorId": "user-pro-004",
+      "intent": "offer",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "locationCity": "riyadh-city",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [],
+        "offeredSkills": [
+          "Structural Analysis"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T13:29:41.181Z",
+      "updatedAt": "2026-03-05T13:29:41.181Z",
+      "collaborationModel": "project"
+    },
+    {
+      "id": "opp-025",
+      "title": "Civil Works Package – Highway Project",
+      "description": "Civil Works Package – Highway Project. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-001",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "draft",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-026",
+      "title": "MEP Installation – Commercial Tower",
+      "description": "MEP Installation – Commercial Tower. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-002",
+      "modelType": "project_based",
+      "subModelType": "consortium",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-027",
+      "title": "Mentorship Program – Young Engineers",
+      "description": "Mentorship Program – Young Engineers. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-003",
+      "modelType": "strategic_partnership",
+      "subModelType": "strategic_jv",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "strategic_partnership"
+    },
+    {
+      "id": "opp-028",
+      "title": "Bulk Cement Purchase",
+      "description": "Bulk Cement Purchase. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-001",
+      "modelType": "resource_pooling",
+      "subModelType": "bulk_purchasing",
+      "status": "published",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "resource_pooling"
+    },
+    {
+      "id": "opp-029",
+      "title": "Site Engineer – Riyadh",
+      "description": "Site Engineer – Riyadh. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-003",
+      "modelType": "hiring",
+      "subModelType": "professional_hiring",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "hiring"
+    },
+    {
+      "id": "opp-030",
+      "title": "RFP – Sustainability Study",
+      "description": "RFP – Sustainability Study. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-005",
+      "modelType": "competition",
+      "subModelType": "competition_rfp",
+      "status": "in_negotiation",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "competition"
+    },
+    {
+      "id": "opp-031",
+      "title": "MEP Installation – Commercial Tower",
+      "description": "MEP Installation – Commercial Tower. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-006",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-032",
+      "title": "Structural Steel Erection – Industrial Facility",
+      "description": "Structural Steel Erection – Industrial Facility. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-010",
+      "modelType": "project_based",
+      "subModelType": "consortium",
+      "status": "closed",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-033",
+      "title": "Mentorship Program – Young Engineers",
+      "description": "Mentorship Program – Young Engineers. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-015",
+      "modelType": "strategic_partnership",
+      "subModelType": "strategic_jv",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "strategic_partnership"
+    },
+    {
+      "id": "opp-034",
+      "title": "Bulk Cement Purchase",
+      "description": "Bulk Cement Purchase. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-001",
+      "modelType": "resource_pooling",
+      "subModelType": "bulk_purchasing",
+      "status": "published",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "resource_pooling"
+    },
+    {
+      "id": "opp-035",
+      "title": "Quantity Surveyor – Dammam",
+      "description": "Quantity Surveyor – Dammam. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-002",
+      "modelType": "hiring",
+      "subModelType": "professional_hiring",
+      "status": "in_negotiation",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "hiring"
+    },
+    {
+      "id": "opp-036",
+      "title": "RFP – Sustainability Study",
+      "description": "RFP – Sustainability Study. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-003",
+      "modelType": "competition",
+      "subModelType": "competition_rfp",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "competition"
+    },
+    {
+      "id": "opp-037",
+      "title": "Structural Steel Erection – Industrial Facility",
+      "description": "Structural Steel Erection – Industrial Facility. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-001",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-038",
+      "title": "Site Supervision – Residential Complex",
+      "description": "Site Supervision – Residential Complex. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-003",
+      "modelType": "project_based",
+      "subModelType": "consortium",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-039",
+      "title": "Mentorship Program – Young Engineers",
+      "description": "Mentorship Program – Young Engineers. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-005",
+      "modelType": "strategic_partnership",
+      "subModelType": "strategic_jv",
+      "status": "closed",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "strategic_partnership"
+    },
+    {
+      "id": "opp-040",
+      "title": "Bulk Cement Purchase",
+      "description": "Bulk Cement Purchase. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-006",
+      "modelType": "resource_pooling",
+      "subModelType": "bulk_purchasing",
+      "status": "in_negotiation",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "resource_pooling"
+    },
+    {
+      "id": "opp-041",
+      "title": "Site Engineer – Riyadh",
+      "description": "Site Engineer – Riyadh. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-010",
+      "modelType": "hiring",
+      "subModelType": "professional_hiring",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "hiring"
+    },
+    {
+      "id": "opp-042",
+      "title": "RFP – Sustainability Study",
+      "description": "RFP – Sustainability Study. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-015",
+      "modelType": "competition",
+      "subModelType": "competition_rfp",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "competition"
+    },
+    {
+      "id": "opp-043",
+      "title": "Site Supervision – Residential Complex",
+      "description": "Site Supervision – Residential Complex. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-001",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-044",
+      "title": "Design Review – Hospital Project",
+      "description": "Design Review – Hospital Project. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-002",
+      "modelType": "project_based",
+      "subModelType": "consortium",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-045",
+      "title": "Mentorship Program – Young Engineers",
+      "description": "Mentorship Program – Young Engineers. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-003",
+      "modelType": "strategic_partnership",
+      "subModelType": "strategic_jv",
+      "status": "in_negotiation",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "strategic_partnership"
+    },
+    {
+      "id": "opp-046",
+      "title": "Bulk Cement Purchase",
+      "description": "Bulk Cement Purchase. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-001",
+      "modelType": "resource_pooling",
+      "subModelType": "bulk_purchasing",
+      "status": "closed",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "resource_pooling"
+    },
+    {
+      "id": "opp-047",
+      "title": "Quantity Surveyor – Dammam",
+      "description": "Quantity Surveyor – Dammam. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-003",
+      "modelType": "hiring",
+      "subModelType": "professional_hiring",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "hiring"
+    },
+    {
+      "id": "opp-048",
+      "title": "RFP – Sustainability Study",
+      "description": "RFP – Sustainability Study. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-005",
+      "modelType": "competition",
+      "subModelType": "competition_rfp",
+      "status": "published",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "competition"
+    },
+    {
+      "id": "opp-049",
+      "title": "Design Review – Hospital Project",
+      "description": "Design Review – Hospital Project. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-company-006",
+      "modelType": "project_based",
+      "subModelType": "task_based",
+      "status": "published",
+      "intent": "offer",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
+    },
+    {
+      "id": "opp-050",
+      "title": "Civil Works Package – Highway Project",
+      "description": "Civil Works Package – Highway Project. Demo opportunity for PMTwin POC.",
+      "creatorId": "user-pro-010",
+      "modelType": "project_based",
+      "subModelType": "consortium",
+      "status": "in_negotiation",
+      "intent": "request",
+      "location": "Riyadh, KSA",
+      "locationCountry": "sa",
+      "locationRegion": "Riyadh",
+      "locationCity": "Riyadh",
+      "locationDistrict": "",
+      "latitude": 24.7136,
+      "longitude": 46.6753,
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Project Management",
+          "Construction"
+        ],
+        "sectors": [
+          "Construction"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "exchangeTermsSummary": "",
+        "cashAmount": 100000,
+        "cashPaymentTerms": "Milestone-Based",
+        "cashMilestones": ""
+      },
+      "attributes": {},
+      "createdAt": "2026-03-05T18:06:12.193Z",
+      "updatedAt": "2026-03-05T18:06:12.193Z",
+      "collaborationModel": "project_based"
     }
   ]
 }

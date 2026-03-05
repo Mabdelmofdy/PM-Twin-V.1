@@ -104,6 +104,9 @@ loadScript('src/core/config/config.js').then(async () => {
     await loadScript('src/business-logic/exchange/exchange-rules.js');
     await loadScript('src/business-logic/exchange/equivalence-calculator.js');
     
+    // Load skill service (shared by profiles, opportunities, and matching)
+    await loadScript('src/services/skill-service.js');
+
     // Load services (matching pipeline: preprocessor, semantic profile, then matching)
     await loadScript('src/services/matching/post-preprocessor.js');
     await loadScript('src/services/matching/semantic-profile.js');
@@ -289,6 +292,11 @@ function initializeRoutes() {
     router.register(CONFIG.ROUTES.DASHBOARD, authGuard.protect(async () => {
         await loadPage('dashboard');
     }));
+
+    // Company dashboard route (protected; company users get a dedicated URL)
+    router.register(CONFIG.ROUTES.COMPANY_DASHBOARD, authGuard.protect(async () => {
+        await loadPage('dashboard', { view: 'company' });
+    }));
     
     // Opportunities routes (protected)
     router.register(CONFIG.ROUTES.OPPORTUNITIES, authGuard.protect(async () => {
@@ -326,7 +334,10 @@ function initializeRoutes() {
         await loadPage('notifications');
     }));
     
-    // Pipeline route (protected)
+    // Pipeline routes (protected) – more specific /pipeline/:tab first
+    router.register('/pipeline/:tab', authGuard.protect(async (params) => {
+        await loadPage('pipeline', params);
+    }));
     router.register('/pipeline', authGuard.protect(async () => {
         await loadPage('pipeline');
     }));
@@ -418,6 +429,14 @@ function initializeRoutes() {
         await loadPage('admin-settings');
     }, [CONFIG.ROLES.ADMIN]));
 
+    router.register(CONFIG.ROUTES.ADMIN_SKILLS, authGuard.protect(async () => {
+        if (!authService.hasRole(CONFIG.ROLES.ADMIN)) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-skills');
+    }, [CONFIG.ROLES.ADMIN]));
+
     router.register(CONFIG.ROUTES.ADMIN_COLLABORATION_MODELS, authGuard.protect(async () => {
         if (!authService.hasRole(CONFIG.ROLES.ADMIN)) {
             router.navigate(CONFIG.ROUTES.DASHBOARD);
@@ -473,12 +492,23 @@ function initializeRoutes() {
 function setupGlobalNavigation() {
     // Use event delegation on document body to catch all links
     document.body.addEventListener('click', (e) => {
+        const scrollLink = e.target.closest('a[data-scroll]');
+        if (scrollLink) {
+            e.preventDefault();
+            const id = scrollLink.getAttribute('data-scroll');
+            if (id) {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            return;
+        }
         const link = e.target.closest('a[data-route]');
         if (link) {
             e.preventDefault();
             const route = link.getAttribute('data-route');
-            if (route) {
-                router.navigate(route);
+            const r = window.router || (typeof router !== 'undefined' ? router : null);
+            if (route && r && typeof r.navigate === 'function') {
+                r.navigate(route);
             }
         }
     });

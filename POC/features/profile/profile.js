@@ -9,6 +9,15 @@ let profileLookups = null;
 async function loadProfileLookups() {
     if (profileLookups) return profileLookups;
     try {
+        const storage = typeof storageService !== 'undefined' ? storageService : (window.storageService || null);
+        const overrideKey = typeof CONFIG !== 'undefined' && CONFIG.STORAGE_KEYS && CONFIG.STORAGE_KEYS.LOOKUPS_OVERRIDE;
+        if (storage && overrideKey) {
+            const override = storage.get(overrideKey);
+            if (override && typeof override === 'object') {
+                profileLookups = override;
+                return profileLookups;
+            }
+        }
         const res = await fetch(BASE_PATH + 'data/lookups.json');
         profileLookups = await res.json();
         return profileLookups;
@@ -266,6 +275,354 @@ async function initProfile() {
     await loadProfileLookups();
     await loadProfile(user);
     await loadProfileStats(user.id);
+    await loadCompanyAffiliation(user);
+    await loadReputation(user.id);
+    await loadReviewsReceived(user.id);
+    await loadTeamMembers(user);
+    loadMatchingPreferences(user);
+    setupMatchingPreferencesSave();
+    setupSkillAutocomplete();
+}
+
+async function loadCompanyAffiliation(user) {
+    const banner = document.getElementById('prof-company-affiliation');
+    if (!banner) return;
+    if (!user.companyId) { banner.style.display = 'none'; return; }
+    try {
+        const company = await dataService.getCompanyById(user.companyId);
+        if (company) {
+            const nameEl = document.getElementById('prof-company-name-link');
+            if (nameEl) nameEl.textContent = company.profile?.name || company.id;
+            banner.style.display = 'block';
+        }
+    } catch (e) { banner.style.display = 'none'; }
+}
+
+async function loadReputation(userId) {
+    try {
+        let score = 0;
+        let count = 0;
+        if (typeof dataService.getReviewsByRevieweeId === 'function') {
+            const reviews = await dataService.getReviewsByRevieweeId(userId);
+            count = reviews.length;
+            if (count > 0) {
+                const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
+                score = sum / count;
+            }
+        }
+        if (count === 0) {
+            const contracts = typeof dataService.getContracts === 'function'
+                ? await dataService.getContracts() : [];
+            const completed = contracts.filter(c =>
+                c.status === 'completed' && (c.creatorId === userId || c.contractorId === userId)
+            );
+            count = completed.length;
+            score = count > 0 ? Math.min(5, 3 + (count * 0.4)) : 0;
+        }
+        const rounded = Math.round(score * 10) / 10;
+
+        const scoreEl = document.getElementById('reputation-score');
+        const barEl = document.getElementById('reputation-bar');
+        const labelEl = document.getElementById('reputation-label');
+        if (scoreEl) scoreEl.textContent = count > 0 ? rounded.toFixed(1) : '—';
+        if (barEl) barEl.style.width = count > 0 ? ((Math.min(5, rounded) / 5) * 100) + '%' : '0%';
+        if (labelEl) labelEl.textContent = count > 0
+            ? `Based on ${count} review${count !== 1 ? 's' : ''}`
+            : 'No reviews yet';
+    } catch (e) { /* ignore */ }
+}
+
+async function loadReviewsReceived(userId) {
+    try {
+        const listEl = document.getElementById('reviews-received-list');
+        const emptyEl = document.getElementById('reviews-received-empty');
+        if (!listEl) return;
+        if (typeof dataService.getReviewsByRevieweeId !== 'function') {
+            if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'No reviews yet.'; }
+            return;
+        }
+        const reviews = await dataService.getReviewsByRevieweeId(userId);
+        if (reviews.length === 0) {
+            listEl.innerHTML = '';
+            if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.textContent = 'No reviews yet.'; }
+            return;
+        }
+        if (emptyEl) emptyEl.style.display = 'none';
+        const maxRating = (typeof CONFIG !== 'undefined' && CONFIG.REVIEW_RATING_MAX) ? CONFIG.REVIEW_RATING_MAX : 5;
+        const rows = await Promise.all(reviews.slice(0, 10).map(async (r) => {
+            const reviewer = await dataService.getUserOrCompanyById(r.reviewerId);
+            const name = reviewer?.profile?.name || reviewer?.email || 'Someone';
+            const contractLink = r.contractId ? `<a href="#" data-route="/contracts/${r.contractId}" class="text-primary text-xs">View contract</a>` : '';
+            return `<div class="border-b border-gray-100 pb-2 last:border-0"><strong>${escapeHtml(name)}</strong> — ${r.rating}/${maxRating}${r.comment ? '<br/><span class="text-gray-600">' + escapeHtml(r.comment) + '</span>' : ''}${contractLink ? '<br/>' + contractLink : ''}</div>`;
+        }));
+        listEl.innerHTML = rows.join('');
+        listEl.querySelectorAll('a[data-route]').forEach((a) => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const route = a.getAttribute('data-route');
+                if (route && typeof router !== 'undefined') router.navigate(route);
+            });
+        });
+    } catch (e) { /* ignore */ }
+}
+
+function loadMatchingPreferences(user) {
+    const input = document.getElementById('matching-min-score');
+    if (!input) return;
+    const minScore = user?.profile?.matchingPreferences?.minScore;
+    if (minScore != null && typeof minScore === 'number') {
+        input.value = Math.round(Math.min(100, Math.max(70, minScore * 100)));
+    } else {
+        input.value = 70;
+    }
+}
+
+function setupMatchingPreferencesSave() {
+    const btn = document.getElementById('matching-preferences-save');
+    const input = document.getElementById('matching-min-score');
+    if (!btn || !input) return;
+    btn.addEventListener('click', async () => {
+        const user = authService.getCurrentUser();
+        if (!user) return;
+        const raw = parseInt(input.value, 10);
+        const pct = isNaN(raw) ? 70 : Math.min(100, Math.max(70, raw));
+        const minScore = pct / 100;
+        const merged = { ...(user.profile || {}), matchingPreferences: { ...(user.profile?.matchingPreferences || {}), minScore } };
+        try {
+            if (user.profile?.type === 'company' || authService.isCompanyUser?.()) {
+                await dataService.updateCompany(user.id, { profile: merged });
+            } else {
+                await dataService.updateUser(user.id, { profile: merged });
+            }
+            authService.currentUser = { ...user, profile: merged };
+            showProfileSuccess('Matching preferences saved.');
+        } catch (e) {
+            console.error('Error saving matching preferences:', e);
+            alert('Failed to save preferences.');
+        }
+    });
+}
+
+async function loadTeamMembers(user) {
+    const card = document.getElementById('team-members-card');
+    const list = document.getElementById('team-members-list');
+    const addBtn = document.getElementById('team-add-member-btn');
+    if (!card || !list) return;
+    const isCompany = authService.isCompanyUser && authService.isCompanyUser();
+    if (!isCompany) { card.style.display = 'none'; return; }
+    const canManageTeam = user.role === CONFIG.ROLES.COMPANY_OWNER || user.role === CONFIG.ROLES.COMPANY_ADMIN;
+    if (addBtn) {
+        addBtn.style.display = canManageTeam ? 'inline-flex' : 'none';
+        addBtn.onclick = () => showAddTeamMemberModal(user.id);
+    }
+    try {
+        const members = await dataService.getCompanyMembers(user.id);
+        if (members.length === 0) {
+            list.innerHTML = '<p class="text-sm text-gray-500">No team members linked yet.</p>';
+        } else {
+            list.innerHTML = members.map(m => {
+                const roleLabel = (m.role === CONFIG.ROLES.COMPANY_ADMIN ? 'Admin' : m.role === CONFIG.ROLES.COMPANY_MEMBER ? 'Member' : m.role) || 'Member';
+                const removeBtn = canManageTeam && m.id !== user.id
+                    ? `<button type="button" class="btn btn-ghost btn-sm text-red-600 team-remove-member" data-member-id="${escapeHtml(m.id)}">Remove</button>`
+                    : '';
+                return `<div class="flex items-center justify-between gap-2 py-1 border-b border-gray-100 last:border-0 team-member-row" data-member-id="${escapeHtml(m.id)}">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">${escapeHtml((m.profile?.name || '?')[0])}</div>
+                        <div class="min-w-0">
+                            <div class="text-sm font-medium truncate">${escapeHtml(m.profile?.name || m.email)}</div>
+                            <div class="text-xs text-gray-500 truncate">${escapeHtml(m.profile?.title || roleLabel)}</div>
+                        </div>
+                    </div>
+                    ${removeBtn}
+                </div>`;
+            }).join('');
+        }
+        card.style.display = 'block';
+        list.querySelectorAll('.team-remove-member').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const memberId = btn.getAttribute('data-member-id');
+                if (memberId) removeTeamMember(memberId, user.id);
+            });
+        });
+    } catch (e) { card.style.display = 'none'; }
+}
+
+function showAddTeamMemberModal(companyId) {
+    const roleOptions = [
+        { value: CONFIG.ROLES.COMPANY_ADMIN, label: 'Admin' },
+        { value: CONFIG.ROLES.COMPANY_MEMBER, label: 'Member' }
+    ].map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('');
+    const contentHTML = `
+        <form id="add-team-member-form" class="space-y-3">
+            <p class="text-sm text-gray-600">Link an existing user to your company by email. They must already have an account.</p>
+            <div>
+                <label for="team-member-email" class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+                <input type="email" id="team-member-email" class="w-full px-3 py-2 border border-gray-300 rounded-md" required placeholder="colleague@example.com" />
+            </div>
+            <div>
+                <label for="team-member-role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <select id="team-member-role" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    ${roleOptions}
+                </select>
+            </div>
+            <div id="add-team-member-error" class="text-sm text-red-600" style="display: none;"></div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" id="add-team-member-submit" class="btn btn-primary">Add</button>
+                <button type="button" id="add-team-member-cancel" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    `;
+    if (typeof modalService === 'undefined') {
+        const email = prompt('Team member email:');
+        if (email == null || !email.trim()) return;
+        const role = confirm('Grant Admin role? (Cancel = Member)') ? CONFIG.ROLES.COMPANY_ADMIN : CONFIG.ROLES.COMPANY_MEMBER;
+        addTeamMemberByEmail(companyId, email.trim(), role);
+        return;
+    }
+    modalService.showCustom(contentHTML, 'Add team member', { confirmText: 'Close' }).then(() => {});
+    const modalEl = document.getElementById('modal-container');
+    if (!modalEl) return;
+    const submitBtn = modalEl.querySelector('#add-team-member-submit');
+    const cancelBtn = modalEl.querySelector('#add-team-member-cancel');
+    const emailInput = modalEl.querySelector('#team-member-email');
+    const roleSelect = modalEl.querySelector('#team-member-role');
+    const errorEl = modalEl.querySelector('#add-team-member-error');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', async () => {
+            const email = emailInput?.value?.trim();
+            const role = roleSelect?.value || CONFIG.ROLES.COMPANY_MEMBER;
+            if (!email) {
+                if (errorEl) { errorEl.textContent = 'Email is required.'; errorEl.style.display = 'block'; }
+                return;
+            }
+            if (errorEl) errorEl.style.display = 'none';
+            const done = await addTeamMemberByEmail(companyId, email, role);
+            if (done) modalService.close();
+        });
+    }
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modalService.close());
+}
+
+async function addTeamMemberByEmail(companyId, email, role) {
+    try {
+        const user = await dataService.getUserByEmail(email);
+        if (!user) {
+            const errEl = document.getElementById('add-team-member-error');
+            if (errEl) { errEl.textContent = 'No user found with this email. They need to register first.'; errEl.style.display = 'block'; }
+            return false;
+        }
+        if (user.companyId && user.companyId !== companyId) {
+            const errEl = document.getElementById('add-team-member-error');
+            if (errEl) { errEl.textContent = 'This user is already linked to another company.'; errEl.style.display = 'block'; }
+            return false;
+        }
+        await dataService.updateUser(user.id, { companyId, role });
+        const currentUser = authService.getCurrentUser();
+        if (currentUser && typeof loadTeamMembers === 'function') await loadTeamMembers(currentUser);
+        return true;
+    } catch (e) {
+        const errEl = document.getElementById('add-team-member-error');
+        if (errEl) { errEl.textContent = 'Failed to add member. Please try again.'; errEl.style.display = 'block'; }
+        return false;
+    }
+}
+
+async function removeTeamMember(memberId, companyId) {
+    if (!confirm('Remove this member from your company? They will no longer have access to company opportunities.')) return;
+    try {
+        await dataService.updateUser(memberId, { companyId: null, role: CONFIG.ROLES.PROFESSIONAL });
+        const user = authService.getCurrentUser();
+        if (user && typeof loadTeamMembers === 'function') await loadTeamMembers(user);
+    } catch (e) {
+        console.error('Error removing team member:', e);
+        alert('Failed to remove member.');
+    }
+}
+
+function setupSkillAutocomplete() {
+    const input = document.getElementById('skills');
+    const sugBox = document.getElementById('skills-suggestions');
+    const tagsBox = document.getElementById('skills-tags');
+    if (!input || !sugBox || !tagsBox) return;
+
+    let selectedSkills = [];
+    const currentVal = input.value;
+    if (currentVal) {
+        selectedSkills = parseArray(currentVal);
+    }
+    renderSkillTags();
+
+    input.addEventListener('input', async () => {
+        const q = input.value.trim();
+        if (q.length < 1) { sugBox.style.display = 'none'; return; }
+        if (typeof skillService === 'undefined') { return; }
+        const catalog = await skillService.getCatalog();
+        const lq = q.toLowerCase();
+        let html = '';
+        for (const [cat, skills] of Object.entries(catalog)) {
+            const matching = skills.filter(s =>
+                s.toLowerCase().includes(lq) && !selectedSkills.includes(s)
+            );
+            if (matching.length > 0) {
+                html += `<div class="skill-suggestion-category">${escapeHtml(cat)}</div>`;
+                matching.forEach(s => {
+                    html += `<div class="skill-suggestion-item" data-skill="${escapeHtml(s)}">${escapeHtml(s)}</div>`;
+                });
+            }
+        }
+        if (!html) html = '<div class="p-2 text-sm text-gray-400">No matching skills</div>';
+        sugBox.innerHTML = html;
+        sugBox.style.display = 'block';
+
+        sugBox.querySelectorAll('.skill-suggestion-item').forEach(el => {
+            el.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                const skill = el.dataset.skill;
+                if (skill && !selectedSkills.includes(skill)) {
+                    selectedSkills.push(skill);
+                    renderSkillTags();
+                    syncSkillInput();
+                }
+                input.value = '';
+                sugBox.style.display = 'none';
+            });
+        });
+    });
+
+    input.addEventListener('blur', () => {
+        setTimeout(() => { sugBox.style.display = 'none'; }, 200);
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const raw = input.value.trim();
+            if (raw && !selectedSkills.includes(raw)) {
+                selectedSkills.push(raw);
+                renderSkillTags();
+                syncSkillInput();
+            }
+            input.value = '';
+            sugBox.style.display = 'none';
+        }
+    });
+
+    function renderSkillTags() {
+        tagsBox.innerHTML = selectedSkills.map((s, i) =>
+            `<span class="skill-tag">${escapeHtml(s)}<span class="skill-tag-remove" data-idx="${i}">&times;</span></span>`
+        ).join('');
+        tagsBox.querySelectorAll('.skill-tag-remove').forEach(el => {
+            el.addEventListener('click', () => {
+                selectedSkills.splice(Number(el.dataset.idx), 1);
+                renderSkillTags();
+                syncSkillInput();
+            });
+        });
+    }
+
+    function syncSkillInput() {
+        input.value = selectedSkills.join(', ');
+    }
 }
 
 function getCompanyCompleteness(profile) {
@@ -431,18 +788,57 @@ function setProfessionalViewMode(profile) {
     document.getElementById('view-prof-title').textContent = profile?.title || '—';
     document.getElementById('view-prof-phone').textContent = profile?.phone || '—';
     document.getElementById('view-prof-location').textContent = profile?.location || '—';
+
+    const expLevelEl = document.getElementById('view-prof-experienceLevel');
+    if (expLevelEl) {
+        const years = Number(exp) || 0;
+        let level = '—';
+        if (years >= 15) level = 'Expert (' + years + ' years)';
+        else if (years >= 8) level = 'Senior (' + years + ' years)';
+        else if (years >= 3) level = 'Mid-Level (' + years + ' years)';
+        else if (years > 0) level = 'Junior (' + years + ' years)';
+        expLevelEl.textContent = level;
+    }
+
     document.getElementById('view-prof-bio').textContent = profile?.bio || '—';
     const profSocialEl = document.getElementById('view-prof-socialMedia');
     if (profSocialEl) profSocialEl.innerHTML = getSocialIconsHtml(profile?.socialMediaLinks);
     document.getElementById('view-specializations').textContent = formatArray(profile?.specializations);
-    document.getElementById('view-skills').textContent = formatArray(profile?.skills);
+
+    const skillsViewEl = document.getElementById('view-skills');
+    if (skillsViewEl) {
+        const skills = Array.isArray(profile?.skills) ? profile.skills : [];
+        if (skills.length === 0) {
+            skillsViewEl.innerHTML = '—';
+        } else {
+            skillsViewEl.innerHTML = skills.map(s =>
+                `<span class="skill-tag">${escapeHtml(s)}</span>`
+            ).join('');
+        }
+    }
+
     document.getElementById('view-prof-sectors').textContent = formatArray(profile?.sectors || profile?.industry);
     document.getElementById('view-prof-education').textContent = profile?.education || '—';
     document.getElementById('view-certifications').textContent = formatArray(profile?.certifications);
     document.getElementById('view-years-experience').textContent = exp != null && exp !== '' ? exp : '—';
     document.getElementById('view-prof-services').textContent = formatArray(profile?.services);
     document.getElementById('view-prof-interests').textContent = formatArray(profile?.interests);
-    document.getElementById('view-prof-availability').textContent = profile?.availability || '—';
+
+    const availEl = document.getElementById('view-prof-availability');
+    if (availEl) {
+        const avail = profile?.availability || '';
+        const lower = avail.toLowerCase();
+        let badgeClass = '';
+        if (lower.includes('available') && !lower.includes('un')) badgeClass = 'available';
+        else if (lower.includes('limited') || lower.includes('busy')) badgeClass = 'limited';
+        else if (lower.includes('unavailable')) badgeClass = 'unavailable';
+        if (avail && badgeClass) {
+            availEl.innerHTML = `<span class="availability-badge ${badgeClass}">${escapeHtml(avail)}</span>`;
+        } else {
+            availEl.textContent = avail || '—';
+        }
+    }
+
     document.getElementById('view-prof-workMode').textContent = workModeLabel;
     document.getElementById('view-prof-paymentModes').textContent = preferredText;
     const rate = profile?.hourlyRate;
@@ -819,6 +1215,7 @@ function showProfessionalEdit() {
     if (form) form.style.display = 'block';
     if (editBtn) editBtn.style.display = 'none';
     if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    setupSkillAutocomplete();
 }
 
 function setupCompanyForm(userId) {
@@ -887,6 +1284,12 @@ function setupCompanyForm(userId) {
             setCompanyViewMode(merged);
             renderCompleteness(merged, true);
             showCompanyView();
+            const ms = window.matchingService;
+            if (ms && typeof ms.findOpportunitiesForCandidate === 'function') {
+                ms.findOpportunitiesForCandidate(userId).catch(e =>
+                    console.warn('Matching refresh after profile save failed', e)
+                );
+            }
             showProfileSuccess('Profile updated successfully. Your match recommendations will update to reflect these changes.');
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -963,6 +1366,12 @@ function setupProfessionalForm(userId) {
             setProfessionalViewMode(merged);
             renderCompleteness(merged, false);
             showProfessionalView();
+            const ms = window.matchingService;
+            if (ms && typeof ms.findOpportunitiesForCandidate === 'function') {
+                ms.findOpportunitiesForCandidate(userId).catch(e =>
+                    console.warn('Matching refresh after profile save failed', e)
+                );
+            }
             showProfileSuccess('Profile updated successfully. Your match recommendations will update to reflect these changes.');
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -973,21 +1382,26 @@ function setupProfessionalForm(userId) {
 
 async function loadProfileStats(userId) {
     try {
-        // Opportunities created
         const allOpportunities = await dataService.getOpportunities();
         const oppsCreated = allOpportunities.filter(o => o.creatorId === userId).length;
         document.getElementById('stat-opps-created').textContent = oppsCreated;
-        
-        // Applications submitted
+
         const allApplications = await dataService.getApplications();
         const appsSubmitted = allApplications.filter(a => a.applicantId === userId).length;
         document.getElementById('stat-apps-submitted').textContent = appsSubmitted;
-        
-        // Matches received
+
         const allMatches = await dataService.getMatches();
-        const matchesReceived = allMatches.filter(m => m.candidateId === userId).length;
+        const matchesReceived = allMatches.filter(m => (m.candidateId || m.userId) === userId).length;
         document.getElementById('stat-matches-received').textContent = matchesReceived;
-        
+
+        const contracts = typeof dataService.getContracts === 'function'
+            ? await dataService.getContracts() : [];
+        const collaborations = contracts.filter(c =>
+            c.status === 'completed' && (c.creatorId === userId || c.contractorId === userId)
+        ).length;
+        const collabEl = document.getElementById('stat-collaborations');
+        if (collabEl) collabEl.textContent = collaborations;
+
     } catch (error) {
         console.error('Error loading profile stats:', error);
     }

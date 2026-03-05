@@ -1,4 +1,6 @@
-<div class="card">
+<div class="card admin-opp-card flex gap-2" data-opportunity-id="{{id}}">
+    <label class="admin-opp-checkbox-label flex-shrink-0 mt-2"><input type="checkbox" class="admin-opp-select" data-opportunity-id="{{id}}" /></label>
+    <div class="flex-1 min-w-0">
     <div class="card-header">
         <h3>{{title}}</h3>
         <div>
@@ -23,5 +25,6 @@
             <button data-action="close" data-opportunity-id="{{id}}" class="btn btn-warning btn-sm">Close</button>
         {{/if}}
         <button data-action="delete" data-opportunity-id="{{id}}" class="btn btn-danger btn-sm">Delete</button>
+    </div>
     </div>
 </div>

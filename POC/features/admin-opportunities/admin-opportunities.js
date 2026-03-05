@@ -10,6 +10,7 @@ async function initAdminOpportunities() {
     
     await loadOpportunities();
     setupFilters();
+    document.getElementById('admin-opp-bulk-apply')?.addEventListener('click', bulkStatusChange);
 }
 
 async function loadOpportunities() {
@@ -93,6 +94,9 @@ async function loadOpportunities() {
                 handleOpportunityAction(action, oppId);
             });
         });
+
+        const bulkEl = document.getElementById('admin-opp-bulk-actions');
+        if (bulkEl) bulkEl.style.display = 'block';
         
     } catch (error) {
         console.error('Error loading opportunities:', error);
@@ -190,5 +194,42 @@ async function deleteOpportunity(opportunityId) {
     } catch (error) {
         console.error('Error deleting opportunity:', error);
         alert('Failed to delete opportunity');
+    }
+}
+
+function getSelectedOpportunityIds() {
+    const checkboxes = document.querySelectorAll('.admin-opp-select:checked');
+    return Array.from(checkboxes).map(cb => cb.dataset.opportunityId).filter(Boolean);
+}
+
+async function bulkStatusChange() {
+    const ids = getSelectedOpportunityIds();
+    const status = document.getElementById('admin-opp-bulk-status')?.value;
+    if (!ids.length) {
+        alert('Select one or more opportunities first.');
+        return;
+    }
+    if (!status || (status !== 'closed' && status !== 'cancelled')) {
+        alert('Please select a status (Closed or Cancelled).');
+        return;
+    }
+    if (!confirm(`Set ${ids.length} opportunity(ies) to "${status}"?`)) return;
+    const admin = authService.getCurrentUser();
+    try {
+        for (const id of ids) {
+            await dataService.updateOpportunity(id, { status });
+            await dataService.createAuditLog({
+                userId: admin.id,
+                action: status === 'closed' ? 'opportunity_closed' : 'opportunity_cancelled',
+                entityType: 'opportunity',
+                entityId: id,
+                details: { bulk: true }
+            });
+        }
+        alert(`Updated ${ids.length} opportunity(ies).`);
+        await loadOpportunities();
+    } catch (e) {
+        console.error('Bulk status change failed:', e);
+        alert('Failed to update some opportunities.');
     }
 }

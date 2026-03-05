@@ -11,6 +11,11 @@ async function initAdminVetting() {
 
     await loadVettingList();
     setupFilters();
+    const bulkEl = document.getElementById('vetting-bulk-actions');
+    if (bulkEl) {
+        bulkEl.querySelector('#vetting-approve-selected')?.addEventListener('click', bulkApprove);
+        bulkEl.querySelector('#vetting-reject-selected')?.addEventListener('click', bulkReject);
+    }
 }
 
 function setupFilters() {
@@ -67,7 +72,11 @@ async function loadVettingList() {
             const statusLabel = user.status === 'clarification_requested' ? 'Clarification Requested' : 'Pending';
             const statusClass = user.status === 'clarification_requested' ? 'warning' : 'warning';
             return `
-            <div class="vetting-card" data-id="${user.id}" data-company="${isCompany}">
+            <div class="vetting-card flex gap-2" data-id="${user.id}" data-company="${isCompany}">
+                <label class="vetting-checkbox-label flex-shrink-0 mt-1">
+                    <input type="checkbox" class="vetting-select" data-id="${user.id}" data-company="${isCompany}" />
+                </label>
+                <div class="flex-1 min-w-0">
                 <div class="vetting-card-header">
                     <div>
                         <h3 class="vetting-email">${user.email}</h3>
@@ -86,9 +95,13 @@ async function loadVettingList() {
                     <button type="button" class="btn btn-warning btn-sm" data-action="clarify" data-id="${user.id}" data-company="${isCompany}">Request clarification</button>
                     <a href="#" data-route="/admin/users/${user.id}" class="btn btn-secondary btn-sm">View detail</a>
                 </div>
+                </div>
             </div>
             `;
         }).join('');
+
+        const bulkEl = document.getElementById('vetting-bulk-actions');
+        if (bulkEl) bulkEl.style.display = 'block';
 
         container.querySelectorAll('[data-action]').forEach(btn => {
             if (btn.tagName === 'A') return;
@@ -172,6 +185,63 @@ async function rejectUser(userId, isCompany = false) {
     } catch (error) {
         console.error('Error rejecting:', error);
         alert('Failed to reject. Please try again.');
+    }
+}
+
+function getSelectedVettingItems() {
+    const checkboxes = document.querySelectorAll('.vetting-select:checked');
+    return Array.from(checkboxes).map(cb => ({ id: cb.dataset.id, isCompany: cb.dataset.company === 'true' }));
+}
+
+async function bulkApprove() {
+    const selected = getSelectedVettingItems();
+    if (selected.length === 0) {
+        alert('Select one or more items first.');
+        return;
+    }
+    if (!confirm(`Approve ${selected.length} selected item(s)?`)) return;
+    for (const { id, isCompany } of selected) {
+        await approveUser(id, isCompany);
+    }
+}
+
+async function bulkReject() {
+    const selected = getSelectedVettingItems();
+    if (selected.length === 0) {
+        alert('Select one or more items first.');
+        return;
+    }
+    const reason = prompt('Rejection reason (optional, applies to all):');
+    if (reason === null) return;
+    for (const { id, isCompany } of selected) {
+        await rejectUserWithReason(id, isCompany, reason);
+    }
+    await loadVettingList();
+}
+
+async function rejectUserWithReason(userId, isCompany, reason) {
+    try {
+        if (isCompany) {
+            await dataService.updateCompany(userId, { status: 'rejected' });
+        } else {
+            await dataService.updateUser(userId, { status: 'rejected' });
+        }
+        await dataService.createNotification({
+            userId,
+            type: 'account_rejected',
+            title: 'Account Rejected',
+            message: reason ? `Your account was rejected: ${reason}` : 'Your account registration was rejected.'
+        });
+        const admin = authService.getCurrentUser();
+        await dataService.createAuditLog({
+            userId: admin.id,
+            action: isCompany ? 'company_rejected' : 'user_rejected',
+            entityType: isCompany ? 'company' : 'user',
+            entityId: userId,
+            details: { reason: reason || 'No reason provided' }
+        });
+    } catch (e) {
+        console.error('Error rejecting:', e);
     }
 }
 

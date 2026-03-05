@@ -3,6 +3,7 @@
         <div class="page-header-content">
             <h1 class="page-title">User Vetting</h1>
             <p class="page-subtitle">Review and approve pending registrations and clarification requests</p>
+            <p class="text-sm text-gray-500 mt-1">Demo: use accounts with status Pending to see this queue (e.g. Professional (pending) in demo credentials).</p>
         </div>
     </div>
     <div class="page-body">
@@ -26,6 +27,10 @@
         </div>
     </div>
 
+    <div id="vetting-bulk-actions" class="vetting-bulk-actions mb-3" style="display: none;">
+        <button type="button" id="vetting-approve-selected" class="btn btn-success btn-sm">Approve selected</button>
+        <button type="button" id="vetting-reject-selected" class="btn btn-danger btn-sm">Reject selected</button>
+    </div>
     <div id="vetting-list" class="vetting-list">
         <div class="spinner"></div>
     </div>
