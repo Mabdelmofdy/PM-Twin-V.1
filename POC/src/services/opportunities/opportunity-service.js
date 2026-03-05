@@ -14,15 +14,37 @@ class OpportunityService {
      */
     async createOpportunity(opportunityData) {
         const opportunity = await this.dataService.createOpportunity(opportunityData);
-        
+        await this._ensureNormalized(opportunity);
+        const updated = await this.dataService.getOpportunityById(opportunity.id);
+
         // If published, trigger matching
-        if (opportunity.status === 'published') {
-            // Run matching in background (don't wait)
-            this.matchingService.findMatchesForOpportunity(opportunity.id)
+        if (updated.status === 'published') {
+            this.matchingService.findMatchesForOpportunity(updated.id)
                 .catch(error => console.error('Error running matching:', error));
         }
-        
-        return opportunity;
+
+        return updated;
+    }
+
+    /**
+     * Ensure opportunity has normalized payload for matching (post-preprocessor).
+     * Call after create or update so matching pipeline has comparable attributes.
+     */
+    async _ensureNormalized(opportunity) {
+        const preprocessor = window.postPreprocessor;
+        if (!preprocessor) return;
+        const basePath = (typeof CONFIG !== 'undefined' && CONFIG.BASE_PATH) ? CONFIG.BASE_PATH : '';
+        let canonical = {};
+        try {
+            canonical = await preprocessor.loadSkillCanonical(basePath);
+        } catch (e) {
+            console.warn('Matching: could not load skill-canonical', e);
+        }
+        const creator = opportunity.creatorId
+            ? (await this.dataService.getUserById(opportunity.creatorId)) || (await this.dataService.getCompanyById(opportunity.creatorId))
+            : null;
+        const normalized = preprocessor.extractAndNormalize(opportunity, canonical, creator);
+        await this.dataService.updateOpportunity(opportunity.id, { normalized });
     }
     
     /**
@@ -48,12 +70,30 @@ class OpportunityService {
             status: newStatus
         });
         if (newStatus === 'published') {
+            await this._ensureNormalized(opportunity);
             this.matchingService.findMatchesForOpportunity(opportunityId)
                 .catch(error => console.error('Error running matching:', error));
+            return this.dataService.getOpportunityById(opportunityId);
         }
         return opportunity;
     }
     
+    /**
+     * Normalize all published opportunities (e.g. after seed load). Idempotent.
+     */
+    async normalizeAllOpportunities() {
+        const opportunities = await this.dataService.getOpportunities();
+        for (const opp of opportunities) {
+            if (opp.status !== 'published') continue;
+            if (opp.normalized) continue;
+            try {
+                await this._ensureNormalized(opp);
+            } catch (e) {
+                console.warn('Normalize opportunity failed:', opp.id, e);
+            }
+        }
+    }
+
     /**
      * Get opportunities with filters
      */

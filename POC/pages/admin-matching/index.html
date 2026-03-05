@@ -1,0 +1,69 @@
+<div class="page-container admin-matching-page">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Matching Workflow</h1>
+            <p class="page-subtitle">Run the same matching logic used when opportunities are published and in the pipeline. View results by model (one-way, two-way barter, consortium, circular).</p>
+        </div>
+    </div>
+    <div class="page-body">
+
+        <!-- Section 1: Workflow overview -->
+        <section class="matching-section workflow-overview">
+            <h2 class="section-title">How matching works</h2>
+            <ul class="workflow-list">
+                <li><strong>One-way:</strong> For a Need post (request), the system finds Offer posts that match (skills, budget, timeline, location). Default when viewing a request.</li>
+                <li><strong>Two-way (barter):</strong> When a creator has both a Need and an Offer, the system finds other creators whose Offer satisfies this creator’s Need and whose Need is satisfied by this creator’s Offer.</li>
+                <li><strong>Consortium:</strong> A lead Need with defined roles (e.g. Financial partner, Construction expertise, Equipment fleet) gets one best Offer per role from distinct partners.</li>
+                <li><strong>Circular:</strong> The system finds cycles of length 3 or more (e.g. A→B→C→A) where each participant’s Offer satisfies the next participant’s Need.</li>
+            </ul>
+        </section>
+
+        <!-- Section 2: Run on current platform data -->
+        <section class="matching-section run-section">
+            <h2 class="section-title">Run matching on current platform data</h2>
+            <p class="section-desc">Uses the same opportunities, users, and companies as the rest of the platform (Admin Dashboard).</p>
+            <button type="button" id="matching-run-btn" class="btn btn-primary">Run matching on current data</button>
+            <div id="matching-run-loading" class="matching-loading" hidden><span class="spinner"></span> Running matching…</div>
+            <div id="matching-report-block" class="report-block matching-report-block" hidden>
+                <h3 class="report-block-title">Report</h3>
+                <div class="stats-grid" id="matching-stats-grid"></div>
+                <div id="matching-report-details" class="matching-details"></div>
+            </div>
+            <div id="matching-run-error" class="matching-error" hidden></div>
+        </section>
+
+        <!-- Section 3: Last simulation report -->
+        <section class="matching-section simulation-section">
+            <h2 class="section-title">Last simulation report</h2>
+            <p class="section-desc">Report from the standalone simulation. Run locally: <code>node scripts/simulation/run-matching-simulation.js</code>. If the file is not served, this section will show a message.</p>
+            <button type="button" id="matching-load-simulation-btn" class="btn btn-secondary">Load simulation report</button>
+            <div id="matching-simulation-loading" class="matching-loading" hidden><span class="spinner"></span> Loading…</div>
+            <div id="matching-simulation-block" class="report-block matching-report-block" hidden>
+                <h3 class="report-block-title">Simulation report</h3>
+                <div class="stats-grid" id="matching-simulation-stats"></div>
+            </div>
+            <div id="matching-simulation-unavailable" class="matching-unavailable" hidden>Simulation report not available. Run the simulation script and ensure the app can read <code>data/simulation/matching-report.json</code>.</div>
+        </section>
+    </div>
+</div>
+
+<style>
+.admin-matching-page { }
+.matching-section { margin-bottom: 2rem; }
+.matching-section .section-title { font-size: 1.25rem; margin-bottom: 0.75rem; }
+.matching-section .section-desc { color: var(--text-secondary, #6b7280); margin-bottom: 1rem; font-size: 0.9375rem; }
+.workflow-list { margin: 0; padding-left: 1.5rem; }
+.workflow-list li { margin-bottom: 0.5rem; }
+.matching-loading { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+.matching-loading .spinner { width: 1rem; height: 1rem; border: 2px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.report-block { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1rem; }
+.report-block-title { font-size: 1rem; margin-bottom: 1rem; font-weight: 600; }
+.matching-report-block .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.matching-report-block .stat-card { padding: 0.75rem; background: var(--bg-secondary, #f9fafb); border-radius: var(--radius-md); }
+.matching-report-block .stat-value { font-size: 1.5rem; font-weight: 700; }
+.matching-report-block .stat-label { font-size: 0.8125rem; color: var(--text-secondary); }
+.matching-details { font-size: 0.875rem; color: var(--text-secondary); }
+.matching-error { color: var(--danger-color, #dc2626); margin-top: 0.5rem; }
+.matching-unavailable { color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.875rem; }
+</style>

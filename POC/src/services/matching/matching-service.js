@@ -9,7 +9,49 @@ class MatchingService {
         this.minThreshold = CONFIG.MATCHING.MIN_THRESHOLD;
         this.autoNotifyThreshold = CONFIG.MATCHING.AUTO_NOTIFY_THRESHOLD;
     }
-    
+
+    /**
+     * Post-to-post matching: route by post type and options, return { model, matches }.
+     * Models: one_way (Need -> Offers), two_way (barter), consortium, circular.
+     */
+    async findMatchesForPost(opportunityId, options = {}) {
+        const models = window.matchingModels || typeof matchingModels !== 'undefined' && matchingModels;
+        if (!models) return { model: 'one_way', matches: [] };
+
+        const opportunity = await this.dataService.getOpportunityById(opportunityId);
+        if (!opportunity) return { model: 'one_way', matches: [] };
+
+        const intent = opportunity.intent || 'request';
+        const exchangeMode = (opportunity.exchangeMode || '').toLowerCase();
+        const subModelType = (opportunity.subModelType || '').toLowerCase();
+
+        if (options.model === 'circular') {
+            return await models.findCircularExchanges(options);
+        }
+        if (options.model === 'consortium' || subModelType === 'consortium') {
+            const result = await models.findConsortiumCandidates(opportunityId, options);
+            return result;
+        }
+        if ((options.model === 'two_way' || exchangeMode === 'barter') && intent === 'offer') {
+            return await models.findBarterMatches(opportunityId, options);
+        }
+        if ((options.model === 'two_way' || exchangeMode === 'barter') && intent === 'request') {
+            return await models.findBarterMatches(opportunityId, options);
+        }
+        if (intent === 'request') {
+            return await models.findOffersForNeed(opportunityId, options);
+        }
+        return { model: 'one_way', matches: [] };
+    }
+
+    /**
+     * Find offers that match a need (One-Way). Convenience wrapper.
+     */
+    async findOffersForNeed(needPostId, options = {}) {
+        const models = window.matchingModels;
+        return models ? await models.findOffersForNeed(needPostId, options) : { model: 'one_way', matches: [] };
+    }
+
     /**
      * Find matches for an opportunity
      */
@@ -49,10 +91,9 @@ class MatchingService {
         // Save matches
         for (const match of matches) {
             await this.dataService.createMatch(match);
-            
-            // Auto-notify if above threshold
-            if (match.matchScore >= this.autoNotifyThreshold) {
-                await this.notifyMatch(match, opportunity, user);
+            const candidate = await this.dataService.getUserById(match.candidateId) || await this.dataService.getCompanyById(match.candidateId);
+            if (candidate && match.matchScore >= this.autoNotifyThreshold) {
+                await this.notifyMatch(match, opportunity, candidate);
             }
         }
         

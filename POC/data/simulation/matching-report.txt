@@ -1,0 +1,10 @@
+Matching Simulation Report
+==========================
+Total posts analyzed: 26
+Total matches found: 408
+
+Breakdown:
+  One-way matches: 9
+  Two-way (barter) matches: 4
+  Group (consortium) formations: 1
+  Circular exchanges: 394

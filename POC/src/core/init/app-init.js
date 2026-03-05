@@ -97,11 +97,19 @@ loadScript('src/core/config/config.js').then(async () => {
     await loadScript('src/utils/template-renderer.js');
     await loadScript('src/utils/modal.js');
     await loadScript('src/utils/badge-helpers.js');
+    await loadScript('src/utils/decimal-helper.js');
     
     // Load business logic
     await loadScript('src/business-logic/models/opportunity-models.js');
+    await loadScript('src/business-logic/exchange/exchange-rules.js');
+    await loadScript('src/business-logic/exchange/equivalence-calculator.js');
     
-    // Load services
+    // Load services (matching pipeline: preprocessor, semantic profile, then matching)
+    await loadScript('src/services/matching/post-preprocessor.js');
+    await loadScript('src/services/matching/semantic-profile.js');
+    await loadScript('src/services/matching/candidate-generator.js');
+    await loadScript('src/services/matching/post-to-post-scoring.js');
+    await loadScript('src/services/matching/matching-models.js');
     await loadScript('src/services/matching/matching-service.js');
     await loadScript('src/services/opportunities/opportunity-service.js');
     await loadScript('src/services/map/map-service.js');
@@ -119,7 +127,11 @@ async function initializeApp() {
     try {
         // Initialize storage with seed data
         await initializeStorage();
-        
+        // Normalize existing opportunities for post-to-post matching (non-blocking)
+        if (window.opportunityService && typeof window.opportunityService.normalizeAllOpportunities === 'function') {
+            window.opportunityService.normalizeAllOpportunities().catch(e => console.warn('Normalize opportunities:', e));
+        }
+
         // Initialize layout
         await layoutService.init();
         
@@ -428,6 +440,14 @@ function initializeRoutes() {
             return;
         }
         await loadPage('admin-reports');
+    }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR, CONFIG.ROLES.AUDITOR]));
+
+    router.register(CONFIG.ROUTES.ADMIN_MATCHING, authGuard.protect(async () => {
+        if (!authService.canAccessAdmin()) {
+            router.navigate(CONFIG.ROUTES.DASHBOARD);
+            return;
+        }
+        await loadPage('admin-matching');
     }, [CONFIG.ROLES.ADMIN, CONFIG.ROLES.MODERATOR, CONFIG.ROLES.AUDITOR]));
     
     router.register('/admin/users/:id', authGuard.protect(async (params) => {

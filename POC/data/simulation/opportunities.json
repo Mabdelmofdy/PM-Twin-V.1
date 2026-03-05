@@ -1,0 +1,1900 @@
+{
+  "domain": "opportunities",
+  "version": "1.0",
+  "data": [
+    {
+      "id": "sim-opp-001",
+      "title": "Offer: Financial Investment, Structural Engineering",
+      "description": "Offer: Financial Investment, Structural Engineering",
+      "creatorId": "sim-user-018",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Financial Investment",
+          "Structural Engineering"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 192515.5819126012,
+          "max": 634737.6705309086,
+          "currency": "SAR"
+        },
+        "cashAmount": 413626.62622175494
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Financial Investment",
+          "Structural Engineering"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 192515.5819126012,
+          "max": 634737.6705309086,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-002",
+      "title": "Offer: Financial Investment, Accounting",
+      "description": "Offer: Financial Investment, Accounting",
+      "creatorId": "sim-company-005",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Financial Investment",
+          "Accounting"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 112648.83878764177,
+          "max": 403035.72416446905,
+          "currency": "SAR"
+        },
+        "cashAmount": 257842.28147605542
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Financial Investment",
+          "Accounting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 112648.83878764177,
+          "max": 403035.72416446905,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-003",
+      "title": "Need: Engineering Consulting, Project Management",
+      "description": "Need: Engineering Consulting, Project Management",
+      "creatorId": "sim-user-016",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Engineering Consulting",
+          "Project Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 202888.32194772008,
+          "max": 733036.1487497744,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Engineering Consulting",
+          "Project Management"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 202888.32194772008,
+          "max": 733036.1487497744,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-004",
+      "title": "Need: Accounting, Equipment Rental",
+      "description": "Need: Accounting, Equipment Rental",
+      "creatorId": "sim-company-002",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Accounting",
+          "Equipment Rental"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 109136.295346141,
+          "max": 342255.64004958404,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Accounting",
+          "Equipment Rental"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 109136.295346141,
+          "max": 342255.64004958404,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-005",
+      "title": "Need: Financial Investment, Engineering Consulting",
+      "description": "Need: Financial Investment, Engineering Consulting",
+      "creatorId": "sim-user-019",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Financial Investment",
+          "Engineering Consulting"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 68818.54535025478,
+          "max": 482652.42883127765,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Financial Investment",
+          "Engineering Consulting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 68818.54535025478,
+          "max": 482652.42883127765,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-006",
+      "title": "Need: Financial Investment, Engineering Consulting",
+      "description": "Need: Financial Investment, Engineering Consulting",
+      "creatorId": "sim-company-005",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Financial Investment",
+          "Engineering Consulting"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 186062.95591968248,
+          "max": 468039.6796055323,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Financial Investment",
+          "Engineering Consulting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 186062.95591968248,
+          "max": 468039.6796055323,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-007",
+      "title": "Need: Accounting, Structural Engineering",
+      "description": "Need: Accounting, Structural Engineering",
+      "creatorId": "sim-company-004",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Accounting",
+          "Structural Engineering"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 195682.3588095989,
+          "max": 797731.5070562677,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Accounting",
+          "Structural Engineering"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 195682.3588095989,
+          "max": 797731.5070562677,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-008",
+      "title": "Need: Structural Engineering, Financial Investment",
+      "description": "Need: Structural Engineering, Financial Investment",
+      "creatorId": "sim-company-006",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Structural Engineering",
+          "Financial Investment"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 113944.22057268406,
+          "max": 796854.9611497927,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Structural Engineering",
+          "Financial Investment"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 113944.22057268406,
+          "max": 796854.9611497927,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-009",
+      "title": "Barter Need A: Office space",
+      "description": "Barter Need A: Office space",
+      "creatorId": "sim-user-001",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Office space"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Office space"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-010",
+      "title": "Barter Offer A: Engineering Consulting",
+      "description": "Barter Offer A: Engineering Consulting",
+      "creatorId": "sim-user-001",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Engineering Consulting"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "cashAmount": 250000,
+        "barterOffer": "Engineering Consulting",
+        "barterNeed": "Office space",
+        "barterValue": "100000"
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Engineering Consulting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-011",
+      "title": "Barter Need B: Engineering Consulting",
+      "description": "Barter Need B: Engineering Consulting",
+      "creatorId": "sim-user-002",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Engineering Consulting"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Engineering Consulting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-012",
+      "title": "Barter Offer B: Office space",
+      "description": "Barter Offer B: Office space",
+      "creatorId": "sim-user-002",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Office space"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "cashAmount": 250000,
+        "barterOffer": "Office space",
+        "barterNeed": "Engineering Consulting",
+        "barterValue": "100000"
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Office space"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-013",
+      "title": "Barter Need A: Accounting",
+      "description": "Barter Need A: Accounting",
+      "creatorId": "sim-user-003",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Accounting"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Accounting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-014",
+      "title": "Barter Offer A: Equipment Rental",
+      "description": "Barter Offer A: Equipment Rental",
+      "creatorId": "sim-user-003",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Equipment Rental"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "cashAmount": 250000,
+        "barterOffer": "Equipment Rental",
+        "barterNeed": "Accounting",
+        "barterValue": "100000"
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Equipment Rental"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-015",
+      "title": "Barter Need B: Equipment Rental",
+      "description": "Barter Need B: Equipment Rental",
+      "creatorId": "sim-user-004",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Equipment Rental"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Equipment Rental"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-016",
+      "title": "Barter Offer B: Accounting",
+      "description": "Barter Offer B: Accounting",
+      "creatorId": "sim-user-004",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "barter",
+      "paymentModes": [
+        "barter"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Accounting"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "barter",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "cashAmount": 250000,
+        "barterOffer": "Accounting",
+        "barterNeed": "Equipment Rental",
+        "barterValue": "100000"
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Accounting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 0,
+          "max": 500000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-017",
+      "title": "Highway Project - Consortium Partners",
+      "description": "Highway Project - Consortium Partners",
+      "creatorId": "sim-user-021",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "consortium",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Financial partner",
+          "Construction expertise",
+          "Equipment fleet"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 10000000,
+          "max": 50000000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site",
+        "memberRoles": [
+          {
+            "role": "Financial partner",
+            "scope": "Investment and financing"
+          },
+          {
+            "role": "Construction expertise",
+            "scope": "Civil works"
+          },
+          {
+            "role": "Equipment fleet",
+            "scope": "Heavy equipment"
+          }
+        ]
+      },
+      "normalized": {
+        "skills": [
+          "Financial partner",
+          "Construction expertise",
+          "Equipment fleet"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 10000000,
+          "max": 50000000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "consortium"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-018",
+      "title": "Financial partner offer",
+      "description": "Financial partner offer",
+      "creatorId": "sim-user-022",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Investment",
+          "Financial Investment",
+          "Capital"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Financial"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 5000000,
+          "max": 20000000,
+          "currency": "SAR"
+        },
+        "cashAmount": 12500000
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Investment",
+          "Financial Investment",
+          "Capital"
+        ],
+        "categories": [
+          "Financial"
+        ],
+        "budget": {
+          "min": 5000000,
+          "max": 20000000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-019",
+      "title": "Construction expertise offer",
+      "description": "Construction expertise offer",
+      "creatorId": "sim-user-023",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Road Construction",
+          "Infrastructure Development",
+          "Project Management"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 2000000,
+          "max": 15000000,
+          "currency": "SAR"
+        },
+        "cashAmount": 8500000
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Road Construction",
+          "Infrastructure Development",
+          "Project Management"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 2000000,
+          "max": 15000000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-020",
+      "title": "Equipment fleet offer",
+      "description": "Equipment fleet offer",
+      "creatorId": "sim-user-024",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Excavator",
+          "Heavy Equipment",
+          "Equipment Rental"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Industrial"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 1000000,
+          "max": 8000000,
+          "currency": "SAR"
+        },
+        "cashAmount": 4500000
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Excavator",
+          "Heavy Equipment",
+          "Equipment Rental"
+        ],
+        "categories": [
+          "Construction",
+          "Industrial"
+        ],
+        "budget": {
+          "min": 1000000,
+          "max": 8000000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-021",
+      "title": "Circular A needs Excavator",
+      "description": "Circular A needs Excavator",
+      "creatorId": "sim-user-025",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Excavator",
+          "Equipment Rental"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Excavator",
+          "Equipment Rental"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-022",
+      "title": "Circular A offers Office space",
+      "description": "Circular A offers Office space",
+      "creatorId": "sim-user-025",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Office space",
+          "Real Estate"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "cashAmount": 125000
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Office space",
+          "Real Estate"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-023",
+      "title": "Circular B needs Office space",
+      "description": "Circular B needs Office space",
+      "creatorId": "sim-user-026",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Office space",
+          "Real Estate"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Office space",
+          "Real Estate"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-024",
+      "title": "Circular B offers Accounting",
+      "description": "Circular B offers Accounting",
+      "creatorId": "sim-user-026",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Accounting",
+          "Financial Reporting"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "cashAmount": 125000
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Accounting",
+          "Financial Reporting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-025",
+      "title": "Circular C needs Accounting",
+      "description": "Circular C needs Accounting",
+      "creatorId": "sim-user-027",
+      "intent": "request",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "requiredSkills": [
+          "Accounting",
+          "Financial Reporting"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        }
+      },
+      "attributes": {
+        "startDate": "2026-03-01",
+        "tenderDeadline": "2026-06-01",
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Accounting",
+          "Financial Reporting"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-03-01",
+          "end": "2026-06-01"
+        },
+        "deadline": "2026-06-01",
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "request",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-opp-026",
+      "title": "Circular C offers Excavator",
+      "description": "Circular C offers Excavator",
+      "creatorId": "sim-user-027",
+      "intent": "offer",
+      "status": "published",
+      "modelType": "project_based",
+      "subModelType": "project",
+      "location": "Riyadh, Saudi Arabia",
+      "locationCountry": "sa",
+      "locationRegion": "riyadh",
+      "exchangeMode": "cash",
+      "paymentModes": [
+        "cash"
+      ],
+      "scope": {
+        "offeredSkills": [
+          "Excavator",
+          "Equipment Rental"
+        ],
+        "requiredSkills": [],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "certifications": []
+      },
+      "exchangeData": {
+        "exchangeMode": "cash",
+        "currency": "SAR",
+        "budgetRange": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "cashAmount": 125000
+      },
+      "attributes": {
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "locationRequirement": "On-Site"
+      },
+      "normalized": {
+        "skills": [
+          "Excavator",
+          "Equipment Rental"
+        ],
+        "categories": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "budget": {
+          "min": 50000,
+          "max": 200000,
+          "currency": "SAR"
+        },
+        "timeline": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "availability": {
+          "start": "2026-02-01",
+          "end": "2026-12-31"
+        },
+        "location": "Riyadh",
+        "reputation": 0.5,
+        "intent": "offer",
+        "modelType": "project_based",
+        "subModelType": "project"
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    }
+  ]
+}

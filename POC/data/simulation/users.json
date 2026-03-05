@@ -1,0 +1,1061 @@
+{
+  "domain": "users",
+  "version": "1.0",
+  "data": [
+    {
+      "id": "sim-user-001",
+      "email": "user1@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 21,
+      "profile": {
+        "name": "Sim User 1",
+        "type": "professional",
+        "headline": "project_manager",
+        "title": "project_manager",
+        "phone": "+966 55 001 0000",
+        "location": "Remote, Saudi Arabia",
+        "specializations": [
+          "Project Management",
+          "PMP"
+        ],
+        "skills": [
+          "Risk Management",
+          "Project Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 9,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.6256873370733519,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-002",
+      "email": "user2@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 227,
+      "profile": {
+        "name": "Sim User 2",
+        "type": "professional",
+        "headline": "project_manager",
+        "title": "project_manager",
+        "phone": "+966 55 002 0000",
+        "location": "NEOM, Saudi Arabia",
+        "specializations": [
+          "PMP",
+          "Risk Management"
+        ],
+        "skills": [
+          "PMP",
+          "Planning",
+          "Project Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 5,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.7092636289118154,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-003",
+      "email": "user3@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 98,
+      "profile": {
+        "name": "Sim User 3",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 003 0000",
+        "location": "Tabuk, Saudi Arabia",
+        "specializations": [
+          "Tax Advisory",
+          "Accounting"
+        ],
+        "skills": [
+          "Financial Reporting",
+          "Tax Advisory",
+          "Accounting"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 21,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.794359588853251,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-004",
+      "email": "user4@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 139,
+      "profile": {
+        "name": "Sim User 4",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 004 0000",
+        "location": "Riyadh, Saudi Arabia",
+        "specializations": [
+          "Audit",
+          "Financial Reporting"
+        ],
+        "skills": [
+          "Tax Advisory",
+          "Financial Reporting",
+          "Accounting",
+          "Audit"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 19,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.5021773339259332,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-005",
+      "email": "user5@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 20,
+      "profile": {
+        "name": "Sim User 5",
+        "type": "professional",
+        "headline": "engineer",
+        "title": "engineer",
+        "phone": "+966 55 005 0000",
+        "location": "NEOM, Saudi Arabia",
+        "specializations": [
+          "Structural Engineering",
+          "BIM"
+        ],
+        "skills": [
+          "AutoCAD",
+          "Structural Analysis"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "yearsExperience": 10,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8703363421234938,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-006",
+      "email": "user6@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 69,
+      "profile": {
+        "name": "Sim User 6",
+        "type": "professional",
+        "headline": "engineer",
+        "title": "engineer",
+        "phone": "+966 55 006 0000",
+        "location": "Remote, Saudi Arabia",
+        "specializations": [
+          "Structural Analysis",
+          "Structural Engineering"
+        ],
+        "skills": [
+          "BIM",
+          "Engineering Consulting",
+          "Structural Analysis",
+          "Structural Engineering"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "yearsExperience": 8,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8944486859228689,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-007",
+      "email": "user7@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 163,
+      "profile": {
+        "name": "Sim User 7",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 007 0000",
+        "location": "Jeddah, Saudi Arabia",
+        "specializations": [
+          "Audit",
+          "Financial Reporting"
+        ],
+        "skills": [
+          "Financial Reporting",
+          "Audit",
+          "Tax Advisory",
+          "Accounting"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 6,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.7582899751413101,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-008",
+      "email": "user8@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 72,
+      "profile": {
+        "name": "Sim User 8",
+        "type": "professional",
+        "headline": "project_manager",
+        "title": "project_manager",
+        "phone": "+966 55 008 0000",
+        "location": "Jeddah, Saudi Arabia",
+        "specializations": [
+          "Risk Management",
+          "Project Management"
+        ],
+        "skills": [
+          "Project Management",
+          "PMP"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 3,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.4199526250920969,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-009",
+      "email": "user9@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 233,
+      "profile": {
+        "name": "Sim User 9",
+        "type": "professional",
+        "headline": "equipment_supplier",
+        "title": "equipment_supplier",
+        "phone": "+966 55 009 0000",
+        "location": "Riyadh, Saudi Arabia",
+        "specializations": [
+          "Excavator",
+          "Heavy Equipment"
+        ],
+        "skills": [
+          "Equipment Rental",
+          "Construction Equipment",
+          "Excavator",
+          "Heavy Equipment"
+        ],
+        "sectors": [
+          "Construction",
+          "Industrial"
+        ],
+        "yearsExperience": 12,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.5560179234743201,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-010",
+      "email": "user10@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 16,
+      "profile": {
+        "name": "Sim User 10",
+        "type": "professional",
+        "headline": "investor",
+        "title": "investor",
+        "phone": "+966 55 010 0000",
+        "location": "Makkah, Saudi Arabia",
+        "specializations": [
+          "Investment",
+          "Partnership"
+        ],
+        "skills": [
+          "Financial Investment",
+          "Investment",
+          "Partnership",
+          "Capital"
+        ],
+        "sectors": [
+          "Financial",
+          "Investment"
+        ],
+        "yearsExperience": 13,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.6435822488477371,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-011",
+      "email": "user11@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 141,
+      "profile": {
+        "name": "Sim User 11",
+        "type": "professional",
+        "headline": "project_manager",
+        "title": "project_manager",
+        "phone": "+966 55 011 0000",
+        "location": "Tabuk, Saudi Arabia",
+        "specializations": [
+          "Planning",
+          "PMP"
+        ],
+        "skills": [
+          "Risk Management",
+          "Project Management",
+          "PMP",
+          "Planning"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 18,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.7048328878380511,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-012",
+      "email": "user12@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 55,
+      "profile": {
+        "name": "Sim User 12",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 012 0000",
+        "location": "Riyadh, Saudi Arabia",
+        "specializations": [
+          "Tax Advisory",
+          "Accounting"
+        ],
+        "skills": [
+          "Tax Advisory",
+          "Accounting",
+          "Financial Reporting",
+          "Audit"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 5,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.7120339037906536,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-013",
+      "email": "user13@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 114,
+      "profile": {
+        "name": "Sim User 13",
+        "type": "professional",
+        "headline": "engineer",
+        "title": "engineer",
+        "phone": "+966 55 013 0000",
+        "location": "Jeddah, Saudi Arabia",
+        "specializations": [
+          "BIM",
+          "Structural Analysis"
+        ],
+        "skills": [
+          "Structural Engineering",
+          "AutoCAD"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "yearsExperience": 14,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.7950957300584278,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-014",
+      "email": "user14@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 155,
+      "profile": {
+        "name": "Sim User 14",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 014 0000",
+        "location": "NEOM, Saudi Arabia",
+        "specializations": [
+          "Accounting",
+          "Audit"
+        ],
+        "skills": [
+          "Accounting",
+          "Financial Reporting"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 15,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.5339482070104908,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-015",
+      "email": "user15@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 263,
+      "profile": {
+        "name": "Sim User 15",
+        "type": "professional",
+        "headline": "engineer",
+        "title": "engineer",
+        "phone": "+966 55 015 0000",
+        "location": "Eastern Province, Saudi Arabia",
+        "specializations": [
+          "Structural Engineering",
+          "BIM"
+        ],
+        "skills": [
+          "BIM",
+          "Structural Engineering",
+          "Engineering Consulting"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "yearsExperience": 4,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8836019220685596,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-016",
+      "email": "user16@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 19,
+      "profile": {
+        "name": "Sim User 16",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 016 0000",
+        "location": "Makkah, Saudi Arabia",
+        "specializations": [
+          "Tax Advisory",
+          "Accounting"
+        ],
+        "skills": [
+          "Tax Advisory",
+          "Audit"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 8,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.4174580097745443,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-017",
+      "email": "user17@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 139,
+      "profile": {
+        "name": "Sim User 17",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 017 0000",
+        "location": "Jeddah, Saudi Arabia",
+        "specializations": [
+          "Financial Reporting",
+          "Accounting"
+        ],
+        "skills": [
+          "Tax Advisory",
+          "Financial Reporting"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 14,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.7391903402466282,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-018",
+      "email": "user18@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 271,
+      "profile": {
+        "name": "Sim User 18",
+        "type": "professional",
+        "headline": "investor",
+        "title": "investor",
+        "phone": "+966 55 018 0000",
+        "location": "Riyadh, Saudi Arabia",
+        "specializations": [
+          "Capital",
+          "Partnership"
+        ],
+        "skills": [
+          "Partnership",
+          "Capital",
+          "Financial Investment",
+          "Investment"
+        ],
+        "sectors": [
+          "Financial",
+          "Investment"
+        ],
+        "yearsExperience": 7,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.6966925622879958,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-019",
+      "email": "user19@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 46,
+      "profile": {
+        "name": "Sim User 19",
+        "type": "professional",
+        "headline": "equipment_supplier",
+        "title": "equipment_supplier",
+        "phone": "+966 55 019 0000",
+        "location": "Remote, Saudi Arabia",
+        "specializations": [
+          "Heavy Equipment",
+          "Equipment Rental"
+        ],
+        "skills": [
+          "Heavy Equipment",
+          "Equipment Rental",
+          "Construction Equipment",
+          "Excavator"
+        ],
+        "sectors": [
+          "Construction",
+          "Industrial"
+        ],
+        "yearsExperience": 20,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.4595843554286213,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-020",
+      "email": "user20@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 185,
+      "profile": {
+        "name": "Sim User 20",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 020 0000",
+        "location": "Dammam, Saudi Arabia",
+        "specializations": [
+          "Tax Advisory",
+          "Audit"
+        ],
+        "skills": [
+          "Tax Advisory",
+          "Accounting",
+          "Financial Reporting",
+          "Audit"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 20,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8749400141532253,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-021",
+      "email": "user21@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 75,
+      "profile": {
+        "name": "Sim User 21",
+        "type": "professional",
+        "headline": "engineer",
+        "title": "engineer",
+        "phone": "+966 55 021 0000",
+        "location": "Remote, Saudi Arabia",
+        "specializations": [
+          "Structural Engineering",
+          "Engineering Consulting"
+        ],
+        "skills": [
+          "AutoCAD",
+          "Structural Engineering"
+        ],
+        "sectors": [
+          "Construction",
+          "Engineering"
+        ],
+        "yearsExperience": 12,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8595291855556562,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-022",
+      "email": "user22@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 122,
+      "profile": {
+        "name": "Sim User 22",
+        "type": "professional",
+        "headline": "contractor",
+        "title": "contractor",
+        "phone": "+966 55 022 0000",
+        "location": "Eastern Province, Saudi Arabia",
+        "specializations": [
+          "Construction",
+          "Road Construction"
+        ],
+        "skills": [
+          "Construction",
+          "Project Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 17,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8421841623923667,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-023",
+      "email": "user23@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 75,
+      "profile": {
+        "name": "Sim User 23",
+        "type": "professional",
+        "headline": "contractor",
+        "title": "contractor",
+        "phone": "+966 55 023 0000",
+        "location": "Eastern Province, Saudi Arabia",
+        "specializations": [
+          "Road Construction",
+          "Project Management"
+        ],
+        "skills": [
+          "Project Management",
+          "Road Construction"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 9,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.819040918591917,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-024",
+      "email": "user24@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 230,
+      "profile": {
+        "name": "Sim User 24",
+        "type": "professional",
+        "headline": "accountant",
+        "title": "accountant",
+        "phone": "+966 55 024 0000",
+        "location": "Eastern Province, Saudi Arabia",
+        "specializations": [
+          "Tax Advisory",
+          "Accounting"
+        ],
+        "skills": [
+          "Audit",
+          "Accounting",
+          "Tax Advisory"
+        ],
+        "sectors": [
+          "Financial",
+          "Accounting"
+        ],
+        "yearsExperience": 18,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.36770646575265864,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-025",
+      "email": "user25@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 102,
+      "profile": {
+        "name": "Sim User 25",
+        "type": "professional",
+        "headline": "contractor",
+        "title": "contractor",
+        "phone": "+966 55 025 0000",
+        "location": "Tabuk, Saudi Arabia",
+        "specializations": [
+          "Construction",
+          "Infrastructure Development"
+        ],
+        "skills": [
+          "Project Management",
+          "Road Construction",
+          "Construction",
+          "Infrastructure Development"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 4,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8569829645366329,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-026",
+      "email": "user26@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 188,
+      "profile": {
+        "name": "Sim User 26",
+        "type": "professional",
+        "headline": "investor",
+        "title": "investor",
+        "phone": "+966 55 026 0000",
+        "location": "Riyadh, Saudi Arabia",
+        "specializations": [
+          "Partnership",
+          "Capital"
+        ],
+        "skills": [
+          "Financial Investment",
+          "Investment",
+          "Partnership"
+        ],
+        "sectors": [
+          "Financial",
+          "Investment"
+        ],
+        "yearsExperience": 14,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8477636578249577,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    },
+    {
+      "id": "sim-user-027",
+      "email": "user27@sim.test",
+      "passwordHash": "cGFzc3dvcmQxMjM=",
+      "role": "professional",
+      "status": "active",
+      "isPublic": true,
+      "connectionCount": 22,
+      "profile": {
+        "name": "Sim User 27",
+        "type": "professional",
+        "headline": "project_manager",
+        "title": "project_manager",
+        "phone": "+966 55 027 0000",
+        "location": "NEOM, Saudi Arabia",
+        "specializations": [
+          "Risk Management",
+          "PMP"
+        ],
+        "skills": [
+          "Project Management",
+          "PMP",
+          "Planning",
+          "Risk Management"
+        ],
+        "sectors": [
+          "Construction",
+          "Infrastructure"
+        ],
+        "yearsExperience": 19,
+        "preferredPaymentModes": [
+          "cash",
+          "barter"
+        ],
+        "rating": 0.8174855949904236,
+        "avatar": null
+      },
+      "createdAt": "2026-03-05T12:48:16.946Z",
+      "updatedAt": "2026-03-05T12:48:16.946Z"
+    }
+  ]
+}

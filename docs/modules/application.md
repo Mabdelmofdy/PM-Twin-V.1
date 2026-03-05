@@ -424,6 +424,36 @@ When a match score >= 80%, the system automatically:
 
 ---
 
+<a id="post-to-post-matching"></a>
+### Post-to-Post Matching Pipeline
+
+In addition to **opportunity–candidate** matching (above), the platform supports **Need Post ↔ Offer Post** matching with four models.
+
+**Pipeline:** Preprocess (extract & normalize) → Semantic profile (category/skill expansion) → Candidate generation (filter) → Score pairs (weighted) → Model routing → Rank & validate.
+
+**Post-to-Post Weights:**
+
+| Factor              | Weight |
+|---------------------|--------|
+| Attribute Overlap   | 40%    |
+| Budget Fit          | 30%    |
+| Timeline Compatibility | 15% |
+| Location Match      | 10%    |
+| Reputation          | 5%     |
+
+**Models:**
+
+- **One-Way:** Need post → find top Offer posts that satisfy the need. `matchingService.findOffersForNeed(needPostId)` or `findMatchesForPost(opportunityId)` for a request.
+- **Two-Way (Barter):** Both sides must match: Offer_A satisfies Need_B and Offer_B satisfies Need_A. Value equivalence can be returned. Use when `exchangeMode === 'barter'` or `options.model === 'two_way'`.
+- **Consortium (Group):** Lead need is decomposed into required roles (e.g. from `memberRoles`); for each role, best-matching Offer posts are found and suggested as partners. Use for `subModelType === 'consortium'` or `options.model === 'consortium'`.
+- **Circular Exchange:** Directed graph of creators; edge creator I → J when some offer from J satisfies some need from I. Cycles of length ≥ 3 form cash-free exchange chains. `findMatchesForPost(id, { model: 'circular' })`.
+
+**API:** `matchingService.findMatchesForPost(opportunityId, options)` returns `{ model, matches }`. Each match includes `matchScore`, `breakdown`, `labels` (Match/Partial/No Match per factor), optional `valueEquivalence`, and `suggestedPartners` (opportunityId, creatorId, role).
+
+**Config:** `CONFIG.MATCHING.CANDIDATE_MAX`, `POST_TO_POST_THRESHOLD`, `WEIGHTS`, `LABEL_THRESHOLDS`.
+
+---
+
 <a id="pipeline-kanban-view"></a>
 ## Pipeline / Kanban View
 

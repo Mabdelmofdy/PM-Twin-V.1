@@ -172,7 +172,18 @@ const CONFIG = {
     // Matching
     MATCHING: {
         MIN_THRESHOLD: 0.70, // 70% minimum match score
-        AUTO_NOTIFY_THRESHOLD: 0.80 // 80% for auto-notification
+        AUTO_NOTIFY_THRESHOLD: 0.80, // 80% for auto-notification
+        // Post-to-post matching
+        CANDIDATE_MAX: 200,
+        POST_TO_POST_THRESHOLD: 0.50,
+        WEIGHTS: {
+            ATTRIBUTE_OVERLAP: 0.40,
+            BUDGET_FIT: 0.30,
+            TIMELINE: 0.15,
+            LOCATION: 0.10,
+            REPUTATION: 0.05
+        },
+        LABEL_THRESHOLDS: { MATCH: 1, PARTIAL: 0.25 }
     },
     
     // Routes
@@ -200,6 +211,7 @@ const CONFIG = {
         ADMIN_AUDIT: '/admin/audit',
         ADMIN_SETTINGS: '/admin/settings',
         ADMIN_REPORTS: '/admin/reports',
+        ADMIN_MATCHING: '/admin/matching',
         ADMIN_PEOPLE: '/admin/people',
         ADMIN_SUBSCRIPTIONS: '/admin/subscriptions',
         ADMIN_COLLABORATION_MODELS: '/admin/collaboration-models',
